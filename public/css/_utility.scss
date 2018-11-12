@@ -1,0 +1,26 @@
+@mixin border-radius($value) {
+     border-radius: $value;
+}
+
+@mixin font-size($value) {
+     font-size: $value;
+}
+
+.black {
+     background-color: #000000;
+     color: white;
+}
+
+.secure {
+  -webkit-text-security:disc;
+}
+
+.border {
+  border: thin solid #000000;
+}
+
+.btn {
+  text-align: left;
+  font-size: 16px;
+  font-weight: bolder;
+}

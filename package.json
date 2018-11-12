@@ -1,0 +1,17 @@
+{
+  "name": "nnsp_sign_in",
+  "version": "1.0.0",
+  "description": "NNSP Sign In App",
+  "main": "bin/server",
+  "scripts": {
+    "start": "node bin/server"
+  },
+  "author": "Howard Bates",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "latest",
+    "formidable": "latest",
+    "nedb": "latest",
+    "node-fetch": "latest"
+  }
+}

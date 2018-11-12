@@ -1,0 +1,80 @@
+<% include public/views/header.ejs %>
+
+<div class="grid-container">
+    <div class="grid-x">
+        <div class="cell small-12">
+            <h5>Nub's Nob Ski Patrol Sign-In</h5>
+        </div>
+    </div>
+    <div class="grid-x ">
+        <div class="cell small-4 large-4"><h6 id="date"></h6></div>
+        <div class="cell small-4 large-4 text-center"><h6 id="weekDay"></h6></div>
+        <div class="cell small-4 large-4 text-right"><h6 id="dayNight"></h6></div>
+    </div>
+    <hr>
+    <% for (let i = 0; i < data.length; i++) { %>
+        <div class="grid-x">
+            <h6>Night Team</h6>
+        </div>
+        <div class="grid-x">
+            <div class="cell small-1">
+                <h6><strong>ID</strong></h6>
+            </div>
+            <div class="cell small-2">
+                <h6><strong>Name</strong></h6>
+            </div>
+            <div class="cell small-2">
+                <h6><strong>Rating</strong></h6>
+            </div>
+            <div class="cell small-2">
+                <h6><strong>Time</strong></h6>
+            </div>
+            <div class="cell small-1">
+                <h6><strong>Radio</strong></h6>
+            </div>
+            <div class="cell small-1">
+                <h6><strong>Days</strong></h6>
+            </div>
+            <div class="cell small-2">
+                <h6><strong>Guest</strong></h6>
+            </div>
+            <div class="cell small-1">
+                <h6><strong>Race</strong></h6>
+            </div>
+        </div>
+        <div class="grid-x">
+            <% data.forEach((result) => { %>
+                <div class="cell small-1">
+                    <%= result.ID %>
+                </div>
+                <div class="cell small-2">
+                    <%= result.NAME %>
+                </div>
+                <div class="cell small-2">
+                    <%= result.RATING %>
+                </div>
+                <div class="cell small-2">
+                    <%= result.TIME %>
+                </div>
+                <div class="cell small-1">
+                    <%= result.RADIO %>
+                </div>
+                <div class="cell small-1">
+                    <%= result.DAYS %>
+                </div>
+                <div class="cell small-2">
+                    <%= result.GUEST %>
+                </div>
+                <div class="cell small-1">
+                    <%= result.RACE %>
+                </div>
+            <% }); %>
+        </div>
+        <hr>
+        <% break; %>
+    <% } %>
+</div>
+<!-- SCRIPTS -->
+<script src="/public/javascripts/results.js" type="module"></script>
+
+<% include public/views/footer.ejs %>
