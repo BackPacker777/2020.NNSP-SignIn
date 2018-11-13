@@ -19,6 +19,7 @@ class Main {
         if (this.date.getDay() === SAT || this.date.getDay() === SUN) {
             return true;
         }
+        return true;
     }
 
     getWeekDay(patrollers) {
@@ -36,7 +37,7 @@ class Main {
         } else {
             dayNight = "Day";
         }
-        // dayNight = "Day";
+        dayNight = "Day";
         return dayNight;
     }
 
@@ -44,7 +45,7 @@ class Main {
         const OVERRIDE = 777777;
         document.getElementById('formSubmit').disabled = true;
         if (this.getDayNight() === 'Night') {
-            DivContents.getDivs(0, counter, null, 'Night');
+            // DivContents.getDivs(0, counter, null, 'Night');
             let counter = 1;
             const RACE_TIMES = ['', '7:00', '7:15', '7:30', '7:45', '8:00', '8:15', '8:30', '8:45'];
             let teams = document.querySelectorAll("fieldset");
