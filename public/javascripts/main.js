@@ -19,7 +19,7 @@ class Main {
         if (this.date.getDay() === SAT || this.date.getDay() === SUN) {
             return true;
         }
-        return true;
+        // return true;
     }
 
     getWeekDay(patrollers) {
