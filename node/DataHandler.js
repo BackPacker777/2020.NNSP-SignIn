@@ -13,6 +13,32 @@ class DataHandler {
     }
 
     static setBaseData(callback) {
+        let filePath = `data/patrollers.csv`;
+        FS.readFile(filePath, `utf8`, (err, file) => {
+            let tempArray, protoArray = [];
+            let finalData = [];
+            tempArray = file.split(/\r?\n/); //remove newlines
+            tempArray.shift(); //To remove the csv file headers
+            const COLUMNS = 8;
+            for (let i = 0; i < tempArray.length; i++) {
+                protoArray[i] = tempArray[i].split(/,/).slice(0, COLUMNS);
+                finalData[i] = {
+                    ID: protoArray[i][0],
+                    LAST_NAME: protoArray[i][1],
+                    FIRST_NAME: protoArray[i][2],
+                    RATING: protoArray[i][3],
+                    LEADER: protoArray[i][4],
+                    DAYS: protoArray[i][5],
+                    NIGHTS: protoArray[i][6],
+                    HALF_DAYS: protoArray[i][7],
+                }
+            }
+            finalData = JSON.stringify(finalData);
+            callback(finalData);
+        });
+    }
+
+    /*static setBaseData(callback) {
         let filePath = `data/patrollers.csv`, columns = 8;
         FS.readFile(filePath, `utf8`, (err, file) => {
             let tempArray, finalData = [];
@@ -25,7 +51,7 @@ class DataHandler {
             callback(finalData);
             return finalData;
         });
-    }
+    }*/
 
     static updatePatrollerDays(patrollerData, callback) {
         const results = patrollerData;

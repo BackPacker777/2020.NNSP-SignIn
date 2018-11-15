@@ -9,14 +9,6 @@ export default class EventHandler {
         this.dayNight = dayNight;
         this.halfDay = false;
         this.teamCounts = [0,0,0,0,0];
-        this.leaders = {
-            PD: 178647,
-            APD1: 128072,
-            APD2: 251542,
-            APD3: 222222,
-            TR1: 178651,
-            TR2: 219670
-        };
         this.isWeekend = isWeekend;
         // this.validate();
     }
@@ -45,44 +37,6 @@ export default class EventHandler {
         }
     }
 
-    /*handleTeamButtons(teamNum) {
-        let counter = 1;
-        const TEAMS = {
-            DAY: 4,
-            CANDIDATES: 5,
-            LEADERS: 6
-        };
-        const START_CHILDREN = 5;
-        if (teamNum < TEAMS.LEADERS) {
-            document.getElementById(`joinTeam.${teamNum}`).addEventListener('click', () => {
-                if (teamNum <= TEAMS.DAY) {
-                    if (document.getElementById(`team${teamNum}`).childNodes.length === START_CHILDREN || document.getElementById(`patrollerID.${teamNum}.${counter - 1}`).value !== '') {
-                        document.getElementById(`team${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDayDivs(teamNum, counter));
-                        this.handleHalfDay(teamNum, counter, 'regular');
-                        this.changePatrollerDiv(teamNum, counter);
-                        counter++;
-                    }
-                } else if (teamNum === TEAMS.CANDIDATES) {
-                    if (document.getElementById(`team${teamNum}`).childNodes.length === START_CHILDREN || document.getElementById(`patrollerID.${teamNum}.${counter - 1}`).value !== '') {
-                        document.getElementById(`team${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDayCandidateDivs(teamNum, counter));
-                        this.handleHalfDay(teamNum, counter, 'candidate');
-                        this.changePatrollerDiv(teamNum, counter);
-                        counter++;
-                    }
-                }
-            });
-        } else {
-            let leaderNum = 0;
-            let t6counter = 1;
-            while (leaderNum < TEAMS.LEADERS) {
-                document.getElementById(`team${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDayLeaderDivs(teamNum, t6counter, leaderNum));
-                leaderNum++;
-                t6counter++;
-            }
-            this.changeLeaderDiv();
-        }
-    }*/
-
     changePatrollerDiv(teamNum, counter) {
         document.getElementById(`patrollerID.${teamNum}.${counter}`).addEventListener('change', () => {
             let correctID = false;
@@ -93,15 +47,15 @@ export default class EventHandler {
                             alert(`You are already logged in.`);
                             document.getElementById(`patrollerID.${teamNum}.${counter}`).value = '';
                             break;
-                        } else if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
+                        } else if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
                             this.populateDiv(teamNum, counter, i);
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.${teamNum}.${counter}`).value, `radio`);
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${counter}`).value, `radio`);
                             });
                             document.getElementById(`guest.${teamNum}.${counter}`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.${teamNum}.${counter}`).value, `guest`);
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.${teamNum}.${counter}`).value, `guest`);
                             });
                             if (this.isWeekend) {
                                 this.teamCounts[teamNum]++;
@@ -122,15 +76,15 @@ export default class EventHandler {
                     }
                 } else {
                     for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
+                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
                             this.populateDiv(teamNum, counter, i);
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.${teamNum}.${counter}`).value, `radio`);
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${counter}`).value, `radio`);
                             });
                             document.getElementById(`guest.${teamNum}.${counter}`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.${teamNum}.${counter}`).value, `guest`);
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.${teamNum}.${counter}`).value, `guest`);
                             });
                             document.getElementById(`joinTeam.${teamNum}`).disabled = false;
                             if (this.isWeekend) {
@@ -175,8 +129,17 @@ export default class EventHandler {
                     patroller.RADIO = radioGuestDays;
                 } else if (whichListener === `guest`) {
                     patroller.GUEST = radioGuestDays;
-                } else {
-                    patroller.DAYS = radioGuestDays;
+                } else if (whichListener === `halfDaysDown`) {
+                    patroller.TOTAL_DAYS = radioGuestDays;
+                    if (patroller.HALF_DAYS > 0) {
+                        patroller.HALF_DAYS--;
+                    }
+                } else if (whichListener === 'halfDaysUp'){
+                    patroller.TOTAL_DAYS = radioGuestDays;
+                    patroller.HALF_DAYS++;
+                    if (patroller.DAYS > 0) {
+                        patroller.DAYS--;
+                    }
                 }
                 break;
             }
@@ -190,29 +153,37 @@ export default class EventHandler {
             minutes = `0${minutes}`;
         }
         let race;
-        let dayCount = 1;
+        let dayCount = 1, halfDayCount = 0, nightsCount = 0;
         if (this.halfDay === true) {
-            dayCount = .5;
+            halfDayCount = 1;
+            dayCount = 0;
+        }
+        if (this.dayNight === "Night") {
+            nightsCount = 1;
+            dayCount = 0;
         }
         document.getElementById(`time.${teamNum}.${counter}`).value = `${time.getHours()}:${minutes}`;
         if (document.getElementById(`race.${teamNum}.${counter}`)) {
             race = document.getElementById(`race.${teamNum}.${counter}`).value;
         }
         let patroller = {
-            ID: Number(this.patrollers[i][0]),
+            ID: Number(this.patrollers[i].ID),
             RADIO: document.getElementById(`radioNum.${teamNum}.${counter}`).value,
-            NAME: `${this.patrollers[i][2]} ${this.patrollers[i][1]}`,
-            RATING: this.patrollers[i][3],
+            NAME: `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`,
+            RATING: this.patrollers[i].RATING,
             TIME: document.getElementById(`time.${teamNum}.${counter}`).value,
-            DAYS: Number(this.patrollers[i][4]) + dayCount,
+            DAYS: Number(this.patrollers[i].DAYS) + dayCount,
             GUEST: document.getElementById(`guest.${teamNum}.${counter}`).value,
             TEAM: teamNum,
-            RACE: race
+            RACE: race,
+            NIGHTS: Number(this.patrollers[i].NIGHTS) + nightsCount,
+            HALF_DAYS: Number(this.patrollers[i].HALF_DAYS) + halfDayCount,
+            TOTAL_DAYS: (Number(this.patrollers[i].DAYS) + dayCount) + (Number(this.patrollers[i].NIGHTS) + nightsCount) + (Number(this.patrollers[i].HALF_DAYS) / 2)
         };
         this.signedIn.push(patroller);
-        document.getElementById(`name.${teamNum}.${counter}`).value = `${this.patrollers[i][2]} ${this.patrollers[i][1]}`;
-        document.getElementById(`rating.${teamNum}.${counter}`).value = this.patrollers[i][3];
-        document.getElementById(`days.${teamNum}.${counter}`).value = this.signedIn[this.signedIn.length - 1].DAYS;
+        document.getElementById(`name.${teamNum}.${counter}`).value = `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`;
+        document.getElementById(`rating.${teamNum}.${counter}`).value = this.patrollers[i].RATING;
+        document.getElementById(`days.${teamNum}.${counter}`).value = this.signedIn[this.signedIn.length - 1].TOTAL_DAYS;
     }
 
     clearDiv(teamNum, counter) {
@@ -236,292 +207,6 @@ export default class EventHandler {
         document.getElementById(`guest.${teamNum}.${counter}`).value = ``;
     }
 
-    /*changeLeaderDiv() {
-        this.handleHalfDay(6, 1, 'regular');
-        document.getElementById(`patrollerID.6.1`).addEventListener('change', () => {
-            if (document.getElementById(`patrollerID.6.1`).value !== '') {
-                if (this.signedIn.length > 0) {
-                    if (Number(document.getElementById(`patrollerID.6.1`).value) !== this.leaders.PD) {
-                        alert(`Invalid ID number. Please try again... Or don't...`);
-                        document.getElementById(`patrollerID.6.1`).value = '';
-                    } else {
-                        for (let i = 0; i < this.patrollers.length; i++) {
-                            if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.1`).value)) {
-                                this.populateDiv(6, 1, i);
-                                document.getElementById("formSubmit").disabled = false;
-                                document.getElementById("formSubmit").classList.remove('disabled');
-                                document.getElementById(`radioNum.6.1`).required = true;
-                                document.getElementById(`radioNum.6.1`).setAttribute(`required`, `required`);
-                                document.getElementById(`radioNum.6.1`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.1`).value, `radio`);
-                                });
-                                document.getElementById(`guest.6.1`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.1`).value, `guest`);
-                                });
-                                this.handlePrintFormButton(this.leaders);
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.1`).value)) {
-                            this.populateDiv(6, 1, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            document.getElementById(`radioNum.6.1`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.1`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.1`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.1`).value, `guest`);
-                            });
-                            this.handlePrintFormButton(this.leaders);
-                            break;
-                        }
-                    }
-                }
-            } else {
-                this.clearDiv(6, 1);
-            }
-        });
-        this.handleHalfDay(6, 2, 'regular');
-        document.getElementById(`patrollerID.6.2`).addEventListener('change', () => {
-            if (document.getElementById(`patrollerID.6.2`).value !== '') {
-                if (this.signedIn.length > 0) {
-                    if (Number(document.getElementById(`patrollerID.6.2`).value) !== this.leaders.APD1 && Number(document.getElementById(`patrollerID.6.2`).value) !== this.leaders.APD2 && Number(document.getElementById(`patrollerID.6.2`).value) !== this.leaders.APD3) {
-                        alert(`Invalid ID number. Please try again... Or don't...`);
-                        document.getElementById(`patrollerID.6.2`).value = '';
-                    } else {
-                        for (let i = 0; i < this.patrollers.length; i++) {
-                            if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.2`).value)) {
-                                this.populateDiv(6, 2, i);
-                                document.getElementById("formSubmit").disabled = false;
-                                document.getElementById("formSubmit").classList.remove('disabled');
-                                document.getElementById(`radioNum.6.1`).required = true;
-                                document.getElementById(`radioNum.6.2`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.2`).value, `radio`);
-                                });
-                                document.getElementById(`guest.6.2`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.2`).value, `guest`);
-                                });
-                                this.handlePrintFormButton(this.leaders);
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.2`).value)) {
-                            this.populateDiv(6, 2, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            document.getElementById(`radioNum.6.2`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.2`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.2`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.2`).value, `guest`);
-                            });
-                            this.handlePrintFormButton(this.leaders);
-                            break;
-                        }
-                    }
-                }
-            } else {
-                this.clearDiv(6, 2);
-            }
-        });
-        this.handleHalfDay(6, 3, 'regular');
-        document.getElementById(`patrollerID.6.3`).addEventListener('change', () => {
-            if (document.getElementById(`patrollerID.6.3`).value !== '') {
-                if (this.signedIn.length > 0) {
-                    if (Number(document.getElementById(`patrollerID.6.3`).value) !== this.leaders.APD1 && Number(document.getElementById(`patrollerID.6.3`).value) !== this.leaders.APD2 && Number(document.getElementById(`patrollerID.6.3`).value) !== this.leaders.APD3) {
-                        alert(`Invalid ID number. Please try again... Or don't...`);
-                        document.getElementById(`patrollerID.6.3`).value = '';
-                    } else {
-                        for (let i = 0; i < this.patrollers.length; i++) {
-                            if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.3`).value)) {
-                                this.populateDiv(6, 3, i);
-                                document.getElementById("formSubmit").disabled = false;
-                                document.getElementById("formSubmit").classList.remove('disabled');
-                                document.getElementById(`radioNum.6.1`).required = true;
-                                this.handlePrintFormButton(this.leaders);
-                                document.getElementById(`radioNum.6.3`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.3`).value, `radio`);
-                                });
-                                document.getElementById(`guest.6.3`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.3`).value, `guest`);
-                                });
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.3`).value)) {
-                            this.populateDiv(6, 3, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            this.handlePrintFormButton(this.leaders);
-                            document.getElementById(`radioNum.6.3`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.3`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.3`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.3`).value, `guest`);
-                            });
-                            break;
-                        }
-                    }
-                }
-            } else {
-                this.clearDiv(6, 3);
-            }
-        });
-        this.handleHalfDay(6, 4, 'regular');
-        document.getElementById(`patrollerID.6.4`).addEventListener('change', () => {
-            if (document.getElementById(`patrollerID.6.4`).value !== '') {
-                if (this.signedIn.length > 0) {
-                    if (Number(document.getElementById(`patrollerID.6.4`).value) !== this.leaders.APD1 && Number(document.getElementById(`patrollerID.6.4`).value) !== this.leaders.APD2 && Number(document.getElementById(`patrollerID.6.4`).value) !== this.leaders.APD3) {
-                        alert(`Invalid ID number. Please try again... Or don't...`);
-                        document.getElementById(`patrollerID.6.4`).value = '';
-                    } else {
-                        for (let i = 0; i < this.patrollers.length; i++) {
-                            if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.4`).value)) {
-                                this.populateDiv(6, 4, i);
-                                document.getElementById("formSubmit").disabled = false;
-                                document.getElementById("formSubmit").classList.remove('disabled');
-                                document.getElementById(`radioNum.6.1`).required = true;
-                                this.handlePrintFormButton(this.leaders);
-                                document.getElementById(`radioNum.6.4`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.4`).value, `radio`);
-                                });
-                                document.getElementById(`guest.6.4`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.4`).value, `guest`);
-                                });
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.4`).value)) {
-                            this.populateDiv(6, 4, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            this.handlePrintFormButton(this.leaders);
-                            document.getElementById(`radioNum.6.4`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.4`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.4`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.4`).value, `guest`);
-                            });
-                            break;
-                        }
-                    }
-                }
-            } else {
-                this.clearDiv(6, 4);
-            }
-        });
-        this.handleHalfDay(6, 5, 'regular');
-        document.getElementById(`patrollerID.6.5`).addEventListener('change', () => {
-            if (document.getElementById(`patrollerID.6.5`).value !== '') {
-                if (this.signedIn.length > 0) {
-                    if (Number(document.getElementById(`patrollerID.6.5`).value) !== this.leaders.TR1 || Number(document.getElementById(`patrollerID.6.5`).value) !== this.leaders.TR2) {
-                        alert(`Invalid ID number. Please try again... Or don't...`);
-                        document.getElementById(`patrollerID.6.5`).value = '';
-                    } else {
-                        for (let i = 0; i < this.patrollers.length; i++) {
-                            if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.5`).value)) {
-                                this.populateDiv(6, 5, i);
-                                document.getElementById("formSubmit").disabled = false;
-                                document.getElementById("formSubmit").classList.remove('disabled');
-                                document.getElementById(`radioNum.6.1`).required = true;
-                                this.handlePrintFormButton(this.leaders);
-                                document.getElementById(`radioNum.6.5`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.5`).value, `radio`);
-                                });
-                                document.getElementById(`guest.6.5`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.5`).value, `guest`);
-                                });
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.5`).value)) {
-                            this.populateDiv(6, 5, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            this.handlePrintFormButton(this.leaders);
-                            document.getElementById(`radioNum.6.5`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.5`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.5`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.5`).value, `guest`);
-                            });
-                            break;
-                        }
-                    }
-                }
-            } else {
-                this.clearDiv(6, 5);
-            }
-        });
-        this.handleHalfDay(6, 6, 'regular');
-        document.getElementById(`patrollerID.6.6`).addEventListener('change', () => {
-            if (document.getElementById(`patrollerID.6.6`).value !== '') {
-                if (this.signedIn.length > 0) {
-                    if (Number(document.getElementById(`patrollerID.6.6`).value) !== this.leaders.TR1 || Number(document.getElementById(`patrollerID.6.6`).value) !== this.leaders.TR2) {
-                        alert(`Invalid ID number. Please try again... Or don't...`);
-                        document.getElementById(`patrollerID.6.6`).value = '';
-                    } else {
-                        for (let i = 0; i < this.patrollers.length; i++) {
-                            if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.6`).value)) {
-                                this.populateDiv(6, 6, i);
-                                document.getElementById("formSubmit").disabled = false;
-                                document.getElementById("formSubmit").classList.remove('disabled');
-                                document.getElementById(`radioNum.6.1`).required = true;
-                                this.handlePrintFormButton(this.leaders);
-                                document.getElementById(`radioNum.6.6`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.6`).value, `radio`);
-                                });
-                                document.getElementById(`guest.6.6`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.6`).value, `guest`);
-                                });
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i][0]) === Number(document.getElementById(`patrollerID.6.6`).value)) {
-                            this.populateDiv(6, 6, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            this.handlePrintFormButton(this.leaders);
-                            document.getElementById(`radioNum.6.6`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`radioNum.6.6`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.6`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i][0], document.getElementById(`guest.6.6`).value, `guest`);
-                            });
-                            break;
-                        }
-                    }
-                }
-            } else {
-                this.clearDiv(6, 6);
-            }
-        });
-    }*/
-
     handleHalfDay(teamNum, counter) {
         let time = new Date();
         const DAY_CUTOFF = 9;
@@ -535,59 +220,58 @@ export default class EventHandler {
                 if (document.getElementById(`halfDay.${teamNum}.${counter}`).checked) {
                     document.getElementById(`guest.${teamNum}.${counter}`).setAttribute('readonly', '');
                     document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) - .5;
+                    this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${counter}`).value, document.getElementById(`days.${teamNum}.${counter}`).value, `halfDaysUp`);
                 } else {
                     document.getElementById(`guest.${teamNum}.${counter}`).removeAttribute('readonly');
                     document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) + .5;
+                    this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${counter}`).value, document.getElementById(`days.${teamNum}.${counter}`).value, `halfDaysDown`);
                 }
-                this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${counter}`).value, document.getElementById(`days.${teamNum}.${counter}`).value, `halfDay`);
             });
         }
     }
 
     handlePrintFormButton() {
         document.getElementById('formSubmit').addEventListener('click', () => {
-            console.log(`Print Roster Clicked!`);
             if (this.dayNight === "Day" && this.isWeekend) {
-                let correct = false;
-                let answer = Number(prompt(`Password?`));
                 for (let key in this.leaders) {
                     if (this.leaders[key] === answer && this.dayNight === `Day`) {
-                        correct = true;
+                        // correct = true;
                         /*if (this.isWeekend === true) {
                             document.getElementById("formSubmit").disabled = true;
                             document.getElementById("formSubmit").classList.add('disabled');
                             document.getElementById('formSubmit').removeEventListener('click', submit);
                         }*/
-                        EventHandler.disableExisting();
-                        this.updateDaysCount().then(() => { });
-                        window.open('/public/views/day_results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
+                        // EventHandler.disableExisting();
+                        this.pseudoUpdateDays();
+                        // this.updateDaysCount().then(() => { });
+                        // window.open('/public/views/day_results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
                         break;
                     } else if (this.leaders[key] === answer && this.dayNight === `Night`) {
-                        correct = true;
+                        // correct = true;
                         /*if (this.isWeekend === true) {
                             document.getElementById("formSubmit").disabled = true;
                             document.getElementById("formSubmit").classList.add('disabled');
                             document.getElementById('formSubmit').removeEventListener('click', submit);
                         }*/
-                        EventHandler.disableExisting();
-                        this.updateDaysCount().then((response) => { });
-                        window.open('/public/views/night_results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
+                        // EventHandler.disableExisting();
+                        // this.updateDaysCount().then((response) => { });
+                        this.pseudoUpdateDays();
+                        // window.open('/public/views/night_results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
                         break;
                     } else {
-                        correct = false;
+                        // correct = false;
                     }
                 }
                 if (!correct) {
                     alert(`Incorrect password. Please try again.`);
-                }/* else {
-                document.getElementById('formSubmit').removeEventListener('click', submit);
-            }*/
+                }
             } else {
+                console.log(`Print Roster Clicked!`);
                 // EventHandler.disableExisting();
-                this.updateDaysCount().then(() => { });
-                window.open('/public/views/day_results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
+                // this.updateDaysCount().then(() => { });
+                this.pseudoUpdateDays();
+                // window.open('/public/views/day_results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
             }
-
         });
     }
 
@@ -617,6 +301,21 @@ export default class EventHandler {
                 this.handlePrintFormButton();
             }
         });
+    }
+
+    pseudoUpdateDays() {
+        for (let i = 0; i < this.signedIn.length; i++) {
+            for (let j = 0; j < this.patrollers.length; j++) {
+                if (Number(this.signedIn[i].ID) === Number(this.patrollers[j].ID)) {
+                    this.patrollers[j].DAYS = this.signedIn[i].DAYS;
+                    this.patrollers[j].NIGHTS = this.signedIn[i].NIGHTS;
+                    this.patrollers[j].HALF_DAYS = this.signedIn[i].HALF_DAYS;
+                    this.signedIn.splice(this.signedIn[i], 1);
+                    console.log(this.patrollers[j]);
+                    break;
+                }
+            }
+        }
     }
 
     performFetch(fetchNum, folks, callback) {
@@ -657,3 +356,327 @@ export default class EventHandler {
         });
     }
 }
+
+/*handleTeamButtons(teamNum) {
+        let counter = 1;
+        const TEAMS = {
+            DAY: 4,
+            CANDIDATES: 5,
+            LEADERS: 6
+        };
+        const START_CHILDREN = 5;
+        if (teamNum < TEAMS.LEADERS) {
+            document.getElementById(`joinTeam.${teamNum}`).addEventListener('click', () => {
+                if (teamNum <= TEAMS.DAY) {
+                    if (document.getElementById(`team${teamNum}`).childNodes.length === START_CHILDREN || document.getElementById(`patrollerID.${teamNum}.${counter - 1}`).value !== '') {
+                        document.getElementById(`team${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDayDivs(teamNum, counter));
+                        this.handleHalfDay(teamNum, counter, 'regular');
+                        this.changePatrollerDiv(teamNum, counter);
+                        counter++;
+                    }
+                } else if (teamNum === TEAMS.CANDIDATES) {
+                    if (document.getElementById(`team${teamNum}`).childNodes.length === START_CHILDREN || document.getElementById(`patrollerID.${teamNum}.${counter - 1}`).value !== '') {
+                        document.getElementById(`team${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDayCandidateDivs(teamNum, counter));
+                        this.handleHalfDay(teamNum, counter, 'candidate');
+                        this.changePatrollerDiv(teamNum, counter);
+                        counter++;
+                    }
+                }
+            });
+        } else {
+            let leaderNum = 0;
+            let t6counter = 1;
+            while (leaderNum < TEAMS.LEADERS) {
+                document.getElementById(`team${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDayLeaderDivs(teamNum, t6counter, leaderNum));
+                leaderNum++;
+                t6counter++;
+            }
+            this.changeLeaderDiv();
+        }
+    }*/
+
+/*changeLeaderDiv() {
+    this.handleHalfDay(6, 1, 'regular');
+    document.getElementById(`patrollerID.6.1`).addEventListener('change', () => {
+        if (document.getElementById(`patrollerID.6.1`).value !== '') {
+            if (this.signedIn.length > 0) {
+                if (Number(document.getElementById(`patrollerID.6.1`).value) !== this.leaders.PD) {
+                    alert(`Invalid ID number. Please try again... Or don't...`);
+                    document.getElementById(`patrollerID.6.1`).value = '';
+                } else {
+                    for (let i = 0; i < this.patrollers.length; i++) {
+                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.1`).value)) {
+                            this.populateDiv(6, 1, i);
+                            document.getElementById("formSubmit").disabled = false;
+                            document.getElementById("formSubmit").classList.remove('disabled');
+                            document.getElementById(`radioNum.6.1`).required = true;
+                            document.getElementById(`radioNum.6.1`).setAttribute(`required`, `required`);
+                            document.getElementById(`radioNum.6.1`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.1`).value, `radio`);
+                            });
+                            document.getElementById(`guest.6.1`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.1`).value, `guest`);
+                            });
+                            this.handlePrintFormButton(this.leaders);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < this.patrollers.length; i++) {
+                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.1`).value)) {
+                        this.populateDiv(6, 1, i);
+                        document.getElementById("formSubmit").disabled = false;
+                        document.getElementById("formSubmit").classList.remove('disabled');
+                        document.getElementById(`radioNum.6.1`).required = true;
+                        document.getElementById(`radioNum.6.1`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.1`).value, `radio`);
+                        });
+                        document.getElementById(`guest.6.1`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.1`).value, `guest`);
+                        });
+                        this.handlePrintFormButton(this.leaders);
+                        break;
+                    }
+                }
+            }
+        } else {
+            this.clearDiv(6, 1);
+        }
+    });
+    this.handleHalfDay(6, 2, 'regular');
+    document.getElementById(`patrollerID.6.2`).addEventListener('change', () => {
+        if (document.getElementById(`patrollerID.6.2`).value !== '') {
+            if (this.signedIn.length > 0) {
+                if (Number(document.getElementById(`patrollerID.6.2`).value) !== this.leaders.APD1 && Number(document.getElementById(`patrollerID.6.2`).value) !== this.leaders.APD2 && Number(document.getElementById(`patrollerID.6.2`).value) !== this.leaders.APD3) {
+                    alert(`Invalid ID number. Please try again... Or don't...`);
+                    document.getElementById(`patrollerID.6.2`).value = '';
+                } else {
+                    for (let i = 0; i < this.patrollers.length; i++) {
+                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.2`).value)) {
+                            this.populateDiv(6, 2, i);
+                            document.getElementById("formSubmit").disabled = false;
+                            document.getElementById("formSubmit").classList.remove('disabled');
+                            document.getElementById(`radioNum.6.1`).required = true;
+                            document.getElementById(`radioNum.6.2`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.2`).value, `radio`);
+                            });
+                            document.getElementById(`guest.6.2`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.2`).value, `guest`);
+                            });
+                            this.handlePrintFormButton(this.leaders);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < this.patrollers.length; i++) {
+                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.2`).value)) {
+                        this.populateDiv(6, 2, i);
+                        document.getElementById("formSubmit").disabled = false;
+                        document.getElementById("formSubmit").classList.remove('disabled');
+                        document.getElementById(`radioNum.6.1`).required = true;
+                        document.getElementById(`radioNum.6.2`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.2`).value, `radio`);
+                        });
+                        document.getElementById(`guest.6.2`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.2`).value, `guest`);
+                        });
+                        this.handlePrintFormButton(this.leaders);
+                        break;
+                    }
+                }
+            }
+        } else {
+            this.clearDiv(6, 2);
+        }
+    });
+    this.handleHalfDay(6, 3, 'regular');
+    document.getElementById(`patrollerID.6.3`).addEventListener('change', () => {
+        if (document.getElementById(`patrollerID.6.3`).value !== '') {
+            if (this.signedIn.length > 0) {
+                if (Number(document.getElementById(`patrollerID.6.3`).value) !== this.leaders.APD1 && Number(document.getElementById(`patrollerID.6.3`).value) !== this.leaders.APD2 && Number(document.getElementById(`patrollerID.6.3`).value) !== this.leaders.APD3) {
+                    alert(`Invalid ID number. Please try again... Or don't...`);
+                    document.getElementById(`patrollerID.6.3`).value = '';
+                } else {
+                    for (let i = 0; i < this.patrollers.length; i++) {
+                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.3`).value)) {
+                            this.populateDiv(6, 3, i);
+                            document.getElementById("formSubmit").disabled = false;
+                            document.getElementById("formSubmit").classList.remove('disabled');
+                            document.getElementById(`radioNum.6.1`).required = true;
+                            this.handlePrintFormButton(this.leaders);
+                            document.getElementById(`radioNum.6.3`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.3`).value, `radio`);
+                            });
+                            document.getElementById(`guest.6.3`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.3`).value, `guest`);
+                            });
+                            break;
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < this.patrollers.length; i++) {
+                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.3`).value)) {
+                        this.populateDiv(6, 3, i);
+                        document.getElementById("formSubmit").disabled = false;
+                        document.getElementById("formSubmit").classList.remove('disabled');
+                        document.getElementById(`radioNum.6.1`).required = true;
+                        this.handlePrintFormButton(this.leaders);
+                        document.getElementById(`radioNum.6.3`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.3`).value, `radio`);
+                        });
+                        document.getElementById(`guest.6.3`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.3`).value, `guest`);
+                        });
+                        break;
+                    }
+                }
+            }
+        } else {
+            this.clearDiv(6, 3);
+        }
+    });
+    this.handleHalfDay(6, 4, 'regular');
+    document.getElementById(`patrollerID.6.4`).addEventListener('change', () => {
+        if (document.getElementById(`patrollerID.6.4`).value !== '') {
+            if (this.signedIn.length > 0) {
+                if (Number(document.getElementById(`patrollerID.6.4`).value) !== this.leaders.APD1 && Number(document.getElementById(`patrollerID.6.4`).value) !== this.leaders.APD2 && Number(document.getElementById(`patrollerID.6.4`).value) !== this.leaders.APD3) {
+                    alert(`Invalid ID number. Please try again... Or don't...`);
+                    document.getElementById(`patrollerID.6.4`).value = '';
+                } else {
+                    for (let i = 0; i < this.patrollers.length; i++) {
+                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.4`).value)) {
+                            this.populateDiv(6, 4, i);
+                            document.getElementById("formSubmit").disabled = false;
+                            document.getElementById("formSubmit").classList.remove('disabled');
+                            document.getElementById(`radioNum.6.1`).required = true;
+                            this.handlePrintFormButton(this.leaders);
+                            document.getElementById(`radioNum.6.4`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.4`).value, `radio`);
+                            });
+                            document.getElementById(`guest.6.4`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.4`).value, `guest`);
+                            });
+                            break;
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < this.patrollers.length; i++) {
+                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.4`).value)) {
+                        this.populateDiv(6, 4, i);
+                        document.getElementById("formSubmit").disabled = false;
+                        document.getElementById("formSubmit").classList.remove('disabled');
+                        document.getElementById(`radioNum.6.1`).required = true;
+                        this.handlePrintFormButton(this.leaders);
+                        document.getElementById(`radioNum.6.4`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.4`).value, `radio`);
+                        });
+                        document.getElementById(`guest.6.4`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.4`).value, `guest`);
+                        });
+                        break;
+                    }
+                }
+            }
+        } else {
+            this.clearDiv(6, 4);
+        }
+    });
+    this.handleHalfDay(6, 5, 'regular');
+    document.getElementById(`patrollerID.6.5`).addEventListener('change', () => {
+        if (document.getElementById(`patrollerID.6.5`).value !== '') {
+            if (this.signedIn.length > 0) {
+                if (Number(document.getElementById(`patrollerID.6.5`).value) !== this.leaders.TR1 || Number(document.getElementById(`patrollerID.6.5`).value) !== this.leaders.TR2) {
+                    alert(`Invalid ID number. Please try again... Or don't...`);
+                    document.getElementById(`patrollerID.6.5`).value = '';
+                } else {
+                    for (let i = 0; i < this.patrollers.length; i++) {
+                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.5`).value)) {
+                            this.populateDiv(6, 5, i);
+                            document.getElementById("formSubmit").disabled = false;
+                            document.getElementById("formSubmit").classList.remove('disabled');
+                            document.getElementById(`radioNum.6.1`).required = true;
+                            this.handlePrintFormButton(this.leaders);
+                            document.getElementById(`radioNum.6.5`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.5`).value, `radio`);
+                            });
+                            document.getElementById(`guest.6.5`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.5`).value, `guest`);
+                            });
+                            break;
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < this.patrollers.length; i++) {
+                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.5`).value)) {
+                        this.populateDiv(6, 5, i);
+                        document.getElementById("formSubmit").disabled = false;
+                        document.getElementById("formSubmit").classList.remove('disabled');
+                        document.getElementById(`radioNum.6.1`).required = true;
+                        this.handlePrintFormButton(this.leaders);
+                        document.getElementById(`radioNum.6.5`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.5`).value, `radio`);
+                        });
+                        document.getElementById(`guest.6.5`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.5`).value, `guest`);
+                        });
+                        break;
+                    }
+                }
+            }
+        } else {
+            this.clearDiv(6, 5);
+        }
+    });
+    this.handleHalfDay(6, 6, 'regular');
+    document.getElementById(`patrollerID.6.6`).addEventListener('change', () => {
+        if (document.getElementById(`patrollerID.6.6`).value !== '') {
+            if (this.signedIn.length > 0) {
+                if (Number(document.getElementById(`patrollerID.6.6`).value) !== this.leaders.TR1 || Number(document.getElementById(`patrollerID.6.6`).value) !== this.leaders.TR2) {
+                    alert(`Invalid ID number. Please try again... Or don't...`);
+                    document.getElementById(`patrollerID.6.6`).value = '';
+                } else {
+                    for (let i = 0; i < this.patrollers.length; i++) {
+                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.6`).value)) {
+                            this.populateDiv(6, 6, i);
+                            document.getElementById("formSubmit").disabled = false;
+                            document.getElementById("formSubmit").classList.remove('disabled');
+                            document.getElementById(`radioNum.6.1`).required = true;
+                            this.handlePrintFormButton(this.leaders);
+                            document.getElementById(`radioNum.6.6`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.6`).value, `radio`);
+                            });
+                            document.getElementById(`guest.6.6`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.6`).value, `guest`);
+                            });
+                            break;
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < this.patrollers.length; i++) {
+                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.6`).value)) {
+                        this.populateDiv(6, 6, i);
+                        document.getElementById("formSubmit").disabled = false;
+                        document.getElementById("formSubmit").classList.remove('disabled');
+                        document.getElementById(`radioNum.6.1`).required = true;
+                        this.handlePrintFormButton(this.leaders);
+                        document.getElementById(`radioNum.6.6`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.6`).value, `radio`);
+                        });
+                        document.getElementById(`guest.6.6`).addEventListener('change', () => {
+                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.6`).value, `guest`);
+                        });
+                        break;
+                    }
+                }
+            }
+        } else {
+            this.clearDiv(6, 6);
+        }
+    });
+}*/

@@ -8,7 +8,7 @@ class Main {
         this.date = new Date();
         this.isWeekend = this.determineWeekend();
         this.eventHandler = new EventHandler(people, this.getDayNight(), this.isWeekend);
-        document.getElementById("date").innerText = this.getWeekDay(people);
+        document.getElementById("date").innerText = this.getWeekDay();
         document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
         document.getElementById("dayNight").innerText = this.getDayNight();
         this.prepUX();
@@ -22,8 +22,7 @@ class Main {
         // return true;
     }
 
-    getWeekDay(patrollers) {
-        console.log(patrollers[6][7]);
+    getWeekDay() {
         let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         return days[this.date.getDay()];
     }
@@ -68,9 +67,6 @@ class Main {
             }
         }
         this.eventHandler.handleSignOnButtons();
-        /*if (this.getDayNight() === "Day" && this.isWeekend) {
-            this.eventHandler.handleSignOnButtons();
-        }*/
     }
 
     static async populatePatrollers() {
