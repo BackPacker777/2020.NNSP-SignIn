@@ -14,7 +14,6 @@ class DataHandler {
 
     static setBaseData(callback) {
         let filePath = `data/patrollers.csv`, columns = 8;
-
         FS.readFile(filePath, `utf8`, (err, file) => {
             let tempArray, finalData = [];
             tempArray = file.split(/\r?\n/); //remove newlines
@@ -22,7 +21,6 @@ class DataHandler {
             for (let i = 0; i < tempArray.length; i++) {
                 finalData[i] = tempArray[i].split(/,/).slice(0, columns);
             }
-
             finalData = JSON.stringify(finalData);
             callback(finalData);
             return finalData;
@@ -30,6 +28,37 @@ class DataHandler {
     }
 
     static updatePatrollerDays(patrollerData, callback) {
+        const results = patrollerData;
+        patrollerData = JSON.parse(patrollerData);
+        const tempFilePath = `data/temp.csv`;
+        const COLUMNS = 8;
+        const finalFilePath = `data/patrollers.csv`;
+        let changed = false;
+        FS.readFile(finalFilePath, `utf8`, (err, file) => {
+            let tempArray, finalData = [];
+            tempArray = file.split(/\r?\n/); //remove newlines
+            for (let i = 0; i < tempArray.length; i++) {
+                finalData[i] = tempArray[i].split(/,/).slice(0, COLUMNS);
+            }
+            for (let i = 0; i < finalData.length; i++) {
+                for (let j = 0; j < patrollerData.length; j++) {
+                    if (Number(finalData[i][0]) === Number(patrollerData[j].ID)) {
+                        finalData[i][4] = patrollerData[j].DAYS;
+                        patrollerData.splice(j, 1);
+                        changed = true;
+                    }
+                }
+            }
+            let cells = [];
+            finalData.forEach((writeData) => {
+                let row = writeData.join(`,`);
+                cells += `${row}\n`;
+            });
+            cells = cells.replace(/\n*$/, ``);
+        });
+    }
+
+    static updatePatrollerDays2(patrollerData, callback) {
         const results = patrollerData;
         patrollerData = JSON.parse(patrollerData);
         const tempFilePath = `data/temp.csv`;

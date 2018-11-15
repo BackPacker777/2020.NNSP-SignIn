@@ -32,12 +32,11 @@ export default class EventHandler {
             this.buttons[i].addEventListener('click', () => {
                 this.buttons[i].disabled = true;
                 let teamNum = this.buttons[i].id.substr(9,1);
-                if (teamNum === 0 || teamNum === 5 || teamNum === 6) {
-                    document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter));
-                } else {
-                    document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter));
-                    this.changePatrollerDiv(teamNum, counter);
-                }
+                document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter));
+                this.changePatrollerDiv(teamNum, counter);
+                // if (teamNum !== 0 && teamNum !== 5 && teamNum !== 6) {
+                //     this.changePatrollerDiv(teamNum, counter);
+                // }
                 if (this.dayNight === 'Day') {
                     this.handleHalfDay(teamNum, counter);
                 }
@@ -237,7 +236,7 @@ export default class EventHandler {
         document.getElementById(`guest.${teamNum}.${counter}`).value = ``;
     }
 
-    changeLeaderDiv() {
+    /*changeLeaderDiv() {
         this.handleHalfDay(6, 1, 'regular');
         document.getElementById(`patrollerID.6.1`).addEventListener('change', () => {
             if (document.getElementById(`patrollerID.6.1`).value !== '') {
@@ -521,7 +520,7 @@ export default class EventHandler {
                 this.clearDiv(6, 6);
             }
         });
-    }
+    }*/
 
     handleHalfDay(teamNum, counter) {
         let time = new Date();
@@ -546,9 +545,9 @@ export default class EventHandler {
     }
 
     handlePrintFormButton() {
-        if (this.signedIn.length > 0) {
-            let submit;
-            document.getElementById('formSubmit').addEventListener('click', submit = () => {
+        document.getElementById('formSubmit').addEventListener('click', () => {
+            console.log(`Print Roster Clicked!`);
+            if (this.dayNight === "Day" && this.isWeekend) {
                 let correct = false;
                 let answer = Number(prompt(`Password?`));
                 for (let key in this.leaders) {
@@ -581,10 +580,15 @@ export default class EventHandler {
                 if (!correct) {
                     alert(`Incorrect password. Please try again.`);
                 }/* else {
-                    document.getElementById('formSubmit').removeEventListener('click', submit);
-                }*/
-            });
-        }
+                document.getElementById('formSubmit').removeEventListener('click', submit);
+            }*/
+            } else {
+                // EventHandler.disableExisting();
+                this.updateDaysCount().then(() => { });
+                window.open('/public/views/day_results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
+            }
+
+        });
     }
 
     static disableExisting() {
@@ -610,7 +614,25 @@ export default class EventHandler {
             }
             if (valid) {
                 document.getElementById('formSubmit').disabled = false;
+                this.handlePrintFormButton();
             }
+        });
+    }
+
+    performFetch(fetchNum, folks, callback) {
+        fetch(document.url, {
+            method: 'POST',
+            body: JSON.stringify(folks),
+            headers: {
+                'x-requested-with': `fetch.${fetchNum}`,
+                'mode': 'no-cors'
+            }
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            callback(data);
+        }).catch((error) => {
+            console.log(error);
         });
     }
 

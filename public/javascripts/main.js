@@ -42,7 +42,7 @@ class Main {
     }
 
     prepUX() {
-        const OVERRIDE = 777777;
+        // const OVERRIDE = 777777;
         document.getElementById('formSubmit').disabled = true;
         if (this.getDayNight() === 'Night') {
             // DivContents.getDivs(0, counter, null, 'Night');
