@@ -131,10 +131,12 @@ export default class EventHandler {
                     patroller.GUEST = radioGuestDays;
                 } else if (whichListener === `halfDaysDown`) {
                     patroller.TOTAL_DAYS = radioGuestDays;
+                    patroller.DAYS++;
                     if (patroller.HALF_DAYS > 0) {
                         patroller.HALF_DAYS--;
                     }
                 } else if (whichListener === 'halfDaysUp'){
+                    console.log(`half days up!`);
                     patroller.TOTAL_DAYS = radioGuestDays;
                     patroller.HALF_DAYS++;
                     if (patroller.DAYS > 0) {
