@@ -10,29 +10,57 @@ export default class EventHandler {
         this.halfDay = false;
         this.teamCounts = [0,0,0,0,0];
         this.isWeekend = isWeekend;
-        // this.validate();
+        this.buttons = document.querySelectorAll("input[type=button]");
+        this.handleSignOnButtons();
+        this.validate();
     }
 
-    set Leaders(leader) {
+    /*set Leaders(leader) {
         Object.assign(this.leaders, (leader)); // https://stackoverflow.com/a/47116829
-    }
+    }*/
 
     handleSignOnButtons() {
-        let counter = 1;
-        this.buttons = document.querySelectorAll("input[type=button]");
+        let counter0 = 1, counter1 = 1, counter2 = 1, counter3 = 1, counter4 = 1, counter5 = 1, counter6 = 1;
+
+        // this.buttons = document.querySelectorAll("input[type=button]");
         for (let i = 0; i < this.buttons.length; i++) {
             this.buttons[i].addEventListener('click', () => {
-                this.buttons[i].disabled = true;
-                let teamNum = this.buttons[i].id.substr(9,1);
-                document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter));
-                this.changePatrollerDiv(teamNum, counter);
-                // if (teamNum !== 0 && teamNum !== 5 && teamNum !== 6) {
-                //     this.changePatrollerDiv(teamNum, counter);
-                // }
-                if (this.dayNight === 'Day') {
-                    this.handleHalfDay(teamNum, counter);
+                let teamNum = Number(this.buttons[i].id.substr(9, 1));
+                if (teamNum > 0) {
+                    for (let button of this.buttons) {
+                        document.getElementById(button.id).disabled = true;
+                    }
                 }
-                counter++;
+                if (teamNum === 6) {
+                    let isLeader = false;
+                    let password = prompt(`What is your Patroller ID?`);
+                    for (let person of this.patrollers) {
+                        if (person.ID === password && person.LEADER) {
+                            isLeader = true;
+                            this.buttons[i].disabled = true;
+                            this.validate();
+                            document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter6, person.LEADER));
+                            document.getElementById(`patrollerID.6.${counter6}`).value = person.ID;
+                            this.changePatrollerDiv(teamNum, counter6);
+                            if (this.dayNight === 'Day') {
+                                this.handleHalfDay(teamNum, 6);
+                            }
+                            counter6++;
+                        }
+                    }
+                    if (!isLeader) {
+                        alert(`Incorrect ID for this team. Please try again!`);
+                    }
+                } else {
+                    this.buttons[i].disabled = true;
+                    this.validate(`joinTeam.${teamNum}`);
+                    document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter1));
+                    this.changePatrollerDiv(teamNum, counter1);
+                    if (this.dayNight === 'Day') {
+                        this.handleHalfDay(teamNum, counter1);
+                    }
+                    counter1++;
+                }
             });
         }
     }
@@ -60,13 +88,7 @@ export default class EventHandler {
                             if (this.isWeekend) {
                                 this.teamCounts[teamNum]++;
                                 this.enforceTeamBalance(teamNum);
-                            } else {
-                                document.getElementById(`joinTeam.${teamNum}`).disabled = false;
                             }
-                            // if (! this.isWeekend) {
-                            //     this.handlePrintFormButton(this.leaders);
-                            // }
-                            this.validate();
                             break;
                         }
                     }
@@ -86,14 +108,9 @@ export default class EventHandler {
                             document.getElementById(`guest.${teamNum}.${counter}`).addEventListener('change', () => {
                                 this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.${teamNum}.${counter}`).value, `guest`);
                             });
-                            document.getElementById(`joinTeam.${teamNum}`).disabled = false;
                             if (this.isWeekend) {
                                 this.teamCounts[teamNum]++;
                             }
-                            /*if (! this.isWeekend) {
-                                this.handlePrintFormButton(this.leaders);
-                            }*/
-                            this.validate();
                             break;
                         }
                     }
@@ -106,16 +123,26 @@ export default class EventHandler {
                 this.clearDiv(teamNum, counter);
             }
         });
+        let element = document.getElementById(`patrollerID.${teamNum}.${counter}`);
+        let event = new Event('change');
+        if (Number(teamNum) === 6) {
+            element.dispatchEvent(event);
+            //http://2ality.com/2013/06/triggering-events.html
+        }
     }
 
     enforceTeamBalance(teamNum) {
         const MAX_TEAM_COUNT = 4;
         if (this.teamCounts[teamNum] < MAX_TEAM_COUNT) {
-            document.getElementById(`joinTeam.${teamNum}`).disabled = false;
+            this.validate();
+            // this.validate(`joinTeam.${teamNum}`);
+            // document.getElementById(`joinTeam.${teamNum}`).disabled = false;
         } else if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
             const NUM_TEAMS = 4;
             for (let i = 1; i <= NUM_TEAMS; i++) {
-                document.getElementById(`joinTeam.${i}`).disabled = false;
+                this.validate();
+                // this.validate(`joinTeam.${teamNum}`);
+                // document.getElementById(`joinTeam.${i}`).disabled = false;
             }
         } else {
             document.getElementById(`joinTeam.${teamNum}`).disabled = true;
@@ -178,11 +205,12 @@ export default class EventHandler {
             RACE: race,
             NIGHTS: Number(this.patrollers[i].NIGHTS) + nightsCount,
             HALF_DAYS: Number(this.patrollers[i].HALF_DAYS) + halfDayCount,
-            TOTAL_DAYS: (Number(this.patrollers[i].DAYS) + dayCount) + (Number(this.patrollers[i].NIGHTS) + nightsCount) + (Number(this.patrollers[i].HALF_DAYS) / 2)
+            TOTAL_DAYS: (Number(this.patrollers[i].DAYS) + dayCount) + (Number(this.patrollers[i].NIGHTS) + nightsCount) + (Number(this.patrollers[i].HALF_DAYS + halfDayCount / 2))
         };
         this.signedIn.push(patroller);
         document.getElementById(`name.${teamNum}.${counter}`).value = `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`;
         document.getElementById(`rating.${teamNum}.${counter}`).value = this.patrollers[i].RATING;
+        console.log(this.signedIn);
         document.getElementById(`days.${teamNum}.${counter}`).value = this.signedIn[this.signedIn.length - 1].TOTAL_DAYS;
     }
 
@@ -210,10 +238,12 @@ export default class EventHandler {
     handleHalfDay(teamNum, counter) {
         let time = new Date();
         const DAY_CUTOFF = 9;
-        // if (time.getHours() > DAY_CUTOFF) {
-        if (time.getHours() < DAY_CUTOFF) {
+        if (time.getHours() > DAY_CUTOFF) {
+        // if (time.getHours() < DAY_CUTOFF) {
             document.getElementById(`halfDay.${teamNum}.${counter}`).setAttribute('disabled', 'disabled');
             document.getElementById(`halfDay.${teamNum}.${counter}`).setAttribute('checked', 'checked');
+            document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) - .5;
+            this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${counter}`).value, document.getElementById(`days.${teamNum}.${counter}`).value, `halfDaysUp`);
             this.halfDay = true;
         } else {
             document.getElementById(`halfDay.${teamNum}.${counter}`).addEventListener('click', () => {
@@ -275,30 +305,34 @@ export default class EventHandler {
         });
     }
 
-    static disableExisting() {
-        let form = document.getElementById(`rosterForm`);
-        let elements = form.getElementsByClassName(`submitInclude`); // To exclude the submit button
-        for (let i = 0; i < elements.length; i++) {
-            if (/^((?!\.6\.).)*$/g.test(elements[i].id) && /^((?!team).)*$/g.test(elements[i].id)) {
-                if (elements[i] !== `<input type='submit' id='formSubmit' value='PRINT ROSTER' class="button large expanded border">`) {
-                    elements[i].disabled = true;
-                }
-            }
-        }
-    }
-
     validate() {
         document.addEventListener('change', () => {
             let form = document.getElementById('rosterForm');
             let valid = true;
-            for (let i = 0; i < form.elements.length; i++) {
-                if (form.elements[i].hasAttribute("required") && !form.elements[i].value) {
-                    valid = false;
+            if (this.isWeekend && this.dayNight === 'Day') {
+                for (let i = 0; i < form.elements.length; i++) {
+                    if (form.elements[i].hasAttribute("required") && !form.elements[i].value) {
+                        valid = false;
+                    }
+                }
+            } else {
+                for (let i = 0; i < form.elements.length; i++) {
+                    if (form.elements[i].hasAttribute("required") && !form.elements[i].value) {
+                        valid = false;
+                    }
                 }
             }
             if (valid) {
-                document.getElementById('formSubmit').disabled = false;
-                this.handlePrintFormButton();
+                for (let button of this.buttons) {
+                    document.getElementById(button.id).disabled = false;
+                }
+                let validLeader = document.getElementById('radioNum.6.1');
+                if (validLeader) {
+                    if (validLeader.value) {
+                        document.getElementById('formSubmit').disabled = false;
+                        this.handlePrintFormButton();
+                    }
+                }
             }
         });
     }
@@ -356,6 +390,18 @@ export default class EventHandler {
         });
     }
 }
+
+/*static disableExisting() {
+        let form = document.getElementById(`rosterForm`);
+        let elements = form.getElementsByClassName(`submitInclude`); // To exclude the submit button
+        for (let i = 0; i < elements.length; i++) {
+            if (/^((?!\.6\.).)*$/g.test(elements[i].id) && /^((?!team).)*$/g.test(elements[i].id)) {
+                if (elements[i] !== `<input type='submit' id='formSubmit' value='PRINT ROSTER' class="button large expanded border">`) {
+                    elements[i].disabled = true;
+                }
+            }
+        }
+    }*/
 
 /*handleTeamButtons(teamNum) {
         let counter = 1;

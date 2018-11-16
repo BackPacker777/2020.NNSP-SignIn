@@ -91,9 +91,21 @@ export default class DivContents2 {
                     </div>`;
             } else {
                 let leaders = `<div class="small-1 cell">
-                        <label>Position:
+                        <label>Leadership:
                             <input type="text" class="submitInclude" readonly id="position.6.${counter}" value="${leaderNum}">
                         </label>
+                    </div>`;
+                return `<div class="grid-x">
+                        ${patrollerID}
+                        ${leaders}
+                        ${name}
+                        ${radio}
+                        ${rating}
+                        ${time}
+                        ${halfDay}
+                        ${days}
+                        ${guest}
+                        ${blank}
                     </div>`;
             }
         } else {

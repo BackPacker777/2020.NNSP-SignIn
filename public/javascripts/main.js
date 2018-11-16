@@ -7,11 +7,11 @@ class Main {
     constructor(people) {
         this.date = new Date();
         this.isWeekend = this.determineWeekend();
-        this.eventHandler = new EventHandler(people, this.getDayNight(), this.isWeekend);
         document.getElementById("date").innerText = this.getWeekDay();
         document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
-        document.getElementById("dayNight").innerText = this.getDayNight();
+        document.getElementById("dayNight").innerText = `${this.getDayNight()} Shift`;
         this.prepUX();
+        this.eventHandler = new EventHandler(people, this.getDayNight(), this.isWeekend);
     }
 
     determineWeekend() {
@@ -19,7 +19,7 @@ class Main {
         if (this.date.getDay() === SAT || this.date.getDay() === SUN) {
             return true;
         }
-        // return true;
+        return true;
     }
 
     getWeekDay() {
@@ -36,7 +36,7 @@ class Main {
         } else {
             dayNight = "Day";
         }
-        dayNight = "Day";
+        // dayNight = "Night";
         return dayNight;
     }
 
@@ -44,7 +44,6 @@ class Main {
         // const OVERRIDE = 777777;
         document.getElementById('formSubmit').disabled = true;
         if (this.getDayNight() === 'Night') {
-            // DivContents.getDivs(0, counter, null, 'Night');
             let counter = 1;
             const RACE_TIMES = ['', '7:00', '7:15', '7:30', '7:45', '8:00', '8:15', '8:30', '8:45'];
             let teams = document.querySelectorAll("fieldset");
@@ -52,7 +51,7 @@ class Main {
                 document.getElementById(`team.${i}`).style.display = 'none';
             }
             while (counter < RACE_TIMES.length) {
-                // document.getElementById(`team.0`).insertAdjacentHTML('beforeend', DivContents.getNightRaceDivs(0, counter, RACE_TIMES));
+                document.getElementById(`team.0`).insertAdjacentHTML('beforeend', DivContents.getNightRaceDivs(0, counter, RACE_TIMES));
                 DivContents.getDivs(0, counter, null, RACE_TIMES);
                 this.eventHandler.changePatrollerDiv(0, counter);
                 counter++;
@@ -66,7 +65,6 @@ class Main {
                 document.getElementById(`team.${i}`).style.display = 'none';
             }
         }
-        this.eventHandler.handleSignOnButtons();
     }
 
     static async populatePatrollers() {
