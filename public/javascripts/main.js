@@ -10,8 +10,8 @@ class Main {
         document.getElementById("date").innerText = this.getWeekDay();
         document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
         document.getElementById("dayNight").innerText = `${this.getDayNight()} Shift`;
-        this.prepUX();
         this.eventHandler = new EventHandler(people, this.getDayNight(), this.isWeekend);
+        this.prepUX();
     }
 
     determineWeekend() {
@@ -36,12 +36,11 @@ class Main {
         } else {
             dayNight = "Day";
         }
-        // dayNight = "Night";
+        // dayNight = "Day";
         return dayNight;
     }
 
     prepUX() {
-        // const OVERRIDE = 777777;
         document.getElementById('formSubmit').disabled = true;
         if (this.getDayNight() === 'Night') {
             let counter = 1;

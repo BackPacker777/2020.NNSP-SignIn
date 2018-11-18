@@ -63,7 +63,7 @@ export default class DivContents2 {
 
         if (!RACE_TIMES) {
             if (teamNum < TEAMS.CANDIDATES) {
-                return `<div class="grid-x">
+                return `<div class="grid-x" id="person.${teamNum}.${counter}">
                         ${patrollerID}
                         ${blank}
                         ${name}
@@ -76,7 +76,7 @@ export default class DivContents2 {
                         ${blank}
                     </div>`;
             } else if (teamNum === TEAMS.CANDIDATES) {
-                return `<div class="grid-x">
+                return `<div class="grid-x" id="person.${teamNum}.${counter}">
                         ${patrollerID}
                         ${blank}
                         ${name}
@@ -95,7 +95,7 @@ export default class DivContents2 {
                             <input type="text" class="submitInclude" readonly id="position.6.${counter}" value="${leaderNum}">
                         </label>
                     </div>`;
-                return `<div class="grid-x">
+                return `<div class="grid-x" id="person.${teamNum}.${counter}">
                         ${patrollerID}
                         ${leaders}
                         ${name}
@@ -108,13 +108,13 @@ export default class DivContents2 {
                         ${blank}
                     </div>`;
             }
-        } else {
+        }/* else {
             let racetimes = `<div class="small-1 cell">
                             <label>Race Course:
                                 <input type="text" class="submitInclude" id="race.${teamNum}.${counter}" readonly value="${RACE_TIMES[counter]}">
                             </label>
                         </div>`;
-        }
+        }*/
     }
 
     static getNightRaceDivs(teamNum, counter, RACE_TIMES) {
