@@ -37,37 +37,24 @@ class DataHandler {
     }
 
     static updatePatrollerDays(patrollerData, callback) {
-        console.log(`-=CALLING updataData=-`);
         patrollerData = JSON.parse(patrollerData);
         const tempFilePath = `data/temp.csv`;
         const finalFilePath = `data/patrollers.csv`;
         let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays\n`;
+        FS.writeFile(tempFilePath, stuff, `utf8`, (err) => {
+            if (err) throw err;
+        });
         setTimeout(() => {
-            FS.writeFile(tempFilePath, stuff, `utf8`, (err) => {
-                if (err) throw err;
-            });
             for (let i = 1; i < patrollerData.length; i++) {
                 stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS}\n`;
+                if (i === patrollerData.length) {
+                    stuff = stuff.replace(/(\r\n|\n|\r)/gm, " ");
+                }
                 FS.appendFile(tempFilePath, stuff, `utf8`, (err) => {
-                    if (err) throw err;
+                    if (err) console.log(err);
                 });
             }
         },500);
-        console.log(`-=CALLING DELETE FILE=-`);
-        /*setTimeout(() => {
-            FS.unlink(finalFilePath, (err) => {
-                if (err) {
-                    console.log(err);
-                }
-            })
-        }, 200);*/
-        /*setTimeout(() => {
-            FS.rename(tempFilePath, finalFilePath, (err) => {
-                if (err) {
-                    console.log(err);
-                }
-            })
-        }, 200);*/
         callback(JSON.stringify(patrollerData));
     }
 }

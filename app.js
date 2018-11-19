@@ -42,7 +42,6 @@ class app {
                         response.end(patrollerData);
                     });
                 } else if(request.headers['x-requested-with'] === 'fetch.1') {
-                    console.log(`fetch.1 called!`);
                     let body = [];
                     request.on('data', (chunk) => {
                         body.push(chunk);
