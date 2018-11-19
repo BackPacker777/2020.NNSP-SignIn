@@ -32,6 +32,7 @@ class DataHandler {
                 }
             }
             finalData = JSON.stringify(finalData);
+            finalData = finalData.trim();
             callback(finalData);
         });
     }
@@ -43,18 +44,15 @@ class DataHandler {
         let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays\n`;
         FS.writeFile(tempFilePath, stuff, `utf8`, (err) => {
             if (err) throw err;
-        });
-        setTimeout(() => {
-            for (let i = 1; i < patrollerData.length; i++) {
-                stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS}\n`;
-                if (i === patrollerData.length) {
-                    stuff = stuff.replace(/(\r\n|\n|\r)/gm, " ");
+            // setTimeout(() => {
+                for (let i = 0; i < patrollerData.length; i++) {
+                    stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS}\n`;
+                    FS.appendFile(tempFilePath, stuff, `utf8`, (err) => {
+                        if (err) console.log(err);
+                    });
                 }
-                FS.appendFile(tempFilePath, stuff, `utf8`, (err) => {
-                    if (err) console.log(err);
-                });
-            }
-        },500);
+            // },500);
+        });
         callback(JSON.stringify(patrollerData));
     }
 }
