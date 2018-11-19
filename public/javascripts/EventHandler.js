@@ -341,7 +341,6 @@ export default class EventHandler {
             for (let j = 0; j < this.signedIn.length; j++) {
                 if (Number(this.patrollers[i].ID) === Number(this.signedIn[j].ID)) {
                     console.log(this.patrollers[i].LAST_NAME);console.log(this.signedIn[j].LAST_NAME);
-                    console.log(this.patrollers[i].HALF_DAYS);console.log(this.signedIn[j].HALF_DAYS);
                     this.patrollers[i].DAYS = this.signedIn[j].DAYS;
                     this.patrollers[i].NIGHTS = this.signedIn[j].NIGHTS;
                     this.patrollers[i].HALF_DAYS = this.signedIn[j].HALF_DAYS;
