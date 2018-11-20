@@ -8,11 +8,13 @@ export default class EventHandler {
         this.patrollers = patrollers;
         this.dayNight = dayNight;
         this.halfDay = false;
+        this.balanced = false;
         this.teamCounts = [0,0,0,0,0];
         this.isWeekend = isWeekend;
         this.buttons = document.querySelectorAll("input[type=button]");
         this.handleSignOnButtons();
         this.validate();
+        this.handlePrintFormButton();
     }
 
     handleSignOnButtons() {
@@ -32,7 +34,9 @@ export default class EventHandler {
                     for (let person of this.patrollers) {
                         if (person.ID === password && person.LEADER) {
                             isLeader = true;
-                            this.buttons[i].disabled = true;
+                            for (let button of this.buttons) {
+                                document.getElementById(button.id).disabled = true;
+                            }
                             document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum], person.LEADER));
                             document.getElementById(`patrollerID.${LEADERS}.${counter[teamNum]}`).value = person.ID;
                             this.changePatrollerDiv(LEADERS, counter[LEADERS]);
@@ -45,6 +49,10 @@ export default class EventHandler {
                             //http://2ality.com/2013/06/triggering-events.html
                             counter[teamNum]++;
                             break;
+                        } else {
+                            for (let button of this.buttons) {
+                                document.getElementById(button.id).disabled = false;
+                            }
                         }
                     }
                     if (!isLeader) {
@@ -64,7 +72,6 @@ export default class EventHandler {
     }
 
     changePatrollerDiv(teamNum, counter) {
-        // console.log(teamNum);console.log(counter);
         document.getElementById(`patrollerID.${teamNum}.${counter}`).addEventListener('change', () => {
             let correctID = false;
             if (document.getElementById(`patrollerID.${teamNum}.${counter}`).value !== '') {
@@ -133,12 +140,6 @@ export default class EventHandler {
                 this.clearDiv(teamNum, counter);
             }
         });
-        /*let element = document.getElementById(`patrollerID.${teamNum}.${counter}`);
-        let event = new Event('change');
-        if (Number(teamNum) === 6) {
-            element.dispatchEvent(event);
-            //http://2ality.com/2013/06/triggering-events.html
-        }*/
     }
 
     updatePatrollerInfo(patrollerID, radioGuestDays, whichListener) {
@@ -153,13 +154,10 @@ export default class EventHandler {
                     patroller.DAYS++;
                     if (patroller.HALF_DAYS > 0) {
                         patroller.HALF_DAYS--;
-                        console.log(patroller.HALF_DAYS);
                     }
                 } else if (whichListener === 'halfDaysUp') {
-                    console.log(radioGuestDays);
                     patroller.TOTAL_DAYS = radioGuestDays;
                     patroller.HALF_DAYS++;
-                    console.log(patroller.HALF_DAYS);
                     if (patroller.DAYS > 0) {
                         patroller.DAYS--;
                     }
@@ -189,24 +187,31 @@ export default class EventHandler {
         if (document.getElementById(`race.${teamNum}.${counter}`)) {
             race = document.getElementById(`race.${teamNum}.${counter}`).value;
         }
+        this.patrollers[i].DAYS = Number(this.patrollers[i].DAYS);
+        this.patrollers[i].NIGHTS = Number(this.patrollers[i].NIGHTS);
+        this.patrollers[i].HALF_DAYS = Number(this.patrollers[i].HALF_DAYS);
+        let days = this.patrollers[i].DAYS + dayCount;
+        let nights = this.patrollers[i].NIGHTS + nightsCount;
+        let halfDays = this.patrollers[i].HALF_DAYS + halfDayCount;
+        let halfs = halfDays / 2;
+        let totalDays = days + nights + halfs;
         let patroller = {
             ID: Number(this.patrollers[i].ID),
             RADIO: document.getElementById(`radioNum.${teamNum}.${counter}`).value,
             NAME: `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`,
             RATING: this.patrollers[i].RATING,
             TIME: document.getElementById(`time.${teamNum}.${counter}`).value,
-            DAYS: Number(this.patrollers[i].DAYS) + dayCount,
+            DAYS: days,
             TEAM: teamNum,
             RACE: race,
-            NIGHTS: Number(this.patrollers[i].NIGHTS) + nightsCount,
-            HALF_DAYS: Number(this.patrollers[i].HALF_DAYS) + halfDayCount,
-            TOTAL_DAYS: (Number(this.patrollers[i].DAYS) + dayCount) + (Number(this.patrollers[i].NIGHTS) + nightsCount) + (Number(this.patrollers[i].HALF_DAYS + halfDayCount / 2))
+            NIGHTS: nights,
+            HALF_DAYS: halfDays,
+            TOTAL_DAYS: totalDays
         };
         if (teamNum !== 5) {
             patroller.GUEST = document.getElementById(`guest.${teamNum}.${counter}`).value;
         }
         this.signedIn.push(patroller);
-        console.log(this.signedIn);
         document.getElementById(`name.${teamNum}.${counter}`).value = `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`;
         document.getElementById(`rating.${teamNum}.${counter}`).value = this.patrollers[i].RATING;
         document.getElementById(`days.${teamNum}.${counter}`).value = this.signedIn[this.signedIn.length - 1].TOTAL_DAYS;
@@ -238,12 +243,10 @@ export default class EventHandler {
     }
 
     handleHalfDay(teamNum, counter) {
-        console.log(`Handling half day`);
-        // console.log(teamNum); console.log(counter);
         let time = new Date();
         const DAY_CUTOFF = 9;
-        if (time.getHours() > DAY_CUTOFF) {
-        // if (time.getHours() < DAY_CUTOFF) {
+        // if (time.getHours() > DAY_CUTOFF) {
+        if (time.getHours() < DAY_CUTOFF) {
         //     document.getElementById(`guest.${teamNum}.${counter}`).disabled = true;
             document.getElementById(`halfDay.${teamNum}.${counter}`).setAttribute('checked', 'checked');
             document.getElementById(`halfDay.${teamNum}.${counter}`).disabled = true;
@@ -283,18 +286,20 @@ export default class EventHandler {
     handlePrintFormButton() {
         document.getElementById('formSubmit').addEventListener('click', () => {
             this.pseudoUpdateDays();
-        }, { once: true });
+            document.getElementById('formSubmit').disabled = true;
+            for (let button of this.buttons) {
+                document.getElementById(button.id).disabled = true;
+            }
+        });
     }
 
     enforceTeamBalance(teamNum) {
         const MAX_TEAM_COUNT = 4;
-        if (this.teamCounts[teamNum] >= MAX_TEAM_COUNT) {
-            document.getElementById(`joinTeam.${teamNum}`).disabled = true;
+        if (this.teamCounts[teamNum] < MAX_TEAM_COUNT) {
+            this.balanced = true;
         }
         if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
-            for (let i = 0; i < this.teamCounts.length; i++) {
-                document.getElementById(`joinTeam.${this.teamCounts[i]}`).disabled = false;
-            }
+            this.balanced = true;
         }
     }
 
@@ -304,7 +309,7 @@ export default class EventHandler {
             let valid = true;
             if (this.isWeekend && this.dayNight === 'Day') {
                 for (let i = 0; i < form.elements.length; i++) {
-                    if (form.elements[i].hasAttribute("required") && !form.elements[i].value) {
+                    if (form.elements[i].hasAttribute("required") && !form.elements[i].value || !this.balanced) {
                         valid = false;
                     }
                 }
@@ -316,8 +321,6 @@ export default class EventHandler {
                     if (validLeader) {
                         if (validLeader.value) {
                             document.getElementById('formSubmit').disabled = false;
-                            console.log(`Calling print button....`);
-                            this.handlePrintFormButton();
                         }
                     }
                 }
@@ -340,17 +343,13 @@ export default class EventHandler {
         for (let i = 0; i < this.patrollers.length; i++) {
             for (let j = 0; j < this.signedIn.length; j++) {
                 if (Number(this.patrollers[i].ID) === Number(this.signedIn[j].ID)) {
-                    console.log(this.patrollers[i].LAST_NAME);console.log(this.signedIn[j].LAST_NAME);
                     this.patrollers[i].DAYS = this.signedIn[j].DAYS;
                     this.patrollers[i].NIGHTS = this.signedIn[j].NIGHTS;
                     this.patrollers[i].HALF_DAYS = this.signedIn[j].HALF_DAYS;
-                    console.log(this.patrollers[i].HALF_DAYS);console.log(this.signedIn[j].HALF_DAYS);
-                    this.signedIn.splice(this.signedIn[j], 1);
                     break;
                 }
             }
         }
-        console.log(this.patrollers);
         fetch(document.url, {
             method: 'POST',
             body: JSON.stringify(this.patrollers),
@@ -363,6 +362,21 @@ export default class EventHandler {
         });
     }
 }
+
+/*enforceTeamBalance(teamNum) {
+    console.log(teamNum);
+    console.log(this.teamCounts[teamNum]);
+    const MAX_TEAM_COUNT = 4;
+    if (this.teamCounts[teamNum] >= MAX_TEAM_COUNT) {
+        console.log(`Disabling....`);
+        document.getElementById(`joinTeam.${teamNum}`).disabled = true;
+    }
+    if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
+        for (let i = 0; i < this.teamCounts.length; i++) {
+            document.getElementById(`joinTeam.${this.teamCounts[i]}`).disabled = false;
+        }
+    }
+}*/
 
 /* enforceTeamBalance2(teamNum) {
         const MAX_TEAM_COUNT = 4;

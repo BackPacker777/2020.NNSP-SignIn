@@ -39,15 +39,15 @@ class DataHandler {
 
     static updatePatrollerDays(patrollerData, callback) {
         patrollerData = JSON.parse(patrollerData);
-        const tempFilePath = `data/temp.csv`;
+        // const tempFilePath = `data/temp.csv`;
         const finalFilePath = `data/patrollers.csv`;
         let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays\n`;
-        FS.writeFile(tempFilePath, stuff, `utf8`, (err) => {
+        FS.writeFile(finalFilePath, stuff, `utf8`, (err) => {
             if (err) throw err;
             // setTimeout(() => {
                 for (let i = 0; i < patrollerData.length; i++) {
                     stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS}\n`;
-                    FS.appendFile(tempFilePath, stuff, `utf8`, (err) => {
+                    FS.appendFile(finalFilePath, stuff, `utf8`, (err) => {
                         if (err) console.log(err);
                     });
                 }
