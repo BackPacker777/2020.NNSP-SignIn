@@ -8,7 +8,7 @@ export default class EventHandler {
         this.patrollers = patrollers;
         this.dayNight = dayNight;
         this.halfDay = false;
-        this.balanced = false;
+        this.overMax = [false, false, false, false, false];
         this.teamCounts = [0,0,0,0,0];
         this.isWeekend = isWeekend;
         this.buttons = document.querySelectorAll("input[type=button]");
@@ -86,7 +86,18 @@ export default class EventHandler {
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${counter}`).value, `radio`);
+                                let usedRadio = false;
+                                for (let peeps of this.signedIn) {
+                                    if (document.getElementById(`radioNum.${teamNum}.${counter}`).value === peeps.RADIO && peeps.RADIO !== '0') {
+                                        usedRadio = true;
+                                    }
+                                }
+                                if (usedRadio) {
+                                    alert(`Radio already in use....`);
+                                    document.getElementById(`radioNum.${teamNum}.${counter}`).value = '';
+                                } else {
+                                    this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${counter}`).value, `radio`);
+                                }
                             });
                             if (teamNum !== 5) {
                                 document.getElementById(`guest.${teamNum}.${counter}`).addEventListener('change', () => {
@@ -96,6 +107,9 @@ export default class EventHandler {
                             if (this.isWeekend) {
                                 this.teamCounts[teamNum]++;
                                 this.enforceTeamBalance(teamNum);
+                                if (teamNum > 0 && teamNum < 5) {
+                                    this.handleAdmin(teamNum, counter);
+                                }
                             }
                             break;
                         }
@@ -121,11 +135,14 @@ export default class EventHandler {
                             if (this.isWeekend) {
                                 this.teamCounts[teamNum]++;
                                 this.enforceTeamBalance(teamNum);
+                                if (teamNum > 0 && teamNum < 5) {
+                                    this.handleAdmin(teamNum, counter);
+                                }
                             }
                             break;
                         }
                     }
-                    if (correctID !== true) {
+                    if (!correctID) {
                         alert(`Invalid ID number. Please try again... Or don't...`);
                         document.getElementById(`patrollerID.${teamNum}.${counter}`).value = '';
                     }
@@ -233,19 +250,18 @@ export default class EventHandler {
         if (teamNum !== 5) {
             document.getElementById(`guest.${teamNum}.${counter}`).value = ``;
         }
-        document.getElementById(`person.${teamNum}.${counter}`).style.backgroundColor = 'yellow';
+        document.getElementById(`person.${teamNum}.${counter}`).outerHTML = ''; //https://stackoverflow.com/a/19298575/466246
+        this.teamCounts[teamNum]--;
     }
 
     handleHalfDay(teamNum, counter) {
         let time = new Date();
         const DAY_CUTOFF = 9;
-        // if (time.getHours() > DAY_CUTOFF) {
-        if (time.getHours() < DAY_CUTOFF) {
-        //     document.getElementById(`guest.${teamNum}.${counter}`).disabled = true;
+        if (time.getHours() > DAY_CUTOFF) {
             document.getElementById(`halfDay.${teamNum}.${counter}`).setAttribute('checked', 'checked');
             document.getElementById(`halfDay.${teamNum}.${counter}`).disabled = true;
             if (teamNum !== 5) {
-                document.getElementById(`guest.${teamNum}.${counter}`).disabled = true;
+                document.getElementById(`guestDiv.${teamNum}.${counter}`).style.visibility = 'hidden';
             }
             if (document.getElementById(`days.${teamNum}.${counter}`).value > 0) {
                 document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) - .5;
@@ -268,7 +284,7 @@ export default class EventHandler {
                     this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${counter}`).value, document.getElementById(`days.${teamNum}.${counter}`).value, `halfDaysUp`);
                 } else {
                     if (teamNum !== 5) {
-                        document.getElementById(`guest.${teamNum}.${counter}`).removeAttribute('readonly');
+                        document.getElementById(`guest.${teamNum}.${counter}`).disabled = false;
                     }
                     document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) + .5;
                     this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${counter}`).value, document.getElementById(`days.${teamNum}.${counter}`).value, `halfDaysDown`);
@@ -279,26 +295,24 @@ export default class EventHandler {
 
     handlePrintFormButton() {
         document.getElementById('formSubmit').addEventListener('click', () => {
-            this.pseudoUpdateDays();
+            this.updateDays();
             document.getElementById('formSubmit').disabled = true;
             for (let button of this.buttons) {
                 document.getElementById(button.id).disabled = true;
             }
+            window.open('/public/views/results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
         });
     }
 
     enforceTeamBalance(teamNum) {
-        console.log(teamNum);
-        console.log(this.teamCounts[teamNum]);
         const MAX_TEAM_COUNT = 4;
         if (this.teamCounts[teamNum] >= MAX_TEAM_COUNT) {
-            console.log(`Disabling joinTeam.${teamNum}`);
-            document.getElementById(`joinTeam.${teamNum}`).disabled = true;
-            console.log(`Disabled joinTeam.${teamNum}`);
+            this.overMax[teamNum] = true;
         }
         if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
-            for (let i = 0; i < this.teamCounts.length; i++) {
-                document.getElementById(`joinTeam.${this.teamCounts[i]}`).disabled = false;
+            for (let i = 1; i < this.overMax.length; i++) {
+                this.overMax[i] = false;
+                console.log(this.overMax[i]);
             }
         }
     }
@@ -316,6 +330,11 @@ export default class EventHandler {
                 if (valid) {
                     for (let button of this.buttons) {
                         document.getElementById(button.id).disabled = false;
+                    }
+                    for (let i = 1; i < this.overMax.length; i++) {
+                        if (this.overMax[i]) {
+                            document.getElementById(`joinTeam.${i}`).disabled = true;
+                        }
                     }
                     let validLeader = document.getElementById('radioNum.6.1');
                     if (validLeader) {
@@ -339,7 +358,36 @@ export default class EventHandler {
         });
     }
 
-    pseudoUpdateDays() {
+    handleAdmin(teamNum, counter) {
+        let correctPassword = false;
+        document.getElementById(`admin.${teamNum}.${counter}`).addEventListener('click', () => {
+            let password = prompt(`Password: `);
+            for (let person of this.patrollers) {
+                if (person.ID === password && person.LEADER) {
+                    correctPassword = true;
+                }
+            }
+            if (correctPassword) {
+                const MIN_TEAM = 1, MAX_TEAM = 4;
+                let team = prompt(`Move to which team?`);
+                if (team < MIN_TEAM || team > MAX_TEAM) {
+                    alert(`Incorrect team number.`);
+                } else if (Number(team) === Number(teamNum)) {
+                    alert(`Patroller is already in this team!`);
+                } else {
+                    let div = document.getElementById(`person.${teamNum}.${counter}`);
+                    document.getElementById(`team.${team}`).appendChild(div);
+                    this.teamCounts[team]++;
+                    this.teamCounts[teamNum]--;
+                    this.enforceTeamBalance(team);
+                }
+            } else {
+                alert(`Incorrect Password`);
+            }
+        });
+    }
+
+    updateDays() {
         for (let i = 0; i < this.patrollers.length; i++) {
             for (let j = 0; j < this.signedIn.length; j++) {
                 if (Number(this.patrollers[i].ID) === Number(this.signedIn[j].ID)) {
@@ -358,371 +406,18 @@ export default class EventHandler {
                 'mode': 'no-cors'
             }
         }).then((response) => {
+            console.log(response.json());
+        });
+        fetch(document.url, {
+            method: 'POST',
+            body: JSON.stringify(this.signedIn),
+            headers: {
+                'x-requested-with': `fetch.2`,
+                'mode': 'no-cors'
+            }
+        }).then((response) => {
+            console.log(response);
             return response.json();
         });
     }
 }
-
-/*enforceTeamBalance(teamNum) {
-    const MAX_TEAM_COUNT = 4;
-    if (this.teamCounts[teamNum] < MAX_TEAM_COUNT) {
-        this.balanced = true;
-    }
-    if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
-        this.balanced = true;
-    }
-}*/
-
-/* enforceTeamBalance2(teamNum) {
-        const MAX_TEAM_COUNT = 4;
-        if (this.teamCounts[teamNum] < MAX_TEAM_COUNT) {
-            this.validate();
-        } else if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
-            const NUM_TEAMS = 4;
-            for (let i = 1; i <= NUM_TEAMS; i++) {
-                this.validate();
-            }
-        } else {
-            this.validate(teamNum);
-        }
-    }*/
-
-/*set Leaders(leader) {
-    Object.assign(this.leaders, (leader)); // https://stackoverflow.com/a/47116829
-}*/
-
-/*static disableExisting() {
-        let form = document.getElementById(`rosterForm`);
-        let elements = form.getElementsByClassName(`submitInclude`); // To exclude the submit button
-        for (let i = 0; i < elements.length; i++) {
-            if (/^((?!\.6\.).)*$/g.test(elements[i].id) && /^((?!team).)*$/g.test(elements[i].id)) {
-                if (elements[i] !== `<input type='submit' id='formSubmit' value='PRINT ROSTER' class="button large expanded border">`) {
-                    elements[i].disabled = true;
-                }
-            }
-        }
-    }*/
-
-/*handleTeamButtons(teamNum) {
-        let counter = 1;
-        const TEAMS = {
-            DAY: 4,
-            CANDIDATES: 5,
-            LEADERS: 6
-        };
-        const START_CHILDREN = 5;
-        if (teamNum < TEAMS.LEADERS) {
-            document.getElementById(`joinTeam.${teamNum}`).addEventListener('click', () => {
-                if (teamNum <= TEAMS.DAY) {
-                    if (document.getElementById(`team${teamNum}`).childNodes.length === START_CHILDREN || document.getElementById(`patrollerID.${teamNum}.${counter - 1}`).value !== '') {
-                        document.getElementById(`team${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDayDivs(teamNum, counter));
-                        this.handleHalfDay(teamNum, counter, 'regular');
-                        this.changePatrollerDiv(teamNum, counter);
-                        counter++;
-                    }
-                } else if (teamNum === TEAMS.CANDIDATES) {
-                    if (document.getElementById(`team${teamNum}`).childNodes.length === START_CHILDREN || document.getElementById(`patrollerID.${teamNum}.${counter - 1}`).value !== '') {
-                        document.getElementById(`team${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDayCandidateDivs(teamNum, counter));
-                        this.handleHalfDay(teamNum, counter, 'candidate');
-                        this.changePatrollerDiv(teamNum, counter);
-                        counter++;
-                    }
-                }
-            });
-        } else {
-            let leaderNum = 0;
-            let t6counter = 1;
-            while (leaderNum < TEAMS.LEADERS) {
-                document.getElementById(`team${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDayLeaderDivs(teamNum, t6counter, leaderNum));
-                leaderNum++;
-                t6counter++;
-            }
-            this.changeLeaderDiv();
-        }
-    }*/
-
-/*changeLeaderDiv() {
-    this.handleHalfDay(6, 1, 'regular');
-    document.getElementById(`patrollerID.6.1`).addEventListener('change', () => {
-        if (document.getElementById(`patrollerID.6.1`).value !== '') {
-            if (this.signedIn.length > 0) {
-                if (Number(document.getElementById(`patrollerID.6.1`).value) !== this.leaders.PD) {
-                    alert(`Invalid ID number. Please try again... Or don't...`);
-                    document.getElementById(`patrollerID.6.1`).value = '';
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.1`).value)) {
-                            this.populateDiv(6, 1, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            document.getElementById(`radioNum.6.1`).setAttribute(`required`, `required`);
-                            document.getElementById(`radioNum.6.1`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.1`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.1`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.1`).value, `guest`);
-                            });
-                            this.handlePrintFormButton(this.leaders);
-                            break;
-                        }
-                    }
-                }
-            } else {
-                for (let i = 0; i < this.patrollers.length; i++) {
-                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.1`).value)) {
-                        this.populateDiv(6, 1, i);
-                        document.getElementById("formSubmit").disabled = false;
-                        document.getElementById("formSubmit").classList.remove('disabled');
-                        document.getElementById(`radioNum.6.1`).required = true;
-                        document.getElementById(`radioNum.6.1`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.1`).value, `radio`);
-                        });
-                        document.getElementById(`guest.6.1`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.1`).value, `guest`);
-                        });
-                        this.handlePrintFormButton(this.leaders);
-                        break;
-                    }
-                }
-            }
-        } else {
-            this.clearDiv(6, 1);
-        }
-    });
-    this.handleHalfDay(6, 2, 'regular');
-    document.getElementById(`patrollerID.6.2`).addEventListener('change', () => {
-        if (document.getElementById(`patrollerID.6.2`).value !== '') {
-            if (this.signedIn.length > 0) {
-                if (Number(document.getElementById(`patrollerID.6.2`).value) !== this.leaders.APD1 && Number(document.getElementById(`patrollerID.6.2`).value) !== this.leaders.APD2 && Number(document.getElementById(`patrollerID.6.2`).value) !== this.leaders.APD3) {
-                    alert(`Invalid ID number. Please try again... Or don't...`);
-                    document.getElementById(`patrollerID.6.2`).value = '';
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.2`).value)) {
-                            this.populateDiv(6, 2, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            document.getElementById(`radioNum.6.2`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.2`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.2`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.2`).value, `guest`);
-                            });
-                            this.handlePrintFormButton(this.leaders);
-                            break;
-                        }
-                    }
-                }
-            } else {
-                for (let i = 0; i < this.patrollers.length; i++) {
-                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.2`).value)) {
-                        this.populateDiv(6, 2, i);
-                        document.getElementById("formSubmit").disabled = false;
-                        document.getElementById("formSubmit").classList.remove('disabled');
-                        document.getElementById(`radioNum.6.1`).required = true;
-                        document.getElementById(`radioNum.6.2`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.2`).value, `radio`);
-                        });
-                        document.getElementById(`guest.6.2`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.2`).value, `guest`);
-                        });
-                        this.handlePrintFormButton(this.leaders);
-                        break;
-                    }
-                }
-            }
-        } else {
-            this.clearDiv(6, 2);
-        }
-    });
-    this.handleHalfDay(6, 3, 'regular');
-    document.getElementById(`patrollerID.6.3`).addEventListener('change', () => {
-        if (document.getElementById(`patrollerID.6.3`).value !== '') {
-            if (this.signedIn.length > 0) {
-                if (Number(document.getElementById(`patrollerID.6.3`).value) !== this.leaders.APD1 && Number(document.getElementById(`patrollerID.6.3`).value) !== this.leaders.APD2 && Number(document.getElementById(`patrollerID.6.3`).value) !== this.leaders.APD3) {
-                    alert(`Invalid ID number. Please try again... Or don't...`);
-                    document.getElementById(`patrollerID.6.3`).value = '';
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.3`).value)) {
-                            this.populateDiv(6, 3, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            this.handlePrintFormButton(this.leaders);
-                            document.getElementById(`radioNum.6.3`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.3`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.3`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.3`).value, `guest`);
-                            });
-                            break;
-                        }
-                    }
-                }
-            } else {
-                for (let i = 0; i < this.patrollers.length; i++) {
-                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.3`).value)) {
-                        this.populateDiv(6, 3, i);
-                        document.getElementById("formSubmit").disabled = false;
-                        document.getElementById("formSubmit").classList.remove('disabled');
-                        document.getElementById(`radioNum.6.1`).required = true;
-                        this.handlePrintFormButton(this.leaders);
-                        document.getElementById(`radioNum.6.3`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.3`).value, `radio`);
-                        });
-                        document.getElementById(`guest.6.3`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.3`).value, `guest`);
-                        });
-                        break;
-                    }
-                }
-            }
-        } else {
-            this.clearDiv(6, 3);
-        }
-    });
-    this.handleHalfDay(6, 4, 'regular');
-    document.getElementById(`patrollerID.6.4`).addEventListener('change', () => {
-        if (document.getElementById(`patrollerID.6.4`).value !== '') {
-            if (this.signedIn.length > 0) {
-                if (Number(document.getElementById(`patrollerID.6.4`).value) !== this.leaders.APD1 && Number(document.getElementById(`patrollerID.6.4`).value) !== this.leaders.APD2 && Number(document.getElementById(`patrollerID.6.4`).value) !== this.leaders.APD3) {
-                    alert(`Invalid ID number. Please try again... Or don't...`);
-                    document.getElementById(`patrollerID.6.4`).value = '';
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.4`).value)) {
-                            this.populateDiv(6, 4, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            this.handlePrintFormButton(this.leaders);
-                            document.getElementById(`radioNum.6.4`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.4`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.4`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.4`).value, `guest`);
-                            });
-                            break;
-                        }
-                    }
-                }
-            } else {
-                for (let i = 0; i < this.patrollers.length; i++) {
-                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.4`).value)) {
-                        this.populateDiv(6, 4, i);
-                        document.getElementById("formSubmit").disabled = false;
-                        document.getElementById("formSubmit").classList.remove('disabled');
-                        document.getElementById(`radioNum.6.1`).required = true;
-                        this.handlePrintFormButton(this.leaders);
-                        document.getElementById(`radioNum.6.4`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.4`).value, `radio`);
-                        });
-                        document.getElementById(`guest.6.4`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.4`).value, `guest`);
-                        });
-                        break;
-                    }
-                }
-            }
-        } else {
-            this.clearDiv(6, 4);
-        }
-    });
-    this.handleHalfDay(6, 5, 'regular');
-    document.getElementById(`patrollerID.6.5`).addEventListener('change', () => {
-        if (document.getElementById(`patrollerID.6.5`).value !== '') {
-            if (this.signedIn.length > 0) {
-                if (Number(document.getElementById(`patrollerID.6.5`).value) !== this.leaders.TR1 || Number(document.getElementById(`patrollerID.6.5`).value) !== this.leaders.TR2) {
-                    alert(`Invalid ID number. Please try again... Or don't...`);
-                    document.getElementById(`patrollerID.6.5`).value = '';
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.5`).value)) {
-                            this.populateDiv(6, 5, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            this.handlePrintFormButton(this.leaders);
-                            document.getElementById(`radioNum.6.5`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.5`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.5`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.5`).value, `guest`);
-                            });
-                            break;
-                        }
-                    }
-                }
-            } else {
-                for (let i = 0; i < this.patrollers.length; i++) {
-                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.5`).value)) {
-                        this.populateDiv(6, 5, i);
-                        document.getElementById("formSubmit").disabled = false;
-                        document.getElementById("formSubmit").classList.remove('disabled');
-                        document.getElementById(`radioNum.6.1`).required = true;
-                        this.handlePrintFormButton(this.leaders);
-                        document.getElementById(`radioNum.6.5`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.5`).value, `radio`);
-                        });
-                        document.getElementById(`guest.6.5`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.5`).value, `guest`);
-                        });
-                        break;
-                    }
-                }
-            }
-        } else {
-            this.clearDiv(6, 5);
-        }
-    });
-    this.handleHalfDay(6, 6, 'regular');
-    document.getElementById(`patrollerID.6.6`).addEventListener('change', () => {
-        if (document.getElementById(`patrollerID.6.6`).value !== '') {
-            if (this.signedIn.length > 0) {
-                if (Number(document.getElementById(`patrollerID.6.6`).value) !== this.leaders.TR1 || Number(document.getElementById(`patrollerID.6.6`).value) !== this.leaders.TR2) {
-                    alert(`Invalid ID number. Please try again... Or don't...`);
-                    document.getElementById(`patrollerID.6.6`).value = '';
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.6`).value)) {
-                            this.populateDiv(6, 6, i);
-                            document.getElementById("formSubmit").disabled = false;
-                            document.getElementById("formSubmit").classList.remove('disabled');
-                            document.getElementById(`radioNum.6.1`).required = true;
-                            this.handlePrintFormButton(this.leaders);
-                            document.getElementById(`radioNum.6.6`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.6`).value, `radio`);
-                            });
-                            document.getElementById(`guest.6.6`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.6`).value, `guest`);
-                            });
-                            break;
-                        }
-                    }
-                }
-            } else {
-                for (let i = 0; i < this.patrollers.length; i++) {
-                    if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.6.6`).value)) {
-                        this.populateDiv(6, 6, i);
-                        document.getElementById("formSubmit").disabled = false;
-                        document.getElementById("formSubmit").classList.remove('disabled');
-                        document.getElementById(`radioNum.6.1`).required = true;
-                        this.handlePrintFormButton(this.leaders);
-                        document.getElementById(`radioNum.6.6`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.6.6`).value, `radio`);
-                        });
-                        document.getElementById(`guest.6.6`).addEventListener('change', () => {
-                            this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.6.6`).value, `guest`);
-                        });
-                        break;
-                    }
-                }
-            }
-        } else {
-            this.clearDiv(6, 6);
-        }
-    });
-}*/

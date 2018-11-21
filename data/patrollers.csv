@@ -1,12 +1,12 @@
 ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays
-223298,Atwater,Dana,Alpine Patroller,,3,0,1
+219670,Arlen,James,Senior,TRAINER,0,0,0
+223298,Atwater,Dana,Alpine Patroller,,0,0,0
 127178,Atwater,Douglas,Senior,,0,0,0
 185509,Bahle,Richard,Senior,,0,0,0
-219670,Arlen,James,Senior,TRAINER,0,0,0
-178647,Bailey,Fred,Senior,PD,4,0,0
-226122,Bates,Howard,Senior,,2,0,2
-128091,Barber,Rick,Certified,,0,0,0
+178647,Bailey,Fred,Senior,PD,0,0,0
 185535,Ballien,Lisa,Senior,TRAINER,0,0,0
+128091,Barber,Rick,Certified,,0,0,0
+226122,Bates,Howard,Senior,,0,0,0
 239366,Blasius,Joe,Alpine Patroller,,0,0,0
 246674,Blasius,Breanna,Alpine Patroller,,0,0,0
 129057,Bodamer,Daniel,Senior,,0,0,0
@@ -90,7 +90,3 @@ ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays
 267066,Thorp,Kate,Candidate,,0,0,0
 267263,Wehner,Eric,Candidate,,0,0,0
 268356,Wobser,Gregory,Candidate,,0,0,0
-,undefined,undefined,undefined,undefined,undefined,undefined,undefined
-,undefined,undefined,undefined,undefined,undefined,undefined,undefined
-,undefined,undefined,undefined,undefined,undefined,undefined,undefined
-,undefined,undefined,undefined,undefined,undefined,undefined,undefined

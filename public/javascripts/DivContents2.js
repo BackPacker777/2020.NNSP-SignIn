@@ -59,10 +59,15 @@ export default class DivContents2 {
                         </label>
                     </div>`;
 
+        let admin = `<div class="small-1 cell text-center" id="adminDiv.${teamNum}.${counter}">
+                        <br>
+                        <i class="far fa-compass" id="admin.${teamNum}.${counter}"></i>
+                    </div>`;
+
         let blank = `<div class="small-1 cell"></div>`;
 
         if (!RACE_TIMES) {
-            if (teamNum < TEAMS.CANDIDATES) {
+            if (teamNum === 0) {
                 return `<div class="grid-x" id="person.${teamNum}.${counter}">
                         ${patrollerID}
                         ${blank}
@@ -74,6 +79,19 @@ export default class DivContents2 {
                         ${days}
                         ${guest}
                         ${blank}
+                    </div>`;
+            } else if (teamNum > 0 && teamNum < TEAMS.CANDIDATES) {
+                return `<div class="grid-x" id="person.${teamNum}.${counter}">
+                        ${patrollerID}
+                        ${blank}
+                        ${name}
+                        ${radio}
+                        ${rating}
+                        ${time}
+                        ${halfDay}
+                        ${days}
+                        ${guest}
+                        ${admin}
                     </div>`;
             } else if (teamNum === TEAMS.CANDIDATES) {
                 return `<div class="grid-x" id="person.${teamNum}.${counter}">

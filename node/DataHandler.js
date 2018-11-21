@@ -31,29 +31,27 @@ class DataHandler {
                     HALF_DAYS: protoArray[i][7],
                 }
             }
+            let len = finalData.length - 1;
+            finalData.splice(len, 1);
             finalData = JSON.stringify(finalData);
             finalData = finalData.trim();
             callback(finalData);
         });
     }
 
-    static updatePatrollerDays(patrollerData, callback) {
+    static updatePatrollerDays(patrollerData) {
         patrollerData = JSON.parse(patrollerData);
-        // const tempFilePath = `data/temp.csv`;
         const finalFilePath = `data/patrollers.csv`;
         let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays\n`;
         FS.writeFile(finalFilePath, stuff, `utf8`, (err) => {
             if (err) throw err;
-            // setTimeout(() => {
-                for (let i = 0; i < patrollerData.length; i++) {
-                    stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS}\n`;
-                    FS.appendFile(finalFilePath, stuff, `utf8`, (err) => {
-                        if (err) console.log(err);
-                    });
-                }
-            // },500);
+            for (let i = 0; i < patrollerData.length; i++) {
+                stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS}\n`;
+                FS.appendFile(finalFilePath, stuff, `utf8`, (err) => {
+                    if (err) console.log(err);
+                });
+            }
         });
-        callback(JSON.stringify(patrollerData));
     }
 }
 

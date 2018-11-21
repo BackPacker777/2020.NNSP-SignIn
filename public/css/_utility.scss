@@ -24,3 +24,16 @@
   font-size: 16px;
   font-weight: bolder;
 }
+
+i {
+  color: #8a8a8a;
+  font-size: 40px;
+  cursor: pointer;
+}
+
+i:hover {
+  color: black;
+  border-radius: 50%;
+  transition: all 0.3s ease-in;
+  box-shadow: 0 0 10px 2px rgb(23,121,186);
+}
