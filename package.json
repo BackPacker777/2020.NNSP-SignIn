@@ -4,7 +4,7 @@
   "description": "NNSP Sign In App",
   "main": "bin/server",
   "scripts": {
-    "start": "node bin/server"
+    "start": "node bin/signin_server"
   },
   "author": "Howard Bates",
   "license": "MIT",
