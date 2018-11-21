@@ -82,9 +82,6 @@ export default class EventHandler {
                             document.getElementById(`patrollerID.${teamNum}.${counter}`).value = '';
                             break;
                         } else if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                            if (this.dayNight !== "Night") {
-                                document.getElementById(`person.${teamNum}.${counter}`).style.backgroundColor = 'white';
-                            }
                             this.populateDiv(teamNum, counter, i);
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
@@ -110,9 +107,6 @@ export default class EventHandler {
                 } else {
                     for (let i = 0; i < this.patrollers.length; i++) {
                         if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                            if (this.dayNight !== "Night") {
-                                document.getElementById(`person.${teamNum}.${counter}`).style.backgroundColor = 'white';
-                            }
                             this.populateDiv(teamNum, counter, i);
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
@@ -294,12 +288,18 @@ export default class EventHandler {
     }
 
     enforceTeamBalance(teamNum) {
+        console.log(teamNum);
+        console.log(this.teamCounts[teamNum]);
         const MAX_TEAM_COUNT = 4;
-        if (this.teamCounts[teamNum] < MAX_TEAM_COUNT) {
-            this.balanced = true;
+        if (this.teamCounts[teamNum] >= MAX_TEAM_COUNT) {
+            console.log(`Disabling joinTeam.${teamNum}`);
+            document.getElementById(`joinTeam.${teamNum}`).disabled = true;
+            console.log(`Disabled joinTeam.${teamNum}`);
         }
         if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
-            this.balanced = true;
+            for (let i = 0; i < this.teamCounts.length; i++) {
+                document.getElementById(`joinTeam.${this.teamCounts[i]}`).disabled = false;
+            }
         }
     }
 
@@ -309,7 +309,7 @@ export default class EventHandler {
             let valid = true;
             if (this.isWeekend && this.dayNight === 'Day') {
                 for (let i = 0; i < form.elements.length; i++) {
-                    if (form.elements[i].hasAttribute("required") && !form.elements[i].value || !this.balanced) {
+                    if (form.elements[i].hasAttribute("required") && !form.elements[i].value) {
                         valid = false;
                     }
                 }
@@ -364,17 +364,12 @@ export default class EventHandler {
 }
 
 /*enforceTeamBalance(teamNum) {
-    console.log(teamNum);
-    console.log(this.teamCounts[teamNum]);
     const MAX_TEAM_COUNT = 4;
-    if (this.teamCounts[teamNum] >= MAX_TEAM_COUNT) {
-        console.log(`Disabling....`);
-        document.getElementById(`joinTeam.${teamNum}`).disabled = true;
+    if (this.teamCounts[teamNum] < MAX_TEAM_COUNT) {
+        this.balanced = true;
     }
     if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
-        for (let i = 0; i < this.teamCounts.length; i++) {
-            document.getElementById(`joinTeam.${this.teamCounts[i]}`).disabled = false;
-        }
+        this.balanced = true;
     }
 }*/
 
