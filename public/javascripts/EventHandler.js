@@ -296,7 +296,6 @@ export default class EventHandler {
 
     static stopEnterKey() {
         document.addEventListener('keypress', (evt) => {
-            console.log(`Key pressed`);
             let key = evt.which;
             if (key === 13 || key === 169) {
                 evt.preventDefault();
