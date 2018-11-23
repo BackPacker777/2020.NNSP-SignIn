@@ -116,6 +116,9 @@ export default class EventHandler {
                             break;
                         } else if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
                             this.populateDiv(teamNum, counter, i);
+                            this.handleSnowmobile(teamNum, counter);
+                            this.handleToboggan(teamNum, counter);
+                            this.handleSplint(teamNum, counter);
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
@@ -155,6 +158,9 @@ export default class EventHandler {
                     for (let i = 0; i < this.patrollers.length; i++) {
                         if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
                             this.populateDiv(teamNum, counter, i);
+                            this.handleSnowmobile(teamNum, counter);
+                            this.handleToboggan(teamNum, counter);
+                            this.handleSplint(teamNum, counter);
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
@@ -250,7 +256,10 @@ export default class EventHandler {
             RACE: race,
             NIGHTS: nights,
             HALF_DAYS: halfDays,
-            TOTAL_DAYS: totalDays
+            TOTAL_DAYS: totalDays,
+            SNOWMOBILE: this.patrollers[i].SNOWMOBILE,
+            TOBOGGAN: this.patrollers[i].TOBOGGAN,
+            SPLINT: this.patrollers[i].SPLINT,
         };
         if (teamNum !== 5) {
             patroller.GUEST = document.getElementById(`guest.${teamNum}.${counter}`).value;
@@ -325,6 +334,90 @@ export default class EventHandler {
                     this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${counter}`).value, document.getElementById(`days.${teamNum}.${counter}`).value, `halfDaysDown`);
                 }
             });
+        }
+    }
+
+    handleSnowmobile(teamNum, counter) {
+        for (let i = 0; i < this.signedIn.length; i++) {
+            if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
+                if (Number(this.signedIn[i].SNOWMOBILE) !== 1) {
+                    document.getElementById(`snowmobile.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
+                    let correctPassword = false;
+                    document.getElementById(`snowmobile.${teamNum}.${counter}`).addEventListener(`click`, () => {
+                        let password = prompt(`Password: `);
+                        for (let person of this.patrollers) {
+                            if (person.ID === password && person.LEADER) {
+                                correctPassword = true;
+                            }
+                        }
+                        if (correctPassword) {
+                            this.signedIn[i].SNOWMOBILE = 1;
+                            document.getElementById(`snowmobile.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                        } else {
+                            alert(`Incorrect Password`);
+                        }
+                    });
+                } else {
+                    document.getElementById(`snowmobile.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                }
+                break;
+            }
+        }
+    }
+
+    handleToboggan(teamNum, counter) {
+        for (let i = 0; i < this.signedIn.length; i++) {
+            if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
+                if (Number(this.signedIn[i].TOBOGGAN) !== 1) {
+                    document.getElementById(`toboggan.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
+                    let correctPassword = false;
+                    document.getElementById(`toboggan.${teamNum}.${counter}`).addEventListener(`click`, () => {
+                        let password = prompt(`Password: `);
+                        for (let person of this.patrollers) {
+                            if (person.ID === password && person.LEADER) {
+                                correctPassword = true;
+                            }
+                        }
+                        if (correctPassword) {
+                            this.signedIn[i].TOBOGGAN = 1;
+                            document.getElementById(`toboggan.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                        } else {
+                            alert(`Incorrect Password`);
+                        }
+                    });
+                } else {
+                    document.getElementById(`toboggan.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                }
+                break;
+            }
+        }
+    }
+
+    handleSplint(teamNum, counter) {
+        for (let i = 0; i < this.signedIn.length; i++) {
+            if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
+                if (Number(this.signedIn[i].SPLINT) !== 1) {
+                    document.getElementById(`splint.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
+                    let correctPassword = false;
+                    document.getElementById(`splint.${teamNum}.${counter}`).addEventListener(`click`, () => {
+                        let password = prompt(`Password: `);
+                        for (let person of this.patrollers) {
+                            if (person.ID === password && person.LEADER) {
+                                correctPassword = true;
+                            }
+                        }
+                        if (correctPassword) {
+                            this.signedIn[i].SPLINT = 1;
+                            document.getElementById(`splint.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                        } else {
+                            alert(`Incorrect Password`);
+                        }
+                    });
+                } else {
+                    document.getElementById(`splint.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                }
+                break;
+            }
         }
     }
 
@@ -439,6 +532,9 @@ export default class EventHandler {
                     this.patrollers[i].DAYS = this.signedIn[j].DAYS;
                     this.patrollers[i].NIGHTS = this.signedIn[j].NIGHTS;
                     this.patrollers[i].HALF_DAYS = this.signedIn[j].HALF_DAYS;
+                    this.patrollers[i].SNOWMOBILE = this.signedIn[j].SNOWMOBILE;
+                    this.patrollers[i].TOBOGGAN = this.signedIn[j].TOBOGGAN;
+                    this.patrollers[i].SPLINT = this.signedIn[j].SPLINT;
                     break;
                 }
             }

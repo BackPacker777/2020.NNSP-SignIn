@@ -53,13 +53,18 @@ export default class DivContents2 {
                         </label>
                     </div>`;
 
-        let guest = `<div class="small-2 cell" id="guestDiv.${teamNum}.${counter}">
+        let guest = `<div class="small-1 cell" id="guestDiv.${teamNum}.${counter}">
                         <label>Guest:
                             <input type="text" class="submitInclude" id="guest.${teamNum}.${counter}" placeholder="Guest">
                         </label>
                     </div>`;
 
-        let admin = `<div class="small-1 cell text-center" id="adminDiv.${teamNum}.${counter}">
+        let signOffs = `<div class="small-1 cell signoffDiv" id="signoffDiv.${teamNum}.${counter}">
+                        <label>Signoffs:</label>
+                        <i class="far fa-snowflake" id="snowmobile.${teamNum}.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="toboggan.${teamNum}.${counter}" title="Toboggan"></i> <i class="fas fa-medkit" id="splint.${teamNum}.${counter}" title="Sager Splint"></i>
+                    </div>`;
+
+        let admin = `<div class="small-1 cell text-center adminDiv" id="adminDiv.${teamNum}.${counter}">
                         <br>
                         <i class="far fa-compass" id="admin.${teamNum}.${counter}"></i>
                     </div>`;
@@ -78,7 +83,7 @@ export default class DivContents2 {
                         ${halfDay}
                         ${days}
                         ${guest}
-                        ${blank}
+                        ${signOffs}
                     </div>`;
             } else if (teamNum > 0 && teamNum < TEAMS.CANDIDATES) {
                 return `<div class="grid-x" id="person.${teamNum}.${counter}">
@@ -91,6 +96,7 @@ export default class DivContents2 {
                         ${halfDay}
                         ${days}
                         ${guest}
+                        ${signOffs}
                         ${admin}
                     </div>`;
             } else if (teamNum === TEAMS.CANDIDATES) {
@@ -103,7 +109,7 @@ export default class DivContents2 {
                         ${time}
                         ${halfDay}
                         ${days}
-                        ${blank}
+                        ${signOffs}
                         ${blank}
                         ${blank}
                     </div>`;
@@ -123,16 +129,10 @@ export default class DivContents2 {
                         ${halfDay}
                         ${days}
                         ${guest}
-                        ${blank}
+                        ${signOffs}
                     </div>`;
             }
-        }/* else {
-            let racetimes = `<div class="small-1 cell">
-                            <label>Race Course:
-                                <input type="text" class="submitInclude" id="race.${teamNum}.${counter}" readonly value="${RACE_TIMES[counter]}">
-                            </label>
-                        </div>`;
-        }*/
+        }
     }
 
     static getNightRaceDivs(teamNum, counter, RACE_TIMES) {
@@ -167,10 +167,14 @@ export default class DivContents2 {
                             <input type="text" class="submitInclude" readonly id="days.${teamNum}.${counter}">
                         </label>
                     </div>
-                    <div class="small-2 cell" id="guestDiv.${teamNum}.${counter}">
+                    <div class="small-1 cell" id="guestDiv.${teamNum}.${counter}">
                         <label>Guest:
                             <input type="text" class="submitInclude" id="guest.${teamNum}.${counter}" placeholder="Guest">
                         </label>
+                    </div>
+                    <div class="small-1 cell signoffDiv" id="signoffDiv.${teamNum}.${counter}">
+                        <label>Signoffs:</label>
+                        <i class="far fa-snowflake" id="snowmobile.${teamNum}.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="toboggan.${teamNum}.${counter}" title="Toboggan"></i> <i class="fas fa-medkit" id="splint.${teamNum}.${counter}" title="Sager Splint"></i>
                     </div>
                     <div class="small-1 cell">
                         <label>Race Course:

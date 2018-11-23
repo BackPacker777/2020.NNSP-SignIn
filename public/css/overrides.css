@@ -11,6 +11,18 @@
   font-family: 'Font Awesome 5 Free';
   font-weight: 400; }
 
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  font-style: normal;
+  font-weight: 900;
+  src: url("../fonts/fa-solid-900.eot");
+  src: url("../fonts/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("../fonts/fa-solid-900.woff2") format("woff2"), url("../fonts/fa-solid-900.woff") format("woff"), url("../fonts/fa-solid-900.ttf") format("truetype"), url("../fonts/fa-solid-900.svg#fontawesome") format("svg"); }
+
+.fa,
+.fas {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900; }
+
 .black {
   background-color: #000000;
   color: white; }
@@ -26,12 +38,23 @@
   font-size: 16px;
   font-weight: bolder; }
 
-i {
+.signoffDiv {
+  padding-left: 8px; }
+
+.signoffDiv label {
+  padding-bottom: 8px; }
+
+.signoffDiv i {
+  color: #8a8a8a;
+  font-size: 30px;
+  cursor: pointer; }
+
+.adminDiv i {
   color: #8a8a8a;
   font-size: 40px;
   cursor: pointer; }
 
-i:hover {
+.adminDiv i:hover {
   color: black;
   border-radius: 50%;
   transition: all 0.3s ease-in;

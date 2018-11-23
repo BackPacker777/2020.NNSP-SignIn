@@ -17,7 +17,7 @@ class DataHandler {
             let finalData = [];
             tempArray = file.split(/\r?\n/); //remove newlines
             tempArray.shift(); //To remove the csv file headers
-            const COLUMNS = 8;
+            const COLUMNS = 11;
             for (let i = 0; i < tempArray.length; i++) {
                 protoArray[i] = tempArray[i].split(/,/).slice(0, COLUMNS);
                 finalData[i] = {
@@ -29,6 +29,9 @@ class DataHandler {
                     DAYS: protoArray[i][5],
                     NIGHTS: protoArray[i][6],
                     HALF_DAYS: protoArray[i][7],
+                    SNOWMOBILE: protoArray[i][8],
+                    TOBOGGAN: protoArray[i][9],
+                    SPLINT: protoArray[i][10],
                 }
             }
             let len = finalData.length - 1;
