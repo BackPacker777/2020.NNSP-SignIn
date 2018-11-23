@@ -48,11 +48,6 @@ class app {
                     }).on('end', () => {
                         DATA_HANDLER.updatePatrollerDays(body);
                     });
-                    /*    body.push(chunk);
-                    }).on('end', () => {
-                        body = Buffer.concat(body).toString();
-                        DATA_HANDLER.updatePatrollerDays(body);
-                    });*/
                 } else if(request.headers['x-requested-with'] === 'fetch.2') {
                     let body = [];
                     request.on('data', (chunk) => {
@@ -71,6 +66,16 @@ class app {
                 DATA_HANDLER.renderDom(request.url.slice(1), 'application/javascript', httpHandler, 'utf-8');
             } else if (request.url.indexOf('.png') >= 0) {
                 DATA_HANDLER.renderDom(request.url.slice(1), 'image/png', httpHandler, 'binary');
+            } else if (request.url.indexOf('.woff') >= 0) {
+                DATA_HANDLER.renderDom(request.url.slice(1), 'application/font-woff', httpHandler, 'binary');
+            } else if (request.url.indexOf('.woff2') >= 0) {
+                DATA_HANDLER.renderDom(request.url.slice(1), 'application/font-woff2', httpHandler, 'binary');
+            } else if (request.url.indexOf('.ttf') >= 0) {
+                DATA_HANDLER.renderDom(request.url.slice(1), 'application/x-font-truetype', httpHandler, 'binary');
+            } else if (request.url.indexOf('.svg') >= 0) {
+                DATA_HANDLER.renderDom(request.url.slice(1), 'image/svg+xml', httpHandler, 'binary');
+            } else if (request.url.indexOf('.eot') >= 0) {
+                DATA_HANDLER.renderDom(request.url.slice(1), 'application/vnd.ms-fontobject', httpHandler, 'binary');
             } else if (request.url.indexOf('.ico') >= 0) {
                 DATA_HANDLER.renderDom(request.url.slice(1), 'image/x-icon', httpHandler, 'binary');
             } else if (request.url.indexOf('results.ejs') >= 0) {

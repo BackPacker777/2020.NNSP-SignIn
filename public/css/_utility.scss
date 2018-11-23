@@ -6,6 +6,23 @@
      font-size: $value;
 }
 
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/fa-regular-400.eot');
+  src: url('../fonts/fa-regular-400.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/fa-regular-400.woff2') format('woff2'),
+  url('../fonts/fa-regular-400.woff') format('woff'),
+  url('../fonts/fa-regular-400.ttf') format('truetype'),
+  url('../fonts/fa-regular-400.svg#fontawesome') format('svg');
+}
+
+.far {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 400;
+}
+
 .black {
      background-color: #000000;
      color: white;
@@ -36,4 +53,13 @@ i:hover {
   border-radius: 50%;
   transition: all 0.3s ease-in;
   box-shadow: 0 0 10px 2px rgb(23,121,186);
+}
+
+#weekendOverrideDiv label {
+  font-size: 12px;
+}
+
+#weekendOverrideDiv p {
+  font-size: 12px;
+  margin-top: -14px;
 }

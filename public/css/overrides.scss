@@ -1,5 +1,30 @@
 @import 'foundation.min.css';
+@import 'fontawesome.min.css';
 @import 'utility';
+
+@media print {
+  form {
+    display: none !important;
+  }
+
+  #tipTop {
+    display: none !important;
+  }
+
+  #topMast {
+    display: none !important;
+  }
+
+  #noPrint {
+    display: block !important;
+  }
+
+  #warnPic {
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
 
 #tipTop {
   position: sticky;
@@ -38,21 +63,6 @@
 
 #newSubmission:hover #newHover {
   display: block;
-}
-
-@media print {
-  @page {
-    margin: 1cm;
-  }
-
-  .noPrint {
-    display: none;
-  }
-
-  .forPrint {
-    font-size: 7pt;
-    color: black;
-  }
 }
 
 image {

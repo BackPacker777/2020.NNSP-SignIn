@@ -19,7 +19,6 @@ class Main {
         if (this.date.getDay() === SAT || this.date.getDay() === SUN) {
             return true;
         }
-        return true;
     }
 
     getWeekDay() {
@@ -36,11 +35,11 @@ class Main {
         } else {
             dayNight = "Day";
         }
-        dayNight = "Day";
         return dayNight;
     }
 
     prepUX() {
+        document.getElementById('noPrint').style.display = 'none';
         document.getElementById('formSubmit').disabled = true;
         if (this.getDayNight() === 'Night') {
             let counter = 1;

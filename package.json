@@ -15,5 +15,15 @@
     "ejs": "latest",
     "formidable": "latest",
     "node-fetch": "latest"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BackPacker777/2020.NNSP-SignIn.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/BackPacker777/2020.NNSP-SignIn/issues"
+  },
+  "homepage": "https://github.com/BackPacker777/2020.NNSP-SignIn#readme"
 }

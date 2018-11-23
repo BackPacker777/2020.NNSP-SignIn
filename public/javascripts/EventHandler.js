@@ -12,10 +12,41 @@ export default class EventHandler {
         this.teamCounts = [0,0,0,0,0];
         this.isWeekend = isWeekend;
         this.buttons = document.querySelectorAll("input[type=button]");
+        this.handleWeekendOverride();
         this.handleSignOnButtons();
         this.validate();
         EventHandler.stopEnterKey();
         this.handlePrintFormButton();
+    }
+
+    handleWeekendOverride() {
+        document.getElementById(`weekendOverride`).addEventListener('click', () => {
+            if (document.getElementById(`weekendOverride`).checked) {
+                document.getElementById(`weekendOverrideLabel`).style.backgroundColor = 'yellow';
+                document.getElementById(`weekendOverrideP`).style.backgroundColor = 'yellow';
+                document.getElementById(`team.0`).style.display = 'none';
+                this.isWeekend = true;
+                let counter = 1;
+                const MAX_TEAM = 6;
+                while (counter <= MAX_TEAM) {
+                    document.getElementById(`team.${counter}`).style.display = 'block';
+                    counter++;
+                }
+                document.getElementById('formSubmit').disabled = true;
+            } else {
+                document.getElementById(`weekendOverrideLabel`).style.backgroundColor = `rgb(213, 213, 213)`;
+                document.getElementById(`weekendOverrideP`).style.backgroundColor = `rgb(213, 213, 213)`;
+                document.getElementById(`team.0`).style.display = 'block';
+                this.isWeekend = false;
+                let counter = 1;
+                const MAX_TEAM = 6;
+                while (counter <= MAX_TEAM) {
+                    document.getElementById(`team.${counter}`).style.display = 'none';
+                    counter++;
+                }
+                document.getElementById('formSubmit').disabled = true;
+            }
+        });
     }
 
     handleSignOnButtons() {
@@ -23,6 +54,7 @@ export default class EventHandler {
         const LEADERS = 6;
         for (let i = 0; i < this.buttons.length; i++) {
             this.buttons[i].addEventListener('click', () => {
+                document.getElementById(`weekendOverride`).disabled = true;
                 let teamNum = Number(this.buttons[i].id.substr(9, 1));
                 if (teamNum > 0) {
                     for (let button of this.buttons) {
@@ -274,6 +306,7 @@ export default class EventHandler {
         } else {
             document.getElementById(`halfDay.${teamNum}.${counter}`).addEventListener('click', () => {
                 if (document.getElementById(`halfDay.${teamNum}.${counter}`).checked) {
+                    document.getElementById(`person.${teamNum}.${counter}`).style.backgroundColor = 'yellow';
                     if (teamNum !== 5) {
                         document.getElementById(`guest.${teamNum}.${counter}`).disabled = true;
                     }
@@ -284,6 +317,7 @@ export default class EventHandler {
                     }
                     this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${counter}`).value, document.getElementById(`days.${teamNum}.${counter}`).value, `halfDaysUp`);
                 } else {
+                    document.getElementById(`person.${teamNum}.${counter}`).style.backgroundColor = 'white';
                     if (teamNum !== 5) {
                         document.getElementById(`guest.${teamNum}.${counter}`).disabled = false;
                     }
@@ -322,47 +356,48 @@ export default class EventHandler {
         if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
             for (let i = 1; i < this.overMax.length; i++) {
                 this.overMax[i] = false;
-                console.log(this.overMax[i]);
             }
         }
     }
 
     validate() {
         document.addEventListener('change', () => {
-            let form = document.getElementById('rosterForm');
-            let valid = true;
-            if (this.isWeekend && this.dayNight === 'Day') {
-                for (let i = 0; i < form.elements.length; i++) {
-                    if (form.elements[i].hasAttribute("required") && !form.elements[i].value) {
-                        valid = false;
-                    }
-                }
-                if (valid) {
-                    for (let button of this.buttons) {
-                        document.getElementById(button.id).disabled = false;
-                    }
-                    for (let i = 1; i < this.overMax.length; i++) {
-                        if (this.overMax[i]) {
-                            document.getElementById(`joinTeam.${i}`).disabled = true;
+            if (window.event.target !== document.getElementById('weekendOverride')) {
+                let form = document.getElementById('rosterForm');
+                let valid = true;
+                if (this.isWeekend && this.dayNight === 'Day') {
+                    for (let i = 0; i < form.elements.length; i++) {
+                        if (form.elements[i].hasAttribute("required") && !form.elements[i].value) {
+                            valid = false;
                         }
                     }
-                    let validLeader = document.getElementById('radioNum.6.1');
-                    if (validLeader) {
-                        if (validLeader.value) {
-                            document.getElementById('formSubmit').disabled = false;
+                    if (valid) {
+                        for (let button of this.buttons) {
+                            document.getElementById(button.id).disabled = false;
+                        }
+                        for (let i = 1; i < this.overMax.length; i++) {
+                            if (this.overMax[i]) {
+                                document.getElementById(`joinTeam.${i}`).disabled = true;
+                            }
+                        }
+                        let validLeader = document.getElementById('radioNum.6.1');
+                        if (validLeader) {
+                            if (validLeader.value) {
+                                document.getElementById('formSubmit').disabled = false;
+                            }
                         }
                     }
-                }
-            } else {
-                for (let i = 0; i < form.elements.length; i++) {
-                    if (form.elements[i].hasAttribute("required") && !form.elements[i].value) {
-                        valid = false;
+                } else {
+                    for (let i = 0; i < form.elements.length; i++) {
+                        if (form.elements[i].hasAttribute("required") && !form.elements[i].value) {
+                            valid = false;
+                        }
                     }
-                }
-                if (valid) {
-                    document.getElementById('joinTeam.0').disabled = false;
-                    document.getElementById('formSubmit').disabled = false;
-                    this.handlePrintFormButton();
+                    if (valid) {
+                        document.getElementById('joinTeam.0').disabled = false;
+                        document.getElementById('formSubmit').disabled = false;
+                        this.handlePrintFormButton();
+                    }
                 }
             }
         });
@@ -426,7 +461,6 @@ export default class EventHandler {
                 'mode': 'no-cors'
             }
         }).then((response) => {
-            console.log(response);
             return response.json();
         });
     }
