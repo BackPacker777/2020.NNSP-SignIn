@@ -123,6 +123,8 @@ export default class EventHandler {
                             this.handleSnowmobile(teamNum, counter);
                             this.handleToboggan(teamNum, counter);
                             this.handleSplint(teamNum, counter);
+                            this.handleCpr(teamNum, counter);
+                            this.handleChair(teamNum, counter);
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
@@ -165,6 +167,8 @@ export default class EventHandler {
                             this.handleSnowmobile(teamNum, counter);
                             this.handleToboggan(teamNum, counter);
                             this.handleSplint(teamNum, counter);
+                            this.handleCpr(teamNum, counter);
+                            this.handleChair(teamNum, counter);
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
@@ -264,6 +268,8 @@ export default class EventHandler {
             SNOWMOBILE: this.patrollers[i].SNOWMOBILE,
             TOBOGGAN: this.patrollers[i].TOBOGGAN,
             SPLINT: this.patrollers[i].SPLINT,
+            CPR: this.patrollers[i].CPR,
+            CHAIR: this.patrollers[i].CHAIR,
         };
         if (teamNum !== 5) {
             patroller.GUEST = document.getElementById(`guest.${teamNum}.${counter}`).value;
@@ -437,6 +443,70 @@ export default class EventHandler {
         }
     }
 
+    handleCpr(teamNum, counter) {
+        for (let i = 0; i < this.signedIn.length; i++) {
+            if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
+                if (Number(this.signedIn[i].CPR) !== 1) {
+                    document.getElementById(`cpr.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
+                    let correctPassword = false;
+                    let removeMe;
+                    document.getElementById(`cpr.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
+                        let password = prompt(`Password: `);
+                        for (let person of this.patrollers) {
+                            if (person.ID === password && person.LEADER) {
+                                correctPassword = true;
+                            }
+                        }
+                        if (correctPassword) {
+                            this.signedIn[i].CPR = 1;
+                            document.getElementById(`cpr.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                            document.getElementById(`cpr.${teamNum}.${counter}`).removeEventListener('click', removeMe);
+                            document.getElementById(`cpr.${teamNum}.${counter}`).style.cursor = 'default';
+                        } else {
+                            alert(`Incorrect Password`);
+                        }
+                    });
+                } else {
+                    document.getElementById(`cpr.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`cpr.${teamNum}.${counter}`).style.cursor = 'default';
+                }
+                break;
+            }
+        }
+    }
+
+    handleChair(teamNum, counter) {
+        for (let i = 0; i < this.signedIn.length; i++) {
+            if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
+                if (Number(this.signedIn[i].CHAIR) !== 1) {
+                    document.getElementById(`chair.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
+                    let correctPassword = false;
+                    let removeMe;
+                    document.getElementById(`chair.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
+                        let password = prompt(`Password: `);
+                        for (let person of this.patrollers) {
+                            if (person.ID === password && person.LEADER) {
+                                correctPassword = true;
+                            }
+                        }
+                        if (correctPassword) {
+                            this.signedIn[i].CHAIR = 1;
+                            document.getElementById(`chair.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                            document.getElementById(`chair.${teamNum}.${counter}`).removeEventListener('click', removeMe);
+                            document.getElementById(`chair.${teamNum}.${counter}`).style.cursor = 'default';
+                        } else {
+                            alert(`Incorrect Password`);
+                        }
+                    });
+                } else {
+                    document.getElementById(`chair.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`chair.${teamNum}.${counter}`).style.cursor = 'default';
+                }
+                break;
+            }
+        }
+    }
+
     static stopEnterKey() {
         document.addEventListener('keypress', (evt) => {
             let key = evt.which;
@@ -551,6 +621,8 @@ export default class EventHandler {
                     this.patrollers[i].SNOWMOBILE = this.signedIn[j].SNOWMOBILE;
                     this.patrollers[i].TOBOGGAN = this.signedIn[j].TOBOGGAN;
                     this.patrollers[i].SPLINT = this.signedIn[j].SPLINT;
+                    this.patrollers[i].CPR = this.signedIn[j].CPR;
+                    this.patrollers[i].CHAIR = this.signedIn[j].CHAIR;
                     break;
                 }
             }

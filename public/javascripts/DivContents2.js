@@ -61,7 +61,7 @@ export default class DivContents2 {
 
         let signOffs = `<div class="small-1 cell signoffDiv" id="signoffDiv.${teamNum}.${counter}">
                         <label>Signoffs:</label>
-                        <i class="far fa-snowflake" id="snowmobile.${teamNum}.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="toboggan.${teamNum}.${counter}" title="Toboggan"></i> <i class="fas fa-medkit" id="splint.${teamNum}.${counter}" title="Sager Splint"></i>
+                        <i class="far fa-snowflake" id="snowmobile.${teamNum}.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="toboggan.${teamNum}.${counter}" title="Toboggan"></i> <i class="fas fa-medkit" id="splint.${teamNum}.${counter}" title="Sager Splint"></i> <i class="fas fa-heartbeat" id="cpr.${teamNum}.${counter}" title="CPR"></i> <i class="fas fa-chair" id="chair.${teamNum}.${counter}" title="Chair Evac"></i>
                     </div>`;
 
         let admin = `<div class="small-1 cell text-center adminDiv" id="adminDiv.${teamNum}.${counter}">
