@@ -20,33 +20,37 @@ export default class EventHandler {
     }
 
     handleWeekendOverride() {
-        document.getElementById(`weekendOverride`).addEventListener('click', () => {
-            if (document.getElementById(`weekendOverride`).checked) {
-                document.getElementById(`weekendOverrideLabel`).style.backgroundColor = 'yellow';
-                document.getElementById(`weekendOverrideP`).style.backgroundColor = 'yellow';
-                document.getElementById(`team.0`).style.display = 'none';
-                this.isWeekend = true;
-                let counter = 1;
-                const MAX_TEAM = 6;
-                while (counter <= MAX_TEAM) {
-                    document.getElementById(`team.${counter}`).style.display = 'block';
-                    counter++;
+        if (!this.isWeekend && this.dayNight === 'Day') {
+            document.getElementById(`weekendOverride`).addEventListener('click', () => {
+                if (document.getElementById(`weekendOverride`).checked) {
+                    document.getElementById(`weekendOverrideLabel`).style.backgroundColor = 'yellow';
+                    document.getElementById(`weekendOverrideP`).style.backgroundColor = 'yellow';
+                    document.getElementById(`team.0`).style.display = 'none';
+                    this.isWeekend = true;
+                    let counter = 1;
+                    const MAX_TEAM = 6;
+                    while (counter <= MAX_TEAM) {
+                        document.getElementById(`team.${counter}`).style.display = 'block';
+                        counter++;
+                    }
+                    document.getElementById('formSubmit').disabled = true;
+                } else {
+                    document.getElementById(`weekendOverrideLabel`).style.backgroundColor = `rgb(213, 213, 213)`;
+                    document.getElementById(`weekendOverrideP`).style.backgroundColor = `rgb(213, 213, 213)`;
+                    document.getElementById(`team.0`).style.display = 'block';
+                    this.isWeekend = false;
+                    let counter = 1;
+                    const MAX_TEAM = 6;
+                    while (counter <= MAX_TEAM) {
+                        document.getElementById(`team.${counter}`).style.display = 'none';
+                        counter++;
+                    }
+                    document.getElementById('formSubmit').disabled = true;
                 }
-                document.getElementById('formSubmit').disabled = true;
-            } else {
-                document.getElementById(`weekendOverrideLabel`).style.backgroundColor = `rgb(213, 213, 213)`;
-                document.getElementById(`weekendOverrideP`).style.backgroundColor = `rgb(213, 213, 213)`;
-                document.getElementById(`team.0`).style.display = 'block';
-                this.isWeekend = false;
-                let counter = 1;
-                const MAX_TEAM = 6;
-                while (counter <= MAX_TEAM) {
-                    document.getElementById(`team.${counter}`).style.display = 'none';
-                    counter++;
-                }
-                document.getElementById('formSubmit').disabled = true;
-            }
-        });
+            });
+        } else {
+            document.getElementById(`weekendOverride`).disabled = true;
+        }
     }
 
     handleSignOnButtons() {
@@ -315,7 +319,7 @@ export default class EventHandler {
         } else {
             document.getElementById(`halfDay.${teamNum}.${counter}`).addEventListener('click', () => {
                 if (document.getElementById(`halfDay.${teamNum}.${counter}`).checked) {
-                    document.getElementById(`person.${teamNum}.${counter}`).style.backgroundColor = 'yellow';
+                    document.getElementById(`person.${teamNum}.${counter}`).style.backgroundColor = 'rgb(247,223,30)';
                     if (teamNum !== 5) {
                         document.getElementById(`guest.${teamNum}.${counter}`).disabled = true;
                     }
@@ -343,7 +347,8 @@ export default class EventHandler {
                 if (Number(this.signedIn[i].SNOWMOBILE) !== 1) {
                     document.getElementById(`snowmobile.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
                     let correctPassword = false;
-                    document.getElementById(`snowmobile.${teamNum}.${counter}`).addEventListener(`click`, () => {
+                    let removeMe;
+                    document.getElementById(`snowmobile.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
                         let password = prompt(`Password: `);
                         for (let person of this.patrollers) {
                             if (person.ID === password && person.LEADER) {
@@ -353,12 +358,15 @@ export default class EventHandler {
                         if (correctPassword) {
                             this.signedIn[i].SNOWMOBILE = 1;
                             document.getElementById(`snowmobile.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                            document.getElementById(`snowmobile.${teamNum}.${counter}`).removeEventListener("click", removeMe);
+                            document.getElementById(`snowmobile.${teamNum}.${counter}`).style.cursor = 'default';
                         } else {
                             alert(`Incorrect Password`);
                         }
                     });
                 } else {
                     document.getElementById(`snowmobile.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`snowmobile.${teamNum}.${counter}`).style.cursor = 'default';
                 }
                 break;
             }
@@ -371,7 +379,8 @@ export default class EventHandler {
                 if (Number(this.signedIn[i].TOBOGGAN) !== 1) {
                     document.getElementById(`toboggan.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
                     let correctPassword = false;
-                    document.getElementById(`toboggan.${teamNum}.${counter}`).addEventListener(`click`, () => {
+                    let removeMe;
+                    document.getElementById(`toboggan.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
                         let password = prompt(`Password: `);
                         for (let person of this.patrollers) {
                             if (person.ID === password && person.LEADER) {
@@ -381,12 +390,15 @@ export default class EventHandler {
                         if (correctPassword) {
                             this.signedIn[i].TOBOGGAN = 1;
                             document.getElementById(`toboggan.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                            document.getElementById(`toboggan.${teamNum}.${counter}`).removeEventListener("click", removeMe);
+                            document.getElementById(`toboggan.${teamNum}.${counter}`).style.cursor = 'default';
                         } else {
                             alert(`Incorrect Password`);
                         }
                     });
                 } else {
                     document.getElementById(`toboggan.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`toboggan.${teamNum}.${counter}`).style.cursor = 'default';
                 }
                 break;
             }
@@ -399,7 +411,8 @@ export default class EventHandler {
                 if (Number(this.signedIn[i].SPLINT) !== 1) {
                     document.getElementById(`splint.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
                     let correctPassword = false;
-                    document.getElementById(`splint.${teamNum}.${counter}`).addEventListener(`click`, () => {
+                    let removeMe;
+                    document.getElementById(`splint.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
                         let password = prompt(`Password: `);
                         for (let person of this.patrollers) {
                             if (person.ID === password && person.LEADER) {
@@ -409,12 +422,15 @@ export default class EventHandler {
                         if (correctPassword) {
                             this.signedIn[i].SPLINT = 1;
                             document.getElementById(`splint.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                            document.getElementById(`splint.${teamNum}.${counter}`).removeEventListener('click', removeMe);
+                            document.getElementById(`splint.${teamNum}.${counter}`).style.cursor = 'default';
                         } else {
                             alert(`Incorrect Password`);
                         }
                     });
                 } else {
                     document.getElementById(`splint.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`splint.${teamNum}.${counter}`).style.cursor = 'default';
                 }
                 break;
             }

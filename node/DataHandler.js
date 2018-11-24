@@ -49,7 +49,7 @@ class DataHandler {
         FS.writeFile(finalFilePath, stuff, `utf8`, (err) => {
             if (err) throw err;
             for (let i = 0; i < patrollerData.length; i++) {
-                stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS}\n`;
+                stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SPLINT}\n`;
                 FS.appendFile(finalFilePath, stuff, `utf8`, (err) => {
                     if (err) console.log(err);
                 });
