@@ -14,7 +14,8 @@
   "dependencies": {
     "ejs": "latest",
     "formidable": "latest",
-    "node-fetch": "latest"
+    "node-fetch": "latest",
+    "npm": "^6.4.1"
   },
   "devDependencies": {},
   "repository": {
