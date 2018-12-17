@@ -68,6 +68,8 @@
   margin-top: -14px; }
 
 @media print {
+  body {
+    -webkit-print-color-adjust: exact; }
   form {
     display: none !important; }
   #tipTop {
