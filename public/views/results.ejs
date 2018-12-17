@@ -18,7 +18,7 @@
                 <h5>The Team</h5>
             </div>
             <div class="grid-x">
-                <div class="cell small-2">
+                <div class="cell small-3">
                     <h6><strong>Name</strong></h6>
                 </div>
                 <div class="cell small-2">
@@ -30,10 +30,7 @@
                 <div class="cell small-2">
                     <h6><strong>Radio</strong></h6>
                 </div>
-                <div class="cell small-1">
-                    <h6><strong>Days</strong></h6>
-                </div>
-                <div class="cell small-2">
+                <div class="cell small-3">
                     <h6><strong>Guest</strong></h6>
                 </div>
                 <% if (data[i].RACE) { %>
@@ -42,10 +39,14 @@
                     </div>
                 <% } %>
             </div>
-            <div class="grid-x">
+            <% if (data[i].HALF_DAYS > 0) { %>
+                <div class="grid-x" style="background-color: #8d8d8d">
+            <% } else { %>
+                <div class="grid-x">
+            <% } %>
                 <% data.forEach((result) => { %>
                     <% if (Number(result.TEAM) === 0) { %>
-                        <div class="cell small-2">
+                        <div class="cell small-3">
                             <%= result.NAME %>
                         </div>
                         <div class="cell small-2">
@@ -57,10 +58,7 @@
                         <div class="cell small-2">
                             <%= result.RADIO %>
                         </div>
-                        <div class="cell small-1">
-                            <%= result.TOTAL_DAYS %>
-                        </div>
-                        <div class="cell small-2">
+                        <div class="cell small-3">
                             <%= result.GUEST %>
                         </div>
                         <% if (result.RACE) { %>
@@ -81,7 +79,7 @@
                 <h5>Team 1</h5>
             </div>
             <div class="grid-x">
-                <div class="cell small-2">
+                <div class="cell small-3">
                     <h6><strong>Name</strong></h6>
                 </div>
                 <div class="cell small-2">
@@ -93,17 +91,18 @@
                 <div class="cell small-2">
                     <h6><strong>Radio</strong></h6>
                 </div>
-                <div class="cell small-1">
-                    <h6><strong>Days</strong></h6>
-                </div>
                 <div class="cell small-3">
                     <h6><strong>Guest</strong></h6>
                 </div>
             </div>
-            <div class="grid-x">
+            <% if (data[i].HALF_DAYS > 0) { %>
+                <div class="grid-x" style="background-color: #8d8d8d">
+            <% } else { %>
+                <div class="grid-x">
+            <% } %>
                 <% data.forEach((result) => { %>
                     <% if (Number(result.TEAM) === 1) { %>
-                        <div class="cell small-2">
+                        <div class="cell small-3">
                             <%= result.NAME %>
                         </div>
                         <div class="cell small-2">
@@ -114,9 +113,6 @@
                         </div>
                         <div class="cell small-2">
                             <%= result.RADIO %>
-                        </div>
-                        <div class="cell small-1">
-                            <%= result.TOTAL_DAYS %>
                         </div>
                         <div class="cell small-3">
                             <%= result.GUEST %>
@@ -134,7 +130,7 @@
                 <h5>Team 2</h5>
             </div>
             <div class="grid-x">
-                <div class="cell small-2">
+                <div class="cell small-3">
                     <h6><strong>Name</strong></h6>
                 </div>
                 <div class="cell small-2">
@@ -146,17 +142,18 @@
                 <div class="cell small-2">
                     <h6><strong>Radio</strong></h6>
                 </div>
-                <div class="cell small-1">
-                    <h6><strong>Days</strong></h6>
-                </div>
                 <div class="cell small-3">
                     <h6><strong>Guest</strong></h6>
                 </div>
             </div>
-            <div class="grid-x">
+            <% if (data[i].HALF_DAYS > 0) { %>
+                <div class="grid-x" style="background-color: #8d8d8d">
+            <% } else { %>
+                <div class="grid-x">
+            <% } %>
                 <% data.forEach((result) => { %>
                     <% if (Number(result.TEAM) === 2) { %>
-                        <div class="cell small-2">
+                        <div class="cell small-3">
                             <%= result.NAME %>
                         </div>
                         <div class="cell small-2">
@@ -167,9 +164,6 @@
                         </div>
                         <div class="cell small-2">
                             <%= result.RADIO %>
-                        </div>
-                        <div class="cell small-1">
-                            <%= result.TOTAL_DAYS %>
                         </div>
                         <div class="cell small-3">
                             <%= result.GUEST %>
@@ -187,7 +181,7 @@
                 <h5>Team 3</h5>
             </div>
             <div class="grid-x">
-                <div class="cell small-2">
+                <div class="cell small-3">
                     <h6><strong>Name</strong></h6>
                 </div>
                 <div class="cell small-2">
@@ -199,17 +193,18 @@
                 <div class="cell small-2">
                     <h6><strong>Radio</strong></h6>
                 </div>
-                <div class="cell small-1">
-                    <h6><strong>Days</strong></h6>
-                </div>
                 <div class="cell small-3">
                     <h6><strong>Guest</strong></h6>
                 </div>
             </div>
-            <div class="grid-x">
+            <% if (data[i].HALF_DAYS > 0) { %>
+                <div class="grid-x" style="background-color: #8d8d8d">
+            <% } else { %>
+                <div class="grid-x">
+            <% } %>
                 <% data.forEach((result) => { %>
                     <% if (Number(result.TEAM) === 3) { %>
-                        <div class="cell small-2">
+                        <div class="cell small-3">
                             <%= result.NAME %>
                         </div>
                         <div class="cell small-2">
@@ -220,9 +215,6 @@
                         </div>
                         <div class="cell small-2">
                             <%= result.RADIO %>
-                        </div>
-                        <div class="cell small-1">
-                            <%= result.TOTAL_DAYS %>
                         </div>
                         <div class="cell small-3">
                             <%= result.GUEST %>
@@ -240,7 +232,7 @@
                 <h5>Team 4</h5>
             </div>
             <div class="grid-x">
-                <div class="cell small-2">
+                <div class="cell small-3">
                     <h6><strong>Name</strong></h6>
                 </div>
                 <div class="cell small-2">
@@ -252,17 +244,18 @@
                 <div class="cell small-2">
                     <h6><strong>Radio</strong></h6>
                 </div>
-                <div class="cell small-1">
-                    <h6><strong>Days</strong></h6>
-                </div>
                 <div class="cell small-3">
                     <h6><strong>Guest</strong></h6>
                 </div>
             </div>
-            <div class="grid-x">
+            <% if (data[i].HALF_DAYS > 0) { %>
+                <div class="grid-x" style="background-color: #8d8d8d">
+            <% } else { %>
+                <div class="grid-x">
+            <% } %>
                 <% data.forEach((result) => { %>
                     <% if (Number(result.TEAM) === 4) { %>
-                        <div class="cell small-2">
+                        <div class="cell small-3">
                             <%= result.NAME %>
                         </div>
                         <div class="cell small-2">
@@ -273,9 +266,6 @@
                         </div>
                         <div class="cell small-2">
                             <%= result.RADIO %>
-                        </div>
-                        <div class="cell small-1">
-                            <%= result.TOTAL_DAYS %>
                         </div>
                         <div class="cell small-3">
                             <%= result.GUEST %>
@@ -293,7 +283,7 @@
                 <h5>Candidates/Auxiliary</h5>
             </div>
             <div class="grid-x">
-                <div class="cell small-2">
+                <div class="cell small-3">
                     <h6><strong>Name</strong></h6>
                 </div>
                 <div class="cell small-2">
@@ -302,17 +292,18 @@
                 <div class="cell small-2">
                     <h6><strong>Time</strong></h6>
                 </div>
-                <div class="cell small-2">
+                <div class="cell small-5">
                     <h6><strong>Radio</strong></h6>
                 </div>
-                <div class="cell small-4">
-                    <h6><strong>Days</strong></h6>
-                </div>
             </div>
-            <div class="grid-x">
+            <% if (data[i].HALF_DAYS > 0) { %>
+                <div class="grid-x" style="background-color: #8d8d8d">
+            <% } else { %>
+                <div class="grid-x">
+            <% } %>
                 <% data.forEach((result) => { %>
                     <% if (Number(result.TEAM) === 5) { %>
-                        <div class="cell small-2">
+                        <div class="cell small-3">
                             <%= result.NAME %>
                         </div>
                         <div class="cell small-2">
@@ -321,11 +312,8 @@
                         <div class="cell small-2">
                             <%= result.TIME %>
                         </div>
-                        <div class="cell small-2">
+                        <div class="cell small-5">
                             <%= result.RADIO %>
-                        </div>
-                        <div class="cell small-4">
-                            <%= result.TOTAL_DAYS %>
                         </div>
                     <% } %>
                 <% }); %>
@@ -338,7 +326,7 @@
         <h5>Leadership/Trainers</h5>
     </div>
     <div class="grid-x">
-        <div class="cell small-2">
+        <div class="cell small-3">
             <h6><strong>Name</strong></h6>
         </div>
         <div class="cell small-2">
@@ -350,9 +338,6 @@
         <div class="cell small-2">
             <h6><strong>Radio</strong></h6>
         </div>
-        <div class="cell small-1">
-            <h6><strong>Days</strong></h6>
-        </div>
         <div class="cell small-3">
             <h6><strong>Guest</strong></h6>
         </div>
@@ -360,7 +345,7 @@
     <div class="grid-x">
         <% data.forEach((result) => { %>
             <% if (Number(result.TEAM) === 6) { %>
-                <div class="cell small-2">
+                <div class="cell small-3">
                     <%= result.NAME %>
                 </div>
                 <div class="cell small-2">
@@ -371,9 +356,6 @@
                 </div>
                 <div class="cell small-2">
                     <%= result.RADIO %>
-                </div>
-                <div class="cell small-1">
-                    <%= result.TOTAL_DAYS %>
                 </div>
                 <div class="cell small-3">
                     <%= result.GUEST %>

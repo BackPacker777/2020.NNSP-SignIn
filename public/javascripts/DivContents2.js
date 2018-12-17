@@ -53,7 +53,7 @@ export default class DivContents2 {
                         </label>
                     </div>`;
 
-        let guest = `<div class="small-1 cell" id="guestDiv.${teamNum}.${counter}">
+        let guest = `<div class="small-2 cell" id="guestDiv.${teamNum}.${counter}">
                         <label>Guest:
                             <input type="text" class="submitInclude" id="guest.${teamNum}.${counter}" placeholder="Guest">
                         </label>
@@ -81,7 +81,6 @@ export default class DivContents2 {
                         ${rating}
                         ${time}
                         ${halfDay}
-                        ${days}
                         ${guest}
                         ${signOffs}
                     </div>`;
@@ -94,7 +93,6 @@ export default class DivContents2 {
                         ${rating}
                         ${time}
                         ${halfDay}
-                        ${days}
                         ${guest}
                         ${signOffs}
                         ${admin}
@@ -108,7 +106,6 @@ export default class DivContents2 {
                         ${rating}
                         ${time}
                         ${halfDay}
-                        ${days}
                         ${signOffs}
                         ${blank}
                         ${blank}
@@ -127,7 +124,6 @@ export default class DivContents2 {
                         ${rating}
                         ${time}
                         ${halfDay}
-                        ${days}
                         ${guest}
                         ${signOffs}
                     </div>`;
@@ -162,12 +158,7 @@ export default class DivContents2 {
                             <input type="text" class="submitInclude" readonly id="time.${teamNum}.${counter}">
                         </label>
                     </div>
-                    <div class="small-1 cell">
-                        <label>Days:
-                            <input type="text" class="submitInclude" readonly id="days.${teamNum}.${counter}">
-                        </label>
-                    </div>
-                    <div class="small-1 cell" id="guestDiv.${teamNum}.${counter}">
+                    <div class="small-2 cell" id="guestDiv.${teamNum}.${counter}">
                         <label>Guest:
                             <input type="text" class="submitInclude" id="guest.${teamNum}.${counter}" placeholder="Guest">
                         </label>

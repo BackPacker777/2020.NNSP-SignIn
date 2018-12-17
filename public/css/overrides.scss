@@ -3,6 +3,10 @@
 @import 'utility';
 
 @media print {
+  body {
+    -webkit-print-color-adjust: exact;
+  }
+
   form {
     display: none !important;
   }
