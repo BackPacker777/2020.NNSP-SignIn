@@ -14,6 +14,7 @@ export default class EventHandler {
         this.buttons = document.querySelectorAll("input[type=button]");
         this.handleWeekendOverride();
         this.handleSignOnButtons();
+        this.handleNarniaButton();
         this.validate();
         EventHandler.stopEnterKey();
     }
@@ -50,6 +51,28 @@ export default class EventHandler {
         } else {
             document.getElementById(`weekendOverride`).disabled = true;
         }
+    }
+
+    handleNarniaButton() {
+        let correctPassword = false;
+        document.getElementById(`nspLogo`).addEventListener(`click`, () => {
+            document.getElementById("narniaDate").innerText = document.getElementById("date").innerText;
+            document.getElementById("narniaWeekDay").innerText = document.getElementById("weekDay").innerText;
+            document.getElementById("narniaDayNight").innerText = document.getElementById("dayNight").innerText;
+            let password = prompt(`Password: `);
+            for (let person of this.patrollers) {
+                if (person.ID === password && person.LEADER) {
+                    correctPassword = true;
+                }
+            }
+            if (correctPassword) {
+                document.getElementById('narniaDiv').style.display = 'block';
+                document.getElementById('masterDiv').style.display = 'none';
+                document.getElementById('topMast').style.display = 'none';
+            } else {
+                alert(`Incorrect Password`);
+            }
+        });
     }
 
     handleSignOnButtons() {

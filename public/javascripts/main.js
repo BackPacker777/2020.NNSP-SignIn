@@ -41,6 +41,7 @@ class Main {
 
     prepUX() {
         document.getElementById('noPrint').style.display = 'none';
+        document.getElementById('narniaDiv').style.display = 'none';
         document.getElementById('formSubmit').disabled = true;
         if (this.getDayNight() === 'Night') {
             let counter = 1;
