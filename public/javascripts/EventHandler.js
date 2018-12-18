@@ -16,7 +16,6 @@ export default class EventHandler {
         this.handleSignOnButtons();
         this.validate();
         EventHandler.stopEnterKey();
-        this.handlePrintFormButton();
     }
 
     handleWeekendOverride() {
@@ -208,6 +207,7 @@ export default class EventHandler {
                 } else if (whichListener === `guest`) {
                     patroller.GUEST = radioGuestDays;
                 } else if (whichListener === `halfDaysDown`) {
+                    patroller.TODAY_HALF = false;
                     patroller.TOTAL_DAYS = radioGuestDays;
                     patroller.DAYS++;
                     if (patroller.HALF_DAYS > 0) {
@@ -215,6 +215,7 @@ export default class EventHandler {
                     }
                     alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS)}`);
                 } else if (whichListener === 'halfDaysUp') {
+                    patroller.TODAY_HALF = true;
                     patroller.TOTAL_DAYS = radioGuestDays;
                     patroller.HALF_DAYS++;
                     if (patroller.DAYS > 0) {
@@ -272,6 +273,7 @@ export default class EventHandler {
             SPLINT: this.patrollers[i].SPLINT,
             CPR: this.patrollers[i].CPR,
             CHAIR: this.patrollers[i].CHAIR,
+            TODAY_HALF: false
         };
         if (teamNum !== 5) {
             patroller.GUEST = document.getElementById(`guest.${teamNum}.${counter}`).value;
@@ -538,7 +540,8 @@ export default class EventHandler {
     }
 
     handlePrintFormButton() {
-        document.getElementById('formSubmit').addEventListener('click', () => {
+        document.getElementById('formSubmit').addEventListener('click', (event) => {
+            event.stopImmediatePropagation();
             this.updateDays();
             document.getElementById('formSubmit').disabled = true;
             for (let button of this.buttons) {

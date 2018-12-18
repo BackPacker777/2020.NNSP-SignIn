@@ -39,12 +39,12 @@
                     </div>
                 <% } %>
             </div>
-            <% if (data[i].HALF_DAYS > 0) { %>
-                <div class="grid-x" style="background-color: #8d8d8d; -webkit-print-color-adjust: exact;">
+            <% if (data[i].TODAY_HALF) { %>
+                <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
             <% } else { %>
                 <div class="grid-x">
             <% } %>
-                <% data.forEach((result) => { %>
+            <% data.forEach((result) => { %>
                     <% if (Number(result.TEAM) === 0) { %>
                         <div class="cell small-3">
                             <%= result.NAME %>
@@ -95,8 +95,8 @@
                     <h6><strong>Guest</strong></h6>
                 </div>
             </div>
-            <% if (data[i].HALF_DAYS > 0) { %>
-                <div class="grid-x" style="background-color: #8d8d8d; -webkit-print-color-adjust: exact;">
+            <% if (data[i].TODAY_HALF) { %>
+                <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
             <% } else { %>
                 <div class="grid-x">
             <% } %>
@@ -146,8 +146,8 @@
                     <h6><strong>Guest</strong></h6>
                 </div>
             </div>
-            <% if (data[i].HALF_DAYS > 0) { %>
-                <div class="grid-x" style="background-color: #8d8d8d; -webkit-print-color-adjust: exact;">
+            <% if (data[i].TODAY_HALF) { %>
+                <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
             <% } else { %>
                 <div class="grid-x">
             <% } %>
@@ -197,8 +197,8 @@
                     <h6><strong>Guest</strong></h6>
                 </div>
             </div>
-            <% if (data[i].HALF_DAYS > 0) { %>
-                <div class="grid-x" style="background-color: #8d8d8d; -webkit-print-color-adjust: exact;">
+            <% if (data[i].TODAY_HALF) { %>
+                <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
             <% } else { %>
                 <div class="grid-x">
             <% } %>
@@ -248,8 +248,8 @@
                     <h6><strong>Guest</strong></h6>
                 </div>
             </div>
-            <% if (data[i].HALF_DAYS > 0) { %>
-                <div class="grid-x" style="background-color: #8d8d8d; -webkit-print-color-adjust: exact;">
+            <% if (data[i].TODAY_HALF) { %>
+                <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
             <% } else { %>
                 <div class="grid-x">
             <% } %>
@@ -296,8 +296,8 @@
                     <h6><strong>Radio</strong></h6>
                 </div>
             </div>
-            <% if (data[i].HALF_DAYS > 0) { %>
-                <div class="grid-x" style="background-color: #8d8d8d; -webkit-print-color-adjust: exact;">
+            <% if (data[i].TODAY_HALF) { %>
+                <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
             <% } else { %>
                 <div class="grid-x">
             <% } %>

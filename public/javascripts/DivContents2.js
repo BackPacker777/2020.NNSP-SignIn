@@ -59,7 +59,7 @@ export default class DivContents2 {
                         </label>
                     </div>`;
 
-        let signOffs = `<div class="small-1 cell signoffDiv" id="signoffDiv.${teamNum}.${counter}">
+        let signOffs = `<div class="small-2 cell signoffDiv" id="signoffDiv.${teamNum}.${counter}">
                         <label>Signoffs:</label>
                         <i class="far fa-snowflake" id="snowmobile.${teamNum}.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="toboggan.${teamNum}.${counter}" title="Toboggan"></i> <i class="fas fa-medkit" id="splint.${teamNum}.${counter}" title="Sager Splint"></i> <i class="fas fa-heartbeat" id="cpr.${teamNum}.${counter}" title="CPR"></i> <i class="fas fa-chair" id="chair.${teamNum}.${counter}" title="Chair Evac"></i>
                     </div>`;
@@ -138,7 +138,7 @@ export default class DivContents2 {
                             <input type="number" class="submitInclude secure" maxlength="6" name="patrollerID" id="patrollerID.${teamNum}.${counter}" placeholder="ID #">
                         </label>
                     </div>
-                    <div class="small-3 cell">
+                    <div class="small-2 cell">
                         <label>Name:
                             <input type="text" class="submitInclude" readonly id="name.${teamNum}.${counter}">
                         </label>
@@ -163,7 +163,7 @@ export default class DivContents2 {
                             <input type="text" class="submitInclude" id="guest.${teamNum}.${counter}" placeholder="Guest">
                         </label>
                     </div>
-                    <div class="small-1 cell signoffDiv" id="signoffDiv.${teamNum}.${counter}">
+                    <div class="small-2 cell signoffDiv" id="signoffDiv.${teamNum}.${counter}">
                         <label>Signoffs:</label>
                         <i class="far fa-snowflake" id="snowmobile.${teamNum}.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="toboggan.${teamNum}.${counter}" title="Toboggan"></i> <i class="fas fa-medkit" id="splint.${teamNum}.${counter}" title="Sager Splint"></i>
                     </div>
