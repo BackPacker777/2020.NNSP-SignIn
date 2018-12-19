@@ -83,102 +83,94 @@
     margin-left: auto !important;
     margin-right: auto !important; } }
 
-#tipTop {
-  position: sticky;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 30px;
-  z-index: 999; }
-
-#topMast {
-  position: sticky;
-  top: 30px;
-  right: 0;
-  left: 0;
-  margin-bottom: 16px;
-  height: 62px;
-  background-color: #d5d5d5;
-  padding: 2px;
-  z-index: 999; }
-
-#team_0 {
-  position: sticky;
-  top: 92px;
-  right: 0;
-  left: 0;
-  margin-bottom: 4px;
-  background-color: white;
-  z-index: 998; }
-
-#newSubmission #newHover {
-  display: none; }
-
-#newSubmission:hover #newHover {
-  display: block; }
-
-image {
-  max-width: 100%;
-  height: auto; }
-
-.img-center {
-  display: block;
-  margin: 0 auto;
-  max-width: 100%;
-  height: auto; }
-
-.vertical-center {
-  top: 50%;
-  transform: translateY(50%); }
-
-.text-center {
-  text-align: center; }
-
-.bottom {
-  position: fixed;
-  bottom: 5px;
-  width: 100%;
-  right: 0;
-  left: 0; }
-
-.glow img:hover {
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
-  transition: all 0.3s ease-in;
-  box-shadow: 0 0 10px 0 rgba(0, 255, 0, 0.67); }
-
-.bottom-border {
-  border: 1px solid #466d98; }
-
-.grey-box {
-  background-color: #838383;
-  color: white; }
-
-.xxx-thin {
-  height: 2em; }
-
-.xx-thin {
-  height: 2.5em; }
-
-.x-thin {
-  height: 2.8em; }
-
-#top {
-  margin-top: 4px; }
-
-textarea {
-  width: 100%;
-  height: auto; }
-
-#tripNums {
-  width: 10em; }
-
-#tripMileage {
-  width: 10em; }
-
-#tripDate {
-  width: 10em; }
-
-#p_logo {
-  padding-top: 15px; }
+@media screen {
+  #tipTop {
+    position: sticky;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 30px;
+    z-index: 999; }
+  #topMast {
+    position: sticky;
+    top: 30px;
+    right: 0;
+    left: 0;
+    margin-bottom: 16px;
+    height: 62px;
+    background-color: #d5d5d5;
+    padding: 2px;
+    z-index: 999; }
+  #narniaTop {
+    position: sticky;
+    top: 30px;
+    right: 0;
+    left: 0;
+    margin-bottom: 16px;
+    height: 62px;
+    background-color: #d5d5d5;
+    padding: 2px;
+    z-index: 999; }
+  #team_0 {
+    position: sticky;
+    top: 92px;
+    right: 0;
+    left: 0;
+    margin-bottom: 4px;
+    background-color: white;
+    z-index: 998; }
+  #newSubmission #newHover {
+    display: none; }
+  #newSubmission:hover #newHover {
+    display: block; }
+  image {
+    max-width: 100%;
+    height: auto; }
+  .img-center {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto; }
+  .vertical-center {
+    top: 50%;
+    transform: translateY(50%); }
+  .text-center {
+    text-align: center; }
+  .bottom {
+    position: fixed;
+    bottom: 5px;
+    width: 100%;
+    right: 0;
+    left: 0; }
+  .glow img:hover {
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    transition: all 0.3s ease-in;
+    box-shadow: 0 0 10px 0 rgba(0, 255, 0, 0.67); }
+  .bottom-border {
+    border: 1px solid #466d98; }
+  .grey-box {
+    background-color: #838383;
+    color: white; }
+  .xxx-thin {
+    height: 2em; }
+  .xx-thin {
+    height: 2.5em; }
+  .x-thin {
+    height: 2.8em; }
+  #top {
+    margin-top: 4px; }
+  textarea {
+    width: 100%;
+    height: auto; }
+  #tripNums {
+    width: 10em; }
+  #tripMileage {
+    width: 10em; }
+  #tripDate {
+    width: 10em; }
+  #p_logo {
+    padding-top: 15px; }
+  .width-3 {
+    width: 3em; } }

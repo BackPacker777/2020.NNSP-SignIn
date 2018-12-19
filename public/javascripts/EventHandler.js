@@ -1,6 +1,7 @@
 "use strict";
 
 import DivContents from "./DivContents2.js";
+import NarniaContents from "./NarniaContents.js";
 
 export default class EventHandler {
     constructor(patrollers, dayNight, isWeekend) {
@@ -15,6 +16,9 @@ export default class EventHandler {
         this.handleWeekendOverride();
         this.handleSignOnButtons();
         this.handleNarniaButton();
+        this.handleReturnButton();
+        this.handlePatrollerWorkButton();
+        this.handleUploadFileButton();
         this.validate();
         EventHandler.stopEnterKey();
     }
@@ -66,12 +70,33 @@ export default class EventHandler {
                 }
             }
             if (correctPassword) {
+                new NarniaContents();
                 document.getElementById('narniaDiv').style.display = 'block';
                 document.getElementById('masterDiv').style.display = 'none';
                 document.getElementById('topMast').style.display = 'none';
             } else {
                 alert(`Incorrect Password`);
             }
+        });
+    }
+
+    handleReturnButton() {
+        document.getElementById(`formReturn`).addEventListener(`click`, () => {
+            document.getElementById('narniaDiv').style.display = 'none';
+            document.getElementById('masterDiv').style.display = 'block';
+            document.getElementById('topMast').style.display = 'block';
+        });
+    }
+
+    handlePatrollerWorkButton() {
+        document.getElementById(`patrollerWork`).addEventListener(`click`, () => {
+            NarniaContents.populateWorkDiv(this.patrollers);
+        });
+    }
+
+    handleUploadFileButton() {
+        document.getElementById(`uploadFile`).addEventListener(`click`, () => {
+
         });
     }
 
