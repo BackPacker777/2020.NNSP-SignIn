@@ -49,7 +49,7 @@
     height: 62px;
     background-color: rgb(213, 213, 213);
     padding: 2px;
-    z-index: 999;
+    z-index: 990;
   }
 
   #narniaTop {
@@ -57,11 +57,17 @@
     top: 30px;
     right: 0;
     left: 0;
-    margin-bottom: 16px;
     height: 62px;
     background-color: rgb(213, 213, 213);
     padding: 2px;
-    z-index: 999;
+    z-index: 998;
+  }
+
+  #narniaMiddle {
+    background: white;
+    margin-bottom: 60px;
+    height: 60px;
+    z-index: 998;
   }
 
   #team_0 {
@@ -71,7 +77,12 @@
     left: 0;
     margin-bottom: 4px;
     background-color: white;
-    z-index: 998;
+    z-index: 992;
+  }
+
+  #narniaMain {
+    z-index: 1;
+    top: 70px;
   }
 
   #newSubmission #newHover {

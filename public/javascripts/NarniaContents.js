@@ -8,48 +8,48 @@ export default class NarniaContents {
         while (counter < patrollers.length) {
             let divContents = {
                 patrollerID: `<div class="small-1 cell">
-                        <label>ID:
+                        <label><strong>ID:</strong>
                             <input type="number" maxlength="6" name="narniaPatrollerID" id="narniaPatrollerID.${counter}" placeholder="ID #">
                         </label>
                     </div>`,
                 lastName: `<div class="small-2 cell">
-                        <label>Last Name:
+                        <label><strong>Last Name:</strong>
                             <input type="text" id="narniaLastName.${counter}">
                         </label>
                     </div>`,
                 firstName: `<div class="small-2 cell">
-                        <label>First Name:
+                        <label><strong>First Name:</strong>
                             <input type="text" id="narniaFirstName.${counter}">
                         </label>
                     </div>`,
                 rating: `<div class="small-1 cell">
-                        <label>Rating:
+                        <label><strong>Rating:</strong>
                             <input type="text" id="narniaRating.${counter}">
                         </label>
                     </div>`,
                 leader: `<div class="small-1 cell">
-                        <label>Leader:
+                        <label><strong>Leader:</strong>
                             <input type="text" id="narniaLeader.${counter}">
                         </label>
                     </div>`,
                 days: `<div class="small-1 cell">
-                        <label>Days:
+                        <label><strong>Days:</strong>
                             <input type="text" id="narniaDays.${counter}" maxlength="2">
                         </label>
                     </div>`,
                 halfDays: `<div class="small-1 cell">
-                        <label>Half Days:
+                        <label><strong>Half Days:</strong>
                             <input type="text" id="narniaHalfDays.${counter}" maxlength="2">
                         </label>
                     </div>`,
                 nights: `<div class="small-1 cell">
-                        <label>Nights:
+                        <label><strong>Nights:</strong>
                             <input type="text" id="narniaNights.${counter}" maxlength="2">
                         </label>
                     </div>`,
-                signOffs: `<div class="small-2 cell signoffDiv" id="signoffDiv.${counter}">
-                        <label>Signoffs:</label>
-                        <i class="far fa-snowflake" id="snowmobile.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="toboggan.${counter}" title="Toboggan"></i> <i class="fas fa-medkit" id="splint.${counter}" title="Sager Splint"></i> <i class="fas fa-heartbeat" id="cpr.${counter}" title="CPR"></i> <i class="fas fa-chair" id="chair.${counter}" title="Chair Evac"></i>
+                signOffs: `<div class="small-2 cell narniaSignOffDiv" id="narniaSignOffDiv.${counter}">
+                        <label><strong>Signoffs:</strong></label>
+                            <i class="far fa-snowflake" id="snowmobile.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="toboggan.${counter}" title="Toboggan"></i> <i class="fas fa-medkit" id="splint.${counter}" title="Sager Splint"></i> <i class="fas fa-heartbeat" id="cpr.${counter}" title="CPR"></i> <i class="fas fa-chair" id="chair.${counter}" title="Chair Evac"></i>
                     </div>`
             };
 
@@ -67,6 +67,10 @@ export default class NarniaContents {
             document.getElementById(`narniaLastName.${counter}`).value = patrollers[counter].LAST_NAME;
             document.getElementById(`narniaFirstName.${counter}`).value = patrollers[counter].FIRST_NAME;
             document.getElementById(`narniaRating.${counter}`).value = patrollers[counter].RATING;
+            document.getElementById(`narniaLeader.${counter}`).value = patrollers[counter].LEADER;
+            document.getElementById(`narniaDays.${counter}`).value = patrollers[counter].DAYS;
+            document.getElementById(`narniaHalfDays.${counter}`).value = patrollers[counter].HALF_DAYS;
+            document.getElementById(`narniaNights.${counter}`).value = patrollers[counter].NIGHTS;
 
             counter++;
         }
