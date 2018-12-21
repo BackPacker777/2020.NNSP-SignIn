@@ -64,10 +64,13 @@
   }
 
   #narniaMiddle {
+    position: sticky;
+    top: 90px;
     background: white;
-    margin-bottom: 60px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     height: 60px;
-    z-index: 998;
+    z-index: 900;
   }
 
   #team_0 {
@@ -82,7 +85,6 @@
 
   #narniaMain {
     z-index: 1;
-    top: 70px;
   }
 
   #newSubmission #newHover {

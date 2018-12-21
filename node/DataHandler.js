@@ -45,6 +45,7 @@ class DataHandler {
     }
 
     static updatePatrollerDays(patrollerData) {
+        console.log(patrollerData);
         patrollerData = JSON.parse(patrollerData);
         const finalFilePath = `data/patrollers.csv`;
         let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,splint,cpr,chair\n`;

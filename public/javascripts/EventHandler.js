@@ -1,7 +1,7 @@
 "use strict";
 
 import DivContents from "./DivContents2.js";
-import NarniaContents from "./NarniaContents.js";
+import NarniaEventHandler from "./NarniaEventHandler.js";
 
 export default class EventHandler {
     constructor(patrollers, dayNight, isWeekend) {
@@ -13,12 +13,9 @@ export default class EventHandler {
         this.teamCounts = [0,0,0,0,0];
         this.isWeekend = isWeekend;
         this.buttons = document.querySelectorAll("input[type=button]");
+        new NarniaEventHandler(this.patrollers);
         this.handleWeekendOverride();
         this.handleSignOnButtons();
-        this.handleNarniaButton();
-        this.handleReturnButton();
-        this.handlePatrollerWorkButton();
-        this.handleUploadFileButton();
         this.validate();
         EventHandler.stopEnterKey();
     }
@@ -55,49 +52,6 @@ export default class EventHandler {
         } else {
             document.getElementById(`weekendOverride`).disabled = true;
         }
-    }
-
-    handleNarniaButton() {
-        let correctPassword = false;
-        document.getElementById(`nspLogo`).addEventListener(`click`, () => {
-            document.getElementById("narniaDate").innerText = document.getElementById("date").innerText;
-            document.getElementById("narniaWeekDay").innerText = document.getElementById("weekDay").innerText;
-            document.getElementById("narniaDayNight").innerText = document.getElementById("dayNight").innerText;
-            let password = prompt(`Password: `);
-            for (let person of this.patrollers) {
-                if (person.ID === password && person.LEADER) {
-                    correctPassword = true;
-                }
-            }
-            if (correctPassword) {
-                new NarniaContents();
-                document.getElementById('narniaDiv').style.display = 'block';
-                document.getElementById('masterDiv').style.display = 'none';
-                document.getElementById('topMast').style.display = 'none';
-            } else {
-                alert(`Incorrect Password`);
-            }
-        });
-    }
-
-    handleReturnButton() {
-        document.getElementById(`formReturn`).addEventListener(`click`, () => {
-            document.getElementById('narniaDiv').style.display = 'none';
-            document.getElementById('masterDiv').style.display = 'block';
-            document.getElementById('topMast').style.display = 'block';
-        });
-    }
-
-    handlePatrollerWorkButton() {
-        document.getElementById(`patrollerWork`).addEventListener(`click`, () => {
-            NarniaContents.populateWorkDiv(this.patrollers);
-        });
-    }
-
-    handleUploadFileButton() {
-        document.getElementById(`uploadFile`).addEventListener(`click`, () => {
-
-        });
     }
 
     handleSignOnButtons() {
@@ -143,6 +97,7 @@ export default class EventHandler {
                         alert(`Incorrect ID for leadership/trainers team. Please try again or sign on to a different team.`);
                     }
                 } else {
+                    console.log(`Doing stuff?`);
                     this.buttons[i].disabled = true;
                     document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum]));
                     if (this.dayNight === 'Day') {

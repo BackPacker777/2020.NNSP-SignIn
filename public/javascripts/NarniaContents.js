@@ -3,7 +3,6 @@
 export default class NarniaContents {
 
     static populateWorkDiv(patrollers) {
-        console.log(patrollers);
         let counter = 0;
         while (counter < patrollers.length) {
             let divContents = {
@@ -49,7 +48,7 @@ export default class NarniaContents {
                     </div>`,
                 signOffs: `<div class="small-2 cell narniaSignOffDiv" id="narniaSignOffDiv.${counter}">
                         <label><strong>Signoffs:</strong></label>
-                            <i class="far fa-snowflake" id="snowmobile.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="toboggan.${counter}" title="Toboggan"></i> <i class="fas fa-medkit" id="splint.${counter}" title="Sager Splint"></i> <i class="fas fa-heartbeat" id="cpr.${counter}" title="CPR"></i> <i class="fas fa-chair" id="chair.${counter}" title="Chair Evac"></i>
+                            <i class="far fa-snowflake" id="narniaSnowmobile.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="narniaToboggan.${counter}" title="Toboggan"></i> <i class="fas fa-medkit" id="narniaSplint.${counter}" title="Sager Splint"></i> <i class="fas fa-heartbeat" id="narniaCpr.${counter}" title="CPR"></i> <i class="fas fa-chair" id="narniaChair.${counter}" title="Chair Evac"></i>
                     </div>`
             };
 
@@ -74,6 +73,6 @@ export default class NarniaContents {
 
             counter++;
         }
-
+        return counter;
     }
 }

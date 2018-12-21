@@ -46,6 +46,7 @@ class app {
                     request.on('data', (chunk) => {
                         body += chunk.toString();
                     }).on('end', () => {
+                        console.log(body);
                         DATA_HANDLER.updatePatrollerDays(body);
                     });
                 } else if(request.headers['x-requested-with'] === 'fetch.2') {
