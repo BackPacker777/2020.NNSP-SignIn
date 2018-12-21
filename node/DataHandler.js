@@ -45,7 +45,6 @@ class DataHandler {
     }
 
     static updatePatrollerDays(patrollerData) {
-        console.log(patrollerData);
         patrollerData = JSON.parse(patrollerData);
         const finalFilePath = `data/patrollers.csv`;
         let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,splint,cpr,chair\n`;
@@ -56,6 +55,25 @@ class DataHandler {
                 FS.appendFile(finalFilePath, stuff, `utf8`, (err) => {
                     if (err) console.log(err);
                 });
+            }
+        });
+    }
+
+    static updateAllPatrollerData(patrollerData) {
+        patrollerData = JSON.parse(patrollerData);
+        const finalFilePath = `data/patrollers2.csv`;
+        let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,splint,cpr,chair\n`;
+        FS.writeFile(finalFilePath, stuff, `utf8`, (err) => {
+            if (err) throw err;
+            for (let i = 0; i < patrollerData.length; i++) {
+                for (let j = 0; j < patrollerData[i].length; i++) {
+                    if (patrollerData[i][j] < patrollerData.length + 1) {
+                        FS.appendFile(finalFilePath, `${patrollerData[i][j]},`, `utf8`, (err) => {
+                            if (err) console.log(err);
+                        });
+                    }
+                }
+
             }
         });
     }

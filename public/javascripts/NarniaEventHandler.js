@@ -64,7 +64,6 @@ export default class EventHandler {
     }
 
     updatePatrollerData(counter) {
-        let formData = new FormData();
         let updatedPatrollers = [];
         for (let i = 0; i < counter; i++) {
             updatedPatrollers[i] = [];
@@ -84,9 +83,9 @@ export default class EventHandler {
         }
         fetch(document.url, {
             method: 'POST',
-            body: updatedPatrollers,
+            body: JSON.stringify(updatedPatrollers),
             headers: {
-                'x-requested-with': 'fetch.1',
+                'x-requested-with': 'fetch.3',
                 'mode': 'no-cors'
             }
         }).then((response) => {

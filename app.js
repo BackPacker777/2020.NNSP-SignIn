@@ -46,7 +46,6 @@ class app {
                     request.on('data', (chunk) => {
                         body += chunk.toString();
                     }).on('end', () => {
-                        console.log(body);
                         DATA_HANDLER.updatePatrollerDays(body);
                     });
                 } else if(request.headers['x-requested-with'] === 'fetch.2') {
@@ -57,6 +56,13 @@ class app {
                         body = Buffer.concat(body).toString();
                         this.ejsData = JSON.parse(body);
                         this.fileName = `results.ejs`;
+                    });
+                } else if(request.headers['x-requested-with'] === 'fetch.3') {
+                    let body = '';
+                    request.on('data', (chunk) => {
+                        body += chunk.toString();
+                    }).on('end', () => {
+                        DATA_HANDLER.updateAllPatrollerData(body);
                     });
                 } else {
                     console.log(`Yo, somethings super wrong BDH!`);
