@@ -45,16 +45,55 @@ export default class EventHandler {
     handlePatrollerWorkButton() {
         document.getElementById(`patrollerWork`).addEventListener(`click`, () => {
             let counter = NarniaContents.populateWorkDiv(this.patrollers);
+            this.handleNarniaSnowmobile(counter);
+            this.handleNarniaToboggan();
+            this.handleNarniaSplint();
+            this.handleNarniaCpr();
+            this.handleNarniaChair();
             let updateButton = `<input type="submit" class="button success expanded border" id="patrollerUpdateButton" value="Update Patroller Data">`;
             document.getElementById('narniaCenterButton').insertAdjacentHTML('beforeend', updateButton);
             document.getElementById(`patrollerUpdateButton`).addEventListener(`click`, (event) => {
                 event.stopImmediatePropagation();
                 this.updatePatrollerData(counter);
-                // document.getElementById('narniaWork').innerHTML = '';
-                // document.getElementById('narniaCenterButton').innerHTML = '';
+                document.getElementById('narniaWork').innerHTML = '';
+                document.getElementById('narniaCenterButton').innerHTML = '';
                 alert(`Patroller Data Updated.`);
             });
         });
+    }
+
+    handleNarniaSnowmobile(maximum) {
+        let counter = 0;
+        while (counter < maximum) {
+            if (Number(this.patrollers[counter].SNOWMOBILE) !== 1) {
+                document.getElementById(`narniaSnowmobile.${counter}`).style.color = 'rgb(204,75,55)';
+                document.getElementById(`narniaSnowmobile.${counter}`).addEventListener(`click`, () => {
+                    this.patrollers[counter].SNOWMOBILE = 1;
+                    document.getElementById(`narniaSnowmobile.${counter}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`narniaSnowmobile.${counter}`).style.cursor = 'default';
+                });
+            } else {
+                document.getElementById(`narniaSnowmobile.${counter}`).style.color = 'rgb(23,121,186)';
+                document.getElementById(`narniaSnowmobile.${counter}`).style.cursor = 'default';
+            }
+            counter++;
+        }
+    }
+
+    handleNarniaToboggan() {
+
+    }
+
+    handleNarniaSplint() {
+
+    }
+
+    handleNarniaCpr() {
+
+    }
+
+    handleNarniaChair() {
+
     }
 
     handleUploadFileButton() {

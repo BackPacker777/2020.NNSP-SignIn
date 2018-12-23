@@ -1,9 +1,9 @@
 ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,splint,cpr,chair
 185509,Bahle,Richard,Senior,,0,0,0,0,0,0,0,0
-219670,Arlen,James,Senior,TRAINER,0,0,0,0,0,0,0,0
+219670,Arlen,James,Senior,TRAINER,0,0,0,1,0,0,0,0
 223298,Atwater,Dana,Alpine Patroller,,0,0,0,0,0,0,0,0
 127178,Atwater,Douglas,Senior,,0,0,0,0,0,0,0,0
-226122,Bates,Howard,Senior,,2,0,0,0,0,0,0,0
+226122,Bates,Howard,Senior,,2,0,0,0,1,0,1,1
 128091,Barber,Rick,Certified,,0,0,0,0,0,0,0,0
 239366,Blasius,Joe,Alpine Patroller,,0,0,0,0,0,0,0,0
 185535,Ballien,Lisa,Senior,TRAINER,0,0,0,0,0,0,0,0
