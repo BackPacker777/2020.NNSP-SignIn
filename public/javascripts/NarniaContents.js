@@ -49,6 +49,11 @@ export default class NarniaContents {
                 signOffs: `<div class="small-2 cell narniaSignOffDiv" id="narniaSignOffDiv.${counter}">
                         <label><strong>Signoffs:</strong></label>
                             <i class="far fa-snowflake" id="narniaSnowmobile.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="narniaToboggan.${counter}" title="Toboggan"></i> <i class="fas fa-medkit" id="narniaSplint.${counter}" title="Sager Splint"></i> <i class="fas fa-heartbeat" id="narniaCpr.${counter}" title="CPR"></i> <i class="fas fa-chair" id="narniaChair.${counter}" title="Chair Evac"></i>
+                        <input type="hidden" id="narniaSnowmobileValue.${counter}">
+                        <input type="hidden" id="narniaTobogganValue.${counter}">
+                        <input type="hidden" id="narniaSplintValue.${counter}">
+                        <input type="hidden" id="narniaCprValue.${counter}">
+                        <input type="hidden" id="narniaChairValue.${counter}">
                     </div>`
             };
 
@@ -70,7 +75,11 @@ export default class NarniaContents {
             document.getElementById(`narniaDays.${counter}`).value = patrollers[counter].DAYS;
             document.getElementById(`narniaHalfDays.${counter}`).value = patrollers[counter].HALF_DAYS;
             document.getElementById(`narniaNights.${counter}`).value = patrollers[counter].NIGHTS;
-
+            document.getElementById(`narniaSnowmobileValue.${counter}`).value = patrollers[counter].SNOWMOBILE;
+            document.getElementById(`narniaTobogganValue.${counter}`).value = patrollers[counter].TOBOGGAN;
+            document.getElementById(`narniaSplintValue.${counter}`).value = patrollers[counter].SPLINT;
+            document.getElementById(`narniaCprValue.${counter}`).value = patrollers[counter].CPR;
+            document.getElementById(`narniaChairValue.${counter}`).value = patrollers[counter].CHAIR;
             counter++;
         }
         return counter;

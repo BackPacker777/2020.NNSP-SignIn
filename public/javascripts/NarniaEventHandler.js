@@ -46,10 +46,10 @@ export default class EventHandler {
         document.getElementById(`patrollerWork`).addEventListener(`click`, () => {
             let counter = NarniaContents.populateWorkDiv(this.patrollers);
             this.handleNarniaSnowmobile(counter);
-            this.handleNarniaToboggan();
-            this.handleNarniaSplint();
-            this.handleNarniaCpr();
-            this.handleNarniaChair();
+            this.handleNarniaToboggan(counter);
+            this.handleNarniaSplint(counter);
+            this.handleNarniaCpr(counter);
+            this.handleNarniaChair(counter);
             let updateButton = `<input type="submit" class="button success expanded border" id="patrollerUpdateButton" value="Update Patroller Data">`;
             document.getElementById('narniaCenterButton').insertAdjacentHTML('beforeend', updateButton);
             document.getElementById(`patrollerUpdateButton`).addEventListener(`click`, (event) => {
@@ -65,13 +65,22 @@ export default class EventHandler {
     handleNarniaSnowmobile(maximum) {
         let counter = 0;
         while (counter < maximum) {
+            document.getElementById(`narniaSnowmobile.${counter}`).addEventListener(`click`, (event) => {
+                let id = event.target.id.substring(17,19);
+                console.log(id);
+                if (Number(this.patrollers[id].SNOWMOBILE) !== 1) {
+                    this.patrollers[id].SNOWMOBILE = 1;
+                    document.getElementById(`narniaSnowmobileValue.${id}`).value = 1;
+                    document.getElementById(`narniaSnowmobile.${id}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`narniaSnowmobile.${id}`).style.cursor = 'default';
+                } else {
+                    this.patrollers[id].SNOWMOBILE = 0;
+                    document.getElementById(`narniaSnowmobileValue.${id}`).value = 0;
+                    document.getElementById(`narniaSnowmobile.${id}`).style.color = 'rgb(204,75,55)';
+                }
+            });
             if (Number(this.patrollers[counter].SNOWMOBILE) !== 1) {
                 document.getElementById(`narniaSnowmobile.${counter}`).style.color = 'rgb(204,75,55)';
-                document.getElementById(`narniaSnowmobile.${counter}`).addEventListener(`click`, () => {
-                    this.patrollers[counter].SNOWMOBILE = 1;
-                    document.getElementById(`narniaSnowmobile.${counter}`).style.color = 'rgb(23,121,186)';
-                    document.getElementById(`narniaSnowmobile.${counter}`).style.cursor = 'default';
-                });
             } else {
                 document.getElementById(`narniaSnowmobile.${counter}`).style.color = 'rgb(23,121,186)';
                 document.getElementById(`narniaSnowmobile.${counter}`).style.cursor = 'default';
@@ -80,20 +89,112 @@ export default class EventHandler {
         }
     }
 
-    handleNarniaToboggan() {
-
+    handleNarniaToboggan(maximum) {
+        let counter = 0;
+        while (counter < maximum) {
+            document.getElementById(`narniaToboggan.${counter}`).addEventListener(`click`, (event) => {
+                let id = event.target.id.substring(17,19);
+                console.log(id);
+                if (Number(this.patrollers[id].TOBOGGAN) !== 1) {
+                    this.patrollers[id].TOBOGGAN = 1;
+                    document.getElementById(`narniaTobogganValue.${id}`).value = 1;
+                    document.getElementById(`narniaToboggan.${id}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`narniaToboggan.${id}`).style.cursor = 'default';
+                } else {
+                    this.patrollers[id].TOBOGGAN = 0;
+                    document.getElementById(`narniaTobogganValue.${id}`).value = 0;
+                    document.getElementById(`narniaToboggan.${id}`).style.color = 'rgb(204,75,55)';
+                }
+            });
+            if (Number(this.patrollers[counter].TOBOGGAN) !== 1) {
+                document.getElementById(`narniaToboggan.${counter}`).style.color = 'rgb(204,75,55)';
+            } else {
+                document.getElementById(`narniaToboggan.${counter}`).style.color = 'rgb(23,121,186)';
+                document.getElementById(`narniaToboggan.${counter}`).style.cursor = 'default';
+            }
+            counter++;
+        }
     }
 
-    handleNarniaSplint() {
-
+    handleNarniaSplint(maximum) {
+        let counter = 0;
+        while (counter < maximum) {
+            document.getElementById(`narniaSplint.${counter}`).addEventListener(`click`, (event) => {
+                let id = event.target.id.substring(17,19);
+                console.log(id);
+                if (Number(this.patrollers[id].SPLINT) !== 1) {
+                    this.patrollers[id].SPLINT = 1;
+                    document.getElementById(`narniaSplintValue.${id}`).value = 1;
+                    document.getElementById(`narniaSplint.${id}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`narniaSplint.${id}`).style.cursor = 'default';
+                } else {
+                    this.patrollers[id].SPLINT = 0;
+                    document.getElementById(`narniaSplintValue.${id}`).value = 0;
+                    document.getElementById(`narniaSplint.${id}`).style.color = 'rgb(204,75,55)';
+                }
+            });
+            if (Number(this.patrollers[counter].SPLINT) !== 1) {
+                document.getElementById(`narniaSplint.${counter}`).style.color = 'rgb(204,75,55)';
+            } else {
+                document.getElementById(`narniaSplint.${counter}`).style.color = 'rgb(23,121,186)';
+                document.getElementById(`narniaSplint.${counter}`).style.cursor = 'default';
+            }
+            counter++;
+        }
     }
 
-    handleNarniaCpr() {
-
+    handleNarniaCpr(maximum) {
+        let counter = 0;
+        while (counter < maximum) {
+            document.getElementById(`narniaCpr.${counter}`).addEventListener(`click`, (event) => {
+                let id = event.target.id.substring(17,19);
+                console.log(id);
+                if (Number(this.patrollers[id].CPR) !== 1) {
+                    this.patrollers[id].CPR = 1;
+                    document.getElementById(`narniaCprValue.${id}`).value = 1;
+                    document.getElementById(`narniaCpr.${id}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`narniaCpr.${id}`).style.cursor = 'default';
+                } else {
+                    this.patrollers[id].CPR = 0;
+                    document.getElementById(`narniaCprValue.${id}`).value = 0;
+                    document.getElementById(`narniaCpr.${id}`).style.color = 'rgb(204,75,55)';
+                }
+            });
+            if (Number(this.patrollers[counter].CPR) !== 1) {
+                document.getElementById(`narniaCpr.${counter}`).style.color = 'rgb(204,75,55)';
+            } else {
+                document.getElementById(`narniaCpr.${counter}`).style.color = 'rgb(23,121,186)';
+                document.getElementById(`narniaCpr.${counter}`).style.cursor = 'default';
+            }
+            counter++;
+        }
     }
 
-    handleNarniaChair() {
-
+    handleNarniaChair(maximum) {
+        let counter = 0;
+        while (counter < maximum) {
+            document.getElementById(`narniaChair.${counter}`).addEventListener(`click`, (event) => {
+                let id = event.target.id.substring(17,19);
+                console.log(id);
+                if (Number(this.patrollers[id].CHAIR) !== 1) {
+                    this.patrollers[id].CHAIR = 1;
+                    document.getElementById(`narniaChairValue.${id}`).value = 1;
+                    document.getElementById(`narniaChair.${id}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`narniaChair.${id}`).style.cursor = 'default';
+                } else {
+                    this.patrollers[id].CHAIR = 0;
+                    document.getElementById(`narniaChairValue.${id}`).value = 0;
+                    document.getElementById(`narniaChair.${id}`).style.color = 'rgb(204,75,55)';
+                }
+            });
+            if (Number(this.patrollers[counter].CHAIR) !== 1) {
+                document.getElementById(`narniaChair.${counter}`).style.color = 'rgb(204,75,55)';
+            } else {
+                document.getElementById(`narniaChair.${counter}`).style.color = 'rgb(23,121,186)';
+                document.getElementById(`narniaChair.${counter}`).style.cursor = 'default';
+            }
+            counter++;
+        }
     }
 
     handleUploadFileButton() {
@@ -105,26 +206,28 @@ export default class EventHandler {
     updatePatrollerData(counter) {
         let updatedPatrollers = [];
         for (let i = 0; i < counter; i++) {
-            updatedPatrollers[i] = [];
-            updatedPatrollers[i][0] = document.getElementById(`narniaPatrollerID.${i}`).value;
-            updatedPatrollers[i][1] = document.getElementById(`narniaLastName.${i}`).value;
-            updatedPatrollers[i][2] = document.getElementById(`narniaFirstName.${i}`).value;
-            updatedPatrollers[i][3] = document.getElementById(`narniaRating.${i}`).value;
-            updatedPatrollers[i][4] = document.getElementById(`narniaLeader.${i}`).value;
-            updatedPatrollers[i][5] = document.getElementById(`narniaDays.${i}`).value;
-            updatedPatrollers[i][6] = document.getElementById(`narniaHalfDays.${i}`).value;
-            updatedPatrollers[i][7] = document.getElementById(`narniaNights.${i}`).value;
-            updatedPatrollers[i][8] = document.getElementById(`narniaSnowmobile.${i}`).value;
-            updatedPatrollers[i][9] = document.getElementById(`narniaToboggan.${i}`).value;
-            updatedPatrollers[i][10] = document.getElementById(`narniaSplint.${i}`).value;
-            updatedPatrollers[i][11] = document.getElementById(`narniaCpr.${i}`).value;
-            updatedPatrollers[i][12] = document.getElementById(`narniaChair.${i}`).value;
+            updatedPatrollers[i] = {
+                "ID": document.getElementById(`narniaPatrollerID.${i}`).value,
+                "LAST_NAME": document.getElementById(`narniaLastName.${i}`).value,
+                "FIRST_NAME": document.getElementById(`narniaFirstName.${i}`).value,
+                "RATING": document.getElementById(`narniaRating.${i}`).value,
+                "LEADER": document.getElementById(`narniaLeader.${i}`).value,
+                "DAYS": document.getElementById(`narniaDays.${i}`).value,
+                "HALF_DAYS": document.getElementById(`narniaHalfDays.${i}`).value,
+                "NIGHTS": document.getElementById(`narniaNights.${i}`).value,
+                "SNOWMOBILE": document.getElementById(`narniaSnowmobileValue.${i}`).value,
+                "TOBOGGAN": document.getElementById(`narniaTobogganValue.${i}`).value,
+                "SPLINT": document.getElementById(`narniaSplintValue.${i}`).value,
+                "CPR": document.getElementById(`narniaCprValue.${i}`).value,
+                "CHAIR": document.getElementById(`narniaChairValue.${i}`).value
+            }
         }
+
         fetch(document.url, {
             method: 'POST',
             body: JSON.stringify(updatedPatrollers),
             headers: {
-                'x-requested-with': 'fetch.3',
+                'x-requested-with': 'fetch.1',
                 'mode': 'no-cors'
             }
         }).then((response) => {

@@ -62,12 +62,11 @@ class DataHandler {
     static updateAllPatrollerData(patrollerData) {
         patrollerData = JSON.parse(patrollerData);
         const finalFilePath = `data/patrollers2.csv`;
-        let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,splint,cpr,chair\n`;
-        let writeLine = '';
-        FS.writeFile(finalFilePath, stuff, `utf8`, (err) => {
+        let writeLine = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,splint,cpr,chair\n`;
+        FS.writeFile(finalFilePath, writeLine, `utf8`, (err) => {
             if (err) throw err;
             for (let i = 0; i < patrollerData.length; i++) {
-                writeLine = `${patrollerData[i][0]},${patrollerData[i][1]},${patrollerData[i][2]},${patrollerData[i][3]},${patrollerData[i][4]},${patrollerData[i][5]},${patrollerData[i][6]},${patrollerData[i][7]},${patrollerData[i][8]},${patrollerData[i][9]},${patrollerData[i][10]},${patrollerData[i][11]},${patrollerData[i][12]}\n`;
+                writeLine = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SPLINT},${patrollerData[i].CPR},${patrollerData[i].CHAIR}\n`;
                 writeLine = writeLine.replace(/null/gi, '');
                 FS.appendFile(finalFilePath, writeLine, `utf8`, (err) => {
                     if (err) console.log(err);
