@@ -43,7 +43,8 @@ export default class EventHandler {
     }
 
     handlePatrollerWorkButton() {
-        document.getElementById(`patrollerWork`).addEventListener(`click`, () => {
+        document.getElementById(`patrollerWork`).addEventListener(`click`, (event) => {
+            event.stopImmediatePropagation();
             let counter = NarniaContents.populateWorkDiv(this.patrollers);
             this.handleNarniaSnowmobile(counter);
             this.handleNarniaToboggan(counter);
