@@ -94,7 +94,7 @@ export default class EventHandler {
         let counter = 0;
         while (counter < maximum) {
             document.getElementById(`narniaToboggan.${counter}`).addEventListener(`click`, (event) => {
-                let id = event.target.id.substring(17,19);
+                let id = event.target.id.substring(15,17);
                 console.log(id);
                 if (Number(this.patrollers[id].TOBOGGAN) !== 1) {
                     this.patrollers[id].TOBOGGAN = 1;
@@ -121,7 +121,7 @@ export default class EventHandler {
         let counter = 0;
         while (counter < maximum) {
             document.getElementById(`narniaSplint.${counter}`).addEventListener(`click`, (event) => {
-                let id = event.target.id.substring(17,19);
+                let id = event.target.id.substring(13,15);
                 console.log(id);
                 if (Number(this.patrollers[id].SPLINT) !== 1) {
                     this.patrollers[id].SPLINT = 1;
@@ -148,7 +148,7 @@ export default class EventHandler {
         let counter = 0;
         while (counter < maximum) {
             document.getElementById(`narniaCpr.${counter}`).addEventListener(`click`, (event) => {
-                let id = event.target.id.substring(17,19);
+                let id = event.target.id.substring(10,12);
                 console.log(id);
                 if (Number(this.patrollers[id].CPR) !== 1) {
                     this.patrollers[id].CPR = 1;
@@ -175,7 +175,7 @@ export default class EventHandler {
         let counter = 0;
         while (counter < maximum) {
             document.getElementById(`narniaChair.${counter}`).addEventListener(`click`, (event) => {
-                let id = event.target.id.substring(17,19);
+                let id = event.target.id.substring(12,14);
                 console.log(id);
                 if (Number(this.patrollers[id].CHAIR) !== 1) {
                     this.patrollers[id].CHAIR = 1;
