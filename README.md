@@ -1,10 +1,11 @@
 ## Todo:
 
 * Print meal tickets ??
-* Finish signoffs for night shift
+* ~~Finish signoffs for night shift~~
 * ~~Make half-day print out with a grey line~~
-* Create Narnia for admin to update totals, do signoffs, and misc. shift stuff.
+* Create Narnia for admin to update totals, do signoffs, and misc. shift stuff. - 70% complete
 * ~~Hide shift counts and move them to an alert box at signin~~
+* ~~Fix Patroller work button from running multiple times....~~
 
 
 ## systemctl config

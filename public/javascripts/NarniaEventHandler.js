@@ -43,23 +43,27 @@ export default class EventHandler {
     }
 
     handlePatrollerWorkButton() {
+        let alreadyRun = false;
         document.getElementById(`patrollerWork`).addEventListener(`click`, (event) => {
-            event.stopImmediatePropagation();
-            let counter = NarniaContents.populateWorkDiv(this.patrollers);
-            this.handleNarniaSnowmobile(counter);
-            this.handleNarniaToboggan(counter);
-            this.handleNarniaSplint(counter);
-            this.handleNarniaCpr(counter);
-            this.handleNarniaChair(counter);
-            let updateButton = `<input type="submit" class="button success expanded border" id="patrollerUpdateButton" value="Update Patroller Data">`;
-            document.getElementById('narniaCenterButton').insertAdjacentHTML('beforeend', updateButton);
-            document.getElementById(`patrollerUpdateButton`).addEventListener(`click`, (event) => {
+            if (!alreadyRun) {
                 event.stopImmediatePropagation();
-                this.updatePatrollerData(counter);
-                document.getElementById('narniaWork').innerHTML = '';
-                document.getElementById('narniaCenterButton').innerHTML = '';
-                alert(`Patroller Data Updated.`);
-            });
+                let counter = NarniaContents.populateWorkDiv(this.patrollers);
+                this.handleNarniaSnowmobile(counter);
+                this.handleNarniaToboggan(counter);
+                this.handleNarniaSplint(counter);
+                this.handleNarniaCpr(counter);
+                this.handleNarniaChair(counter);
+                let updateButton = `<input type="submit" class="button success expanded border" id="patrollerUpdateButton" value="Update Patroller Data">`;
+                document.getElementById('narniaCenterButton').insertAdjacentHTML('beforeend', updateButton);
+                document.getElementById(`patrollerUpdateButton`).addEventListener(`click`, (event) => {
+                    event.stopImmediatePropagation();
+                    this.updatePatrollerData(counter);
+                    document.getElementById('narniaWork').innerHTML = '';
+                    document.getElementById('narniaCenterButton').innerHTML = '';
+                    alert(`Patroller Data Updated.`);
+                });
+            }
+            alreadyRun = true;
         });
     }
 
