@@ -4,6 +4,32 @@ export default class NarniaContents {
 
     static populateWorkDiv(patrollers) {
         let counter = 0;
+        let daysCount = 0;
+        let halfDaysCount = 0;
+        let nightsCount = 0;
+        let countsDiv = `<div class="grid-x grid-padding-x">
+                <div class="small-5 cell">&nbsp;</div>
+                <div class="small-2 cell"><br><strong>Count Totals:</strong></div>
+                    <div class="small-1 cell">
+                        <label>Days:
+                            <input type="text" id="daysCount">
+                        </div>
+                    </label>
+                <div class="small-1 cell">
+                    <label>Half Days:
+                        <input type="text" id="halfDaysCount">
+                    </label>
+                </div>
+                <div class="small-1 cell">
+                    <label>Nights:
+                        <input type="text" id="nightsCount">
+                    </label>
+                </div>
+                <div class="small-2 cell">&nbsp;</div>
+            </div>`;
+
+        document.getElementById(`narniaWorkHeader`).insertAdjacentHTML('beforeend', countsDiv);
+
         while (counter < patrollers.length) {
             let divContents = {
                 patrollerID: `<div class="small-1 cell">
@@ -73,8 +99,17 @@ export default class NarniaContents {
             document.getElementById(`narniaRating.${counter}`).value = patrollers[counter].RATING;
             document.getElementById(`narniaLeader.${counter}`).value = patrollers[counter].LEADER;
             document.getElementById(`narniaDays.${counter}`).value = patrollers[counter].DAYS;
+            if (patrollers[counter].DAYS > 0) {
+                daysCount++;
+            }
             document.getElementById(`narniaHalfDays.${counter}`).value = patrollers[counter].HALF_DAYS;
+            if (patrollers[counter].HALF_DAYS > 0) {
+                halfDaysCount++;
+            }
             document.getElementById(`narniaNights.${counter}`).value = patrollers[counter].NIGHTS;
+            if (patrollers[counter].NIGHTS > 0) {
+                nightsCount++;
+            }
             document.getElementById(`narniaSnowmobileValue.${counter}`).value = patrollers[counter].SNOWMOBILE;
             document.getElementById(`narniaTobogganValue.${counter}`).value = patrollers[counter].TOBOGGAN;
             document.getElementById(`narniaSplintValue.${counter}`).value = patrollers[counter].SPLINT;
@@ -82,6 +117,9 @@ export default class NarniaContents {
             document.getElementById(`narniaChairValue.${counter}`).value = patrollers[counter].CHAIR;
             counter++;
         }
+        document.getElementById(`daysCount`).value = daysCount.toString();
+        document.getElementById(`halfDaysCount`).value = halfDaysCount.toString();
+        document.getElementById(`nightsCount`).value = nightsCount.toString();
         return counter;
     }
 }
