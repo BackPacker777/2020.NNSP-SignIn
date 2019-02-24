@@ -77,6 +77,7 @@ export default class EventHandler {
                             }
                             document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum], person.LEADER));
                             document.getElementById(`patrollerID.${LEADERS}.${counter[teamNum]}`).value = person.ID;
+                            this.handleUndo(teamNum, counter[teamNum]);
                             this.changePatrollerDiv(LEADERS, counter[LEADERS]);
                             if (this.dayNight === 'Day') {
                                 this.handleHalfDay(teamNum, counter[teamNum]);
@@ -97,12 +98,12 @@ export default class EventHandler {
                         alert(`Incorrect ID for leadership/trainers team. Please try again or sign on to a different team.`);
                     }
                 } else {
-                    console.log(`Doing stuff?`);
                     this.buttons[i].disabled = true;
                     document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum]));
                     if (this.dayNight === 'Day') {
                         this.handleHalfDay(teamNum, counter[teamNum]);
                     }
+                    this.handleUndo(teamNum, counter[teamNum]);
                     this.changePatrollerDiv(teamNum, counter[teamNum]);
                     counter[teamNum]++;
                 }
@@ -306,7 +307,7 @@ export default class EventHandler {
         document.getElementById(`rating.${teamNum}.${counter}`).value = ``;
         document.getElementById(`time.${teamNum}.${counter}`).value = ``;
         document.getElementById(`halfDay.${teamNum}.${counter}`).checked = false;
-        document.getElementById(`days.${teamNum}.${counter}`).value = ``;
+        // document.getElementById(`days.${teamNum}.${counter}`).value = ``;
         if (teamNum !== 5) {
             document.getElementById(`guest.${teamNum}.${counter}`).value = ``;
         }
@@ -634,6 +635,15 @@ export default class EventHandler {
                 }
             } else {
                 alert(`Incorrect Password`);
+            }
+        });
+    }
+
+    handleUndo(teamNum, counter) {
+        document.getElementById(`undo.${teamNum}.${counter}`).addEventListener('click', () => {
+            this.clearDiv(teamNum, counter);
+            for (let button of this.buttons) {
+                document.getElementById(button.id).disabled = false;
             }
         });
     }

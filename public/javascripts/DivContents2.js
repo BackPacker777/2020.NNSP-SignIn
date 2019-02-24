@@ -66,7 +66,7 @@ export default class DivContents2 {
 
         let admin = `<div class="small-1 cell text-center adminDiv" id="adminDiv.${teamNum}.${counter}">
                         <br>
-                        <i class="far fa-compass" id="admin.${teamNum}.${counter}" title="Move to different team"></i>
+                        <i class="far fa-compass" id="admin.${teamNum}.${counter}" title="Move to different team"></i> &nbsp; <i class="fas fa-undo" id="undo.${teamNum}.${counter}" title="Undo team join"></i>
                     </div>`;
 
         let blank = `<div class="small-1 cell"></div>`;

@@ -4,8 +4,10 @@
 * ~~Finish signoffs for night shift~~
 * ~~Make half-day print out with a grey line~~
 * Create Narnia for admin to update totals, do signoffs, and misc. shift stuff. - 70% complete
+~~* Add ability to undo join shift action~~
 * ~~Hide shift counts and move them to an alert box at signin~~
 * ~~Fix Patroller work button from running multiple times....~~
+* Add upload patroller roster csv capability
 
 
 ## systemctl config
