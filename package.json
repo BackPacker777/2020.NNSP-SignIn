@@ -1,6 +1,6 @@
 {
   "name": "nnsp_sign_in",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "NNSP Sign In App",
   "main": "bin/signin_server",
   "scripts": {
@@ -13,9 +13,7 @@
   },
   "dependencies": {
     "ejs": "latest",
-    "formidable": "latest",
-    "node-fetch": "^2.3.0",
-    "npm": "^6.5.0"
+    "formidable": "latest"
   },
   "devDependencies": {},
   "repository": {

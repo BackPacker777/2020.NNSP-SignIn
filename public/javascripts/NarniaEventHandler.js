@@ -204,7 +204,19 @@ export default class EventHandler {
 
     handleUploadFileButton() {
         document.getElementById(`uploadFile`).addEventListener(`click`, () => {
-
+            let file = document.getElementById('fileUpload');
+            let data = new FormData();
+            data.append('file', file.files[0]);
+            fetch(document.url, {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'x-requested-with': 'fetch.4',
+                    'mode': 'no-cors'
+                }
+            }).then((response) => {
+                return response;
+            });
         });
     }
 

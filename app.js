@@ -64,6 +64,8 @@ class app {
                     }).on('end', () => {
                         DATA_HANDLER.updateAllPatrollerData(body);
                     });
+                } else if (request.headers['x-requested-with'] === 'fetch.4') {
+                    DATA_HANDLER.receiveFile(request);
                 } else {
                     console.log(`Yo, somethings super wrong BDH!`);
                 }
