@@ -10,6 +10,14 @@ class DataHandler {
         });
     }
 
+    static getKey() {
+        return FS.readFileSync(`data/encryption/key.pem`);
+    }
+
+    static getCert() {
+        return FS.readFileSync(`data/encryption/cert.pem`);
+    }
+
     static setBaseData(callback) {
         let filePath = `data/patrollers.csv`;
         FS.readFile(filePath, `utf8`, (err, file) => {

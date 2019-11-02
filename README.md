@@ -7,7 +7,7 @@
 ~~* Add ability to undo join shift action~~
 * ~~Hide shift counts and move them to an alert box at signin~~
 * ~~Fix Patroller work button from running multiple times....~~
-* Add upload patroller roster csv capability
+* Add upload patroller roster csv capability - Done, just needs to be incorporated
 
 
 ## systemctl config

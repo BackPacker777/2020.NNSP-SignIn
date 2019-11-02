@@ -7,7 +7,7 @@ ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,spl
 185535,Ballien,Lisa,Senior,TRAINER,0,0,0,0,0,0,0,0,FALSE
 128091,Barber,Rick,Certified,,0,0,0,0,0,0,0,0,FALSE
 165187,Barthel,Linda,Secondary,,0,0,0,0,0,0,0,0,FALSE
-226122,Bates,Howard,Senior,,2,0,1,0,0,0,0,0,FALSE
+226122,Bates,Howard,Senior,,0,0,0,0,0,0,0,0,FALSE
 239366,Blasius,Joe,Alpine Patroller,,0,0,0,0,0,0,0,0,FALSE
 246674,Blasius,Breanna,Alpine Patroller,,0,0,0,0,0,0,0,0,FALSE
 129057,Bodamer,Daniel,Senior,,0,0,0,0,0,0,0,0,FALSE

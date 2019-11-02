@@ -1,52 +1,19 @@
-'use strict';
+"use strict";
 
 const DATA_HANDLER = require('./node/DataHandler');
 
-/**
- * @desc Web server utilizing HTTP/2
- */
 class app {
-    #data_handler;
-    #ejsData;
-    #fileName;
-
-    /**
-     * @desc instantiates DataHandler object
-     */
     constructor() {
-        this.#data_handler = new DATA_HANDLER();
-        this.#ejsData = null;
-        this.#fileName = `index.ejs`;
+        this.ejsData = null;
+        this.fileName = `index.ejs`;
         this.loadServer();
     }
 
-    /**
-     * @desc Route & mime type handler
-     */
     loadServer() {
         const HTTP = require('http');
-        // const HTTP2 = require('http2');
         const EJS = require('ejs');
         const PORT = process.env.PORT || 8111;
-        const SSL_OPTIONS = {
-            key: DATA_HANDLER.getKey(),
-            cert: DATA_HANDLER.getCert(),
-            requestCert: true,
-            rejectUnauthorized: false
-        };
 
-
-/*
-        HTTP.createServer((request, response) => {
-            response.writeHead(301, {
-                'Location': `https://${request.headers['host']}${request.url}`
-            });
-            response.end();
-        }).listen(80);
-
-*/
-
-        // HTTP2.createSecureServer(SSL_OPTIONS, async (request, response) => {
         HTTP.createServer((request, response) => {
 
             let httpHandler = (error, string, contentType) => {
@@ -54,18 +21,15 @@ class app {
                     response.writeHead(500, {'Content-Type': 'text/plain'});
                     response.end('An error has occurred: ' + error.message);
                 } else if (contentType.indexOf('css') >= 0 || contentType.indexOf('js') >= 0) {
-                    response.setHeader('Cache-Control', 'max-age=86400');
                     response.writeHead(200, {'Content-Type': contentType});
                     response.end(string, 'utf-8');
                 } else if (contentType.indexOf('html') >= 0) {
-                    response.setHeader('Cache-Control', 'max-age=86400');
                     response.writeHead(200, {'Content-Type': contentType});
                     response.end(EJS.render(string, {
-                        data: this.#ejsData,
-                        filename: this.#fileName
+                        data: this.ejsData,
+                        filename: this.fileName
                     }));
                 } else {
-                    response.setHeader('Cache-Control', 'max-age=86400');
                     response.writeHead(200, {'Content-Type': contentType});
                     response.end(string, 'binary');
                 }

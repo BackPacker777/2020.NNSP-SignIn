@@ -12,12 +12,19 @@
     "node": ">= 11.4.0"
   },
   "dependencies": {
-    "ejs": "latest",
-    "formidable": "latest",
-    "node-fetch": "^2.3.0",
-    "npm": "^6.5.0"
+    "ejs": "^2.6.2",
+    "formidable": "latest"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.6.0",
+    "gulp": "latest",
+    "gulp-git": "latest",
+    "gulp-minify-ejs": "latest",
+    "gulp-sass": "latest",
+    "gulp-terser": "latest",
+    "jsdoc": "latest"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/BackPacker777/2020.NNSP-SignIn.git"

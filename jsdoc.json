@@ -1,0 +1,24 @@
+{
+  "plugins": [],
+  "recurseDepth": 10,
+  "source": {
+    "include": ".",
+    "exclude": ["public/javascripts/quagga.js", "public/javascripts/quagga.min.js", "node_modules"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  },
+  "opts": {
+    "destination": "documentation/jsdocs",
+    "encoding": "utf8",
+    "recurse": true
+  }
+}
