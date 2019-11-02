@@ -1,5 +1,6 @@
 `use strict`;
 
+const UPLOADER = require('./FileUploader');
 const FS = require(`fs`);
 
 class DataHandler {
@@ -81,6 +82,10 @@ class DataHandler {
                 });
             }
         });
+    }
+
+    static receiveFile(request) {
+        UPLOADER.receiveFiles(request);
     }
 }
 
