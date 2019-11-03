@@ -50,7 +50,7 @@ gulp.task('default', gulp.parallel(
     // 'git-add',
     // 'minify-ejs',
     // 'compile-sass'
-    // 'minify-js'
-    'watch'
+    'minify-js'
+    // 'watch'
     )
 );
