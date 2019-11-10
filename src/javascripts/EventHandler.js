@@ -1,5 +1,3 @@
-"use strict";
-
 import DivContents from "./DivContents2.js";
 import NarniaEventHandler from "./NarniaEventHandler.js";
 
@@ -77,7 +75,7 @@ export default class EventHandler {
                             }
                             document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum], person.LEADER));
                             document.getElementById(`patrollerID.${LEADERS}.${counter[teamNum]}`).value = person.ID;
-                            this.handleUndo(teamNum, counter[teamNum]);
+                            // this.handleUndo(teamNum, counter[teamNum]);
                             this.changePatrollerDiv(LEADERS, counter[LEADERS]);
                             if (this.dayNight === 'Day') {
                                 this.handleHalfDay(teamNum, counter[teamNum]);

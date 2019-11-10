@@ -47,11 +47,11 @@ export default class DivContents2 {
                         </div>
                     </div>`;
 
-        let days = `<div class="small-1 cell">
+        /*let days = `<div class="small-1 cell">
                         <label>Days:
                             <input type="text" class="submitInclude" readonly id="days.${teamNum}.${counter}">
                         </label>
-                    </div>`;
+                    </div>`;*/
 
         let guest = `<div class="small-1 cell" id="guestDiv.${teamNum}.${counter}">
                         <label>Guest:
@@ -126,6 +126,7 @@ export default class DivContents2 {
                         ${halfDay}
                         ${guest}
                         ${signOffs}
+                        ${blank}
                     </div>`;
             }
         }
