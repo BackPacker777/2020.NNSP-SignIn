@@ -54,7 +54,7 @@ export default class EventHandler {
 
     handleSignOnButtons() {
         let counter = [1,1,1,1,1,1,1];
-        const LEADERS = 6;
+        const LEADERS = 6, CANDIDATES = 5;
         for (let i = 0; i < this.buttons.length; i++) {
             this.buttons[i].addEventListener('click', () => {
                 document.getElementById(`weekendOverride`).disabled = true;
@@ -95,6 +95,15 @@ export default class EventHandler {
                     if (!isLeader) {
                         alert(`Incorrect ID for leadership/trainers team. Please try again or sign on to a different team.`);
                     }
+                } else if (teamNum === CANDIDATES) {
+                    this.buttons[i].disabled = true;
+                    document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum]));
+                    if (this.dayNight === 'Day') {
+                        this.handleHalfDay(teamNum, counter[teamNum]);
+                    }
+                    // this.handleUndo(teamNum, counter[teamNum]);
+                    this.changePatrollerDiv(teamNum, counter[teamNum]);
+                    counter[teamNum]++;
                 } else {
                     this.buttons[i].disabled = true;
                     document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum]));
