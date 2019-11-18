@@ -86,7 +86,7 @@ class app {
                             body.push(chunk);
                         }).on('end', () => {
                             body = Buffer.concat(body).toString();
-                            this.ejsData = JSON.parse(body);
+                            this.#ejsData = JSON.parse(body);
                             this.fileName = `results.ejs`;
                         });
                     } else if(request.headers['x-requested-with'] === 'fetch.3') {

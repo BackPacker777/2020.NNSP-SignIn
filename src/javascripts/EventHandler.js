@@ -75,7 +75,7 @@ export default class EventHandler {
                             }
                             document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum], person.LEADER));
                             document.getElementById(`patrollerID.${LEADERS}.${counter[teamNum]}`).value = person.ID;
-                            // this.handleUndo(teamNum, counter[teamNum]);
+                            this.handleUndo(teamNum, counter[teamNum]);
                             this.changePatrollerDiv(LEADERS, counter[LEADERS]);
                             if (this.dayNight === 'Day') {
                                 this.handleHalfDay(teamNum, counter[teamNum]);
@@ -95,16 +95,7 @@ export default class EventHandler {
                     if (!isLeader) {
                         alert(`Incorrect ID for leadership/trainers team. Please try again or sign on to a different team.`);
                     }
-                } /*else if (teamNum === CANDIDATES) {
-                    this.buttons[i].disabled = true;
-                    document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum]));
-                    if (this.dayNight === 'Day') {
-                        this.handleHalfDay(teamNum, counter[teamNum]);
-                    }
-                    this.handleUndo(teamNum, counter[teamNum]);
-                    this.changePatrollerDiv(teamNum, counter[teamNum]);
-                    counter[teamNum]++;
-                }*/ else {
+                } else {
                     this.buttons[i].disabled = true;
                     document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum]));
                     if (this.dayNight === 'Day') {
@@ -552,6 +543,7 @@ export default class EventHandler {
 
     handlePrintFormButton() {
         document.getElementById('formSubmit').addEventListener('click', (event) => {
+            console.log(`Print button clicked`);
             event.stopImmediatePropagation();
             this.updateDays();
             document.getElementById('formSubmit').disabled = true;
@@ -598,6 +590,7 @@ export default class EventHandler {
                         if (validLeader) {
                             if (validLeader.value) {
                                 document.getElementById('formSubmit').disabled = false;
+                                this.handlePrintFormButton();
                             }
                         }
                     }
@@ -659,6 +652,7 @@ export default class EventHandler {
         for (let i = 0; i < this.patrollers.length; i++) {
             for (let j = 0; j < this.signedIn.length; j++) {
                 if (Number(this.patrollers[i].ID) === Number(this.signedIn[j].ID)) {
+                    console.log(`Updating ${this.patrollers[i].LAST_NAME} days....`);
                     this.patrollers[i].DAYS = this.signedIn[j].DAYS;
                     this.patrollers[i].NIGHTS = this.signedIn[j].NIGHTS;
                     this.patrollers[i].HALF_DAYS = this.signedIn[j].HALF_DAYS;

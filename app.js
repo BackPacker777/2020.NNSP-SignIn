@@ -77,23 +77,27 @@ class app {
                         response.writeHead(200, {'content-type': 'application/json'});
                         response.end(patrollerData);
                     });
-                } else if(request.headers['x-requested-with'] === 'fetch.1') {
+                } else if (request.headers['x-requested-with'] === 'fetch.1') {
                     let body = '';
                     request.on('data', (chunk) => {
                         body += chunk.toString();
                     }).on('end', () => {
                         DATA_HANDLER.updatePatrollerDays(body);
                     });
-                } else if(request.headers['x-requested-with'] === 'fetch.2') {
+                } else if (request.headers['x-requested-with'] === 'fetch.2') {
                     let body = [];
                     request.on('data', (chunk) => {
                         body.push(chunk);
                     }).on('end', () => {
-                        body = Buffer.concat(body).toString();
-                        this.ejsData = JSON.parse(body);
-                        this.fileName = `results.ejs`;
+                        try {
+                            body = Buffer.concat(body).toString();
+                            this.#ejsData = JSON.parse(body);
+                            this.fileName = `results.ejs`;
+                        } catch (error) {
+                            console.log(error);
+                        }
                     });
-                } else if(request.headers['x-requested-with'] === 'fetch.3') {
+                } else if (request.headers['x-requested-with'] === 'fetch.3') {
                     let body = '';
                     request.on('data', (chunk) => {
                         body += chunk.toString();

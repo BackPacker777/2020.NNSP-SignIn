@@ -131,7 +131,7 @@ export default class DivContents2 {
                         ${halfDay}
                         ${guest}
                         ${signOffs}
-                        ${blank}
+                        ${admin}
                     </div>`;
             }
         }

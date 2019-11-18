@@ -1,5 +1,6 @@
 ## Todo:
 
+* Fix 00 own radio checking
 * Print meal tickets ??
 * ~~Finish signoffs for night shift~~
 * ~~Make half-day print out with a grey line~~
