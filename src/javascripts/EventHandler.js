@@ -1,8 +1,10 @@
 import DivContents from "./DivContents2.js";
 import NarniaEventHandler from "./NarniaEventHandler.js";
+import WebStorage from "./WebStorage.js";
 
 export default class EventHandler {
     constructor(patrollers, dayNight, isWeekend) {
+        WebStorage.purgeLocalStorage();
         this.signedIn = [];
         this.patrollers = patrollers;
         this.dayNight = dayNight;
@@ -225,9 +227,11 @@ export default class EventHandler {
                     }
                     alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS) - .5}`);
                 }
+                WebStorage.populateLocalStorage(patroller, patroller.TEAM_POSITION);
                 break;
             }
         }
+        WebStorage.retrieveLocalStorage();
     }
 
     populateDiv(teamNum, counter, i) {
@@ -275,7 +279,8 @@ export default class EventHandler {
             SPLINT: this.patrollers[i].SPLINT,
             CPR: this.patrollers[i].CPR,
             CHAIR: this.patrollers[i].CHAIR,
-            TODAY_HALF: false
+            TODAY_HALF: false,
+            TEAM_POSITION: counter
         };
         if (teamNum !== 5) {
             patroller.GUEST = document.getElementById(`guest.${teamNum}.${counter}`).value;
