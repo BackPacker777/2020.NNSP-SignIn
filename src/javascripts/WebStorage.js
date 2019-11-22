@@ -6,9 +6,9 @@
 export default class WebStorage {
     /**
      * @param pageData
-     * @param counter
      */
-    static populateLocalStorage(pageData, counter) {
+    static populateLocalStorage(pageData) {
+        let counter = `${pageData.TEAM}.${pageData.TEAM_POSITION}`;
         localStorage.setItem(`id.${counter}`, pageData.ID);
         localStorage.setItem(`radio.${counter}`, pageData.RADIO);
         localStorage.setItem(`name.${counter}`, pageData.NAME);
@@ -27,21 +27,14 @@ export default class WebStorage {
         localStorage.setItem(`todayHalf.${counter}`, pageData.TODAY_HALF);
         localStorage.setItem(`guest.${counter}`, pageData.GUEST);
         localStorage.setItem(`teamPosition.${counter}`, pageData.TEAM_POSITION);
-
-        // let lePrint = localStorage.getItem(`name.${counter}`);
-        // console.log(lePrint);
     }
 
     /**
      * Get all localStorage items
-     * @return null
+     * @return boolean
      */
     static retrieveLocalStorage() {
-        for (let i = 0; i < localStorage.length; i++ ) {
-            let key = localStorage.key(i);
-            let value = localStorage[key];
-            console.log(`${key}: ${value}`);
-        }
+        return localStorage.length > 0;
     }
 
     /**

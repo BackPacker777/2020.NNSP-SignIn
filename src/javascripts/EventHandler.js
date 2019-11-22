@@ -4,7 +4,6 @@ import WebStorage from "./WebStorage.js";
 
 export default class EventHandler {
     constructor(patrollers, dayNight, isWeekend) {
-        WebStorage.purgeLocalStorage();
         this.signedIn = [];
         this.patrollers = patrollers;
         this.dayNight = dayNight;
@@ -17,6 +16,7 @@ export default class EventHandler {
         this.handleWeekendOverride();
         this.handleSignOnButtons();
         this.validate();
+        this.populatePage();
         EventHandler.stopEnterKey();
     }
 
@@ -556,6 +556,7 @@ export default class EventHandler {
                 document.getElementById(button.id).disabled = true;
             }
             window.open('/public/views/results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
+            WebStorage.purgeLocalStorage();
         });
     }
 
@@ -583,6 +584,7 @@ export default class EventHandler {
                         }
                     }
                     if (valid) {
+                        this.populatePage();
                         for (let button of this.buttons) {
                             document.getElementById(button.id).disabled = false;
                         }
@@ -651,6 +653,16 @@ export default class EventHandler {
                 document.getElementById(button.id).disabled = false;
             }
         });
+    }
+
+    populatePage() {
+        if (WebStorage.retrieveLocalStorage()) {
+            for (let i = 0; i < localStorage.length; i++ ) {
+                let key = localStorage.key(i);
+                let value = localStorage[key];
+                console.log(`${key}: ${value}`);
+            }
+        }
     }
 
     updateDays() {
