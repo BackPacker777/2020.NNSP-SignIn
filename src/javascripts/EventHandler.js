@@ -656,12 +656,8 @@ export default class EventHandler {
     }
 
     populatePage() {
-        if (WebStorage.retrieveLocalStorage()) {
-            for (let i = 0; i < localStorage.length; i++ ) {
-                let key = localStorage.key(i);
-                let value = localStorage[key];
-                console.log(`${key}: ${value}`);
-            }
+        if (WebStorage.localStorageExists()) {
+            WebStorage.populateForm();
         }
     }
 

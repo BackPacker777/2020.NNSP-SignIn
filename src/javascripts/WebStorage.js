@@ -33,8 +33,20 @@ export default class WebStorage {
      * Get all localStorage items
      * @return boolean
      */
-    static retrieveLocalStorage() {
+    static localStorageExists() {
         return localStorage.length > 0;
+    }
+
+    /**
+     * Get all localStorage items
+     * @return null
+     */
+    static populateForm() {
+        for (let i = 0; i < localStorage.length; i++ ) {
+            let key = localStorage.key(i);
+            let value = localStorage[key];
+            console.log(`${key}: ${value}`);
+        }
     }
 
     /**
