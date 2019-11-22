@@ -8,7 +8,7 @@ export default class WebStorage {
      * @param pageData
      */
     static populateLocalStorage(pageData) {
-        let counter = `${pageData.TEAM}.${pageData.TEAM_POSITION}`;
+        let counter = `${pageData.TEAM}.${pageData.POSITION_TEAM}`;
         localStorage.setItem(`id.${counter}`, pageData.ID);
         localStorage.setItem(`radio.${counter}`, pageData.RADIO);
         localStorage.setItem(`name.${counter}`, pageData.NAME);
@@ -26,7 +26,7 @@ export default class WebStorage {
         localStorage.setItem(`chair.${counter}`, pageData.CHAIR);
         localStorage.setItem(`todayHalf.${counter}`, pageData.TODAY_HALF);
         localStorage.setItem(`guest.${counter}`, pageData.GUEST);
-        localStorage.setItem(`teamPosition.${counter}`, pageData.TEAM_POSITION);
+        localStorage.setItem(`positionTeam.${counter}`, pageData.POSITION_TEAM);
     }
 
     /**
@@ -42,10 +42,19 @@ export default class WebStorage {
      * @return null
      */
     static populateForm() {
+        let teams = [];
         for (let i = 0; i < localStorage.length; i++ ) {
             let key = localStorage.key(i);
             let value = localStorage[key];
-            console.log(`${key}: ${value}`);
+            if (key.substring(0,5) === 'team.') {
+                teams.push(Number(localStorage[key]));
+            }
+            // console.log(`${key}: ${value}`);
+        }
+        if (teams[0] > 0) {
+            document.getElementById(`weekendOverride`).checked = true;
+            let event = new Event('click');
+            document.getElementById('weekendOverride').dispatchEvent(event);
         }
     }
 

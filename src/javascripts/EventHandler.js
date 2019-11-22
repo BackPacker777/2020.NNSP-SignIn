@@ -16,8 +16,8 @@ export default class EventHandler {
         this.handleWeekendOverride();
         this.handleSignOnButtons();
         this.validate();
-        this.populatePage();
         EventHandler.stopEnterKey();
+        this.populatePage();
     }
 
     handleWeekendOverride() {
@@ -31,6 +31,8 @@ export default class EventHandler {
                     let counter = 1;
                     const MAX_TEAM = 6;
                     while (counter <= MAX_TEAM) {
+                        console.log(`Displaying team div team.${counter}`);
+                        document.getElementById(`team.1`).style.display = 'block';
                         document.getElementById(`team.${counter}`).style.display = 'block';
                         counter++;
                     }
@@ -280,7 +282,7 @@ export default class EventHandler {
             CPR: this.patrollers[i].CPR,
             CHAIR: this.patrollers[i].CHAIR,
             TODAY_HALF: false,
-            TEAM_POSITION: counter
+            POSITION_TEAM: counter
         };
         if (teamNum !== 5) {
             patroller.GUEST = document.getElementById(`guest.${teamNum}.${counter}`).value;
