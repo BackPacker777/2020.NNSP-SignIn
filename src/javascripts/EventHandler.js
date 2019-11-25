@@ -17,7 +17,7 @@ export default class EventHandler {
         this.handleSignOnButtons();
         this.validate();
         EventHandler.stopEnterKey();
-        // this.populatePage();
+        this.populatePage();
     }
 
     handleWeekendOverride() {
@@ -231,7 +231,7 @@ export default class EventHandler {
                     }
                     alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS) - .5}`);
                 }
-                // WebStorage.populateLocalStorage(patroller, patroller.POSITION_TEAM);
+                WebStorage.populateLocalStorage(patroller, patroller.POSITION_TEAM);
                 break;
             }
         }
@@ -660,7 +660,9 @@ export default class EventHandler {
     }
 
     populatePage() {
-        if (WebStorage.localStorageExists()) {
+        console.log(`Checking WebStorage`);
+        if (WebStorage.checkLocalStorage()) {
+            console.log(`WebStorage Exists`);
             WebStorage.populateForm(this.isWeekend, this.dayNight);
         }
     }

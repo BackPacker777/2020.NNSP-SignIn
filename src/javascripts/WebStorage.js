@@ -33,7 +33,7 @@ export default class WebStorage {
      * Get all localStorage items
      * @return boolean
      */
-    static localStorageExists() {
+    static checkLocalStorage() {
         return localStorage.length > 0;
     }
 
