@@ -17,7 +17,7 @@ export default class EventHandler {
         this.handleSignOnButtons();
         this.validate();
         EventHandler.stopEnterKey();
-        this.populatePage();
+        // this.populatePage();
     }
 
     handleWeekendOverride() {
@@ -31,7 +31,7 @@ export default class EventHandler {
                     let counter = 1;
                     const MAX_TEAM = 6;
                     while (counter <= MAX_TEAM) {
-                        console.log(`Displaying team div team.${counter}`);
+                        // console.log(`Displaying team div team.${counter}`);
                         document.getElementById(`team.1`).style.display = 'block';
                         document.getElementById(`team.${counter}`).style.display = 'block';
                         counter++;
@@ -124,6 +124,7 @@ export default class EventHandler {
                             document.getElementById(`patrollerID.${teamNum}.${counter}`).value = '';
                             break;
                         } else if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
+                            document.getElementById(`patrollerID.${teamNum}.${counter}`).readOnly = true;
                             this.populateDiv(teamNum, counter, i);
                             this.handleSnowmobile(teamNum, counter);
                             this.handleToboggan(teamNum, counter);
@@ -168,6 +169,7 @@ export default class EventHandler {
                 } else {
                     for (let i = 0; i < this.patrollers.length; i++) {
                         if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
+                            document.getElementById(`patrollerID.${teamNum}.${counter}`).readOnly = true;
                             this.populateDiv(teamNum, counter, i);
                             this.handleSnowmobile(teamNum, counter);
                             this.handleToboggan(teamNum, counter);
@@ -229,11 +231,11 @@ export default class EventHandler {
                     }
                     alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS) - .5}`);
                 }
-                WebStorage.populateLocalStorage(patroller, patroller.TEAM_POSITION);
+                // WebStorage.populateLocalStorage(patroller, patroller.POSITION_TEAM);
                 break;
             }
         }
-        WebStorage.retrieveLocalStorage();
+        // WebStorage.retrieveLocalStorage();
     }
 
     populateDiv(teamNum, counter, i) {
@@ -659,7 +661,7 @@ export default class EventHandler {
 
     populatePage() {
         if (WebStorage.localStorageExists()) {
-            WebStorage.populateForm();
+            WebStorage.populateForm(this.isWeekend, this.dayNight);
         }
     }
 
