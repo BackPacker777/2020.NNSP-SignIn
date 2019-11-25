@@ -9,6 +9,9 @@ export default class WebStorage {
      */
     static populateLocalStorage(pageData) {
         let counter = `${pageData.TEAM}.${pageData.POSITION_TEAM}`;
+        if (pageData.GUEST) {
+            localStorage.setItem(`${counter}.guest`, pageData.GUEST);
+        }
         localStorage.setItem(`${counter}.id`, pageData.ID);
         localStorage.setItem(`${counter}.radio`, pageData.RADIO);
         localStorage.setItem(`${counter}.name`, pageData.NAME);
@@ -25,7 +28,6 @@ export default class WebStorage {
         localStorage.setItem(`${counter}.cpr`, pageData.CPR);
         localStorage.setItem(`${counter}.chair`, pageData.CHAIR);
         localStorage.setItem(`${counter}.todayHalf`, pageData.TODAY_HALF);
-        localStorage.setItem(`${counter}.guest`, pageData.GUEST);
         localStorage.setItem(`${counter}.positionTeam`, pageData.POSITION_TEAM);
     }
 
@@ -46,7 +48,7 @@ export default class WebStorage {
         // let key, value;
         for (let i = 0; i < localStorage.length; i++ ) {
             let key = localStorage.key(i);
-            // let value = localStorage[key];
+            let value = localStorage[key];
             if (key.substring(4,9) === 'team') {
                 teams.push(Number(localStorage[key]));
             }
@@ -59,17 +61,32 @@ export default class WebStorage {
                 let event2 = new Event('change');
                 document.getElementById('weekendOverride').dispatchEvent(event);
                 for (let i = 0; i < teams.length; i++) {
-                    // console.log(`Dispatching joinTeam.${team}`);
                     document.getElementById(`joinTeam.${teams[i]}`).dispatchEvent(event);
-                    for (let j = 0; i < localStorage.length; j++ ) {
-                        let key = localStorage.key(i);
-                        // let value = localStorage[key];
-                        console.log(`${key.substring(4,6)} - ${key.substring(2,3)} - ${i + 1}`);
-                        // if (key.substring(4,6) === 'id' && key.substring(2,3) === i + 1) {
+                    for (let j = 0; j < localStorage.length; j++ ) {
+                        let key = localStorage.key(j);
+                        // console.log(`${key.substring(4,6)} - ${key.substring(2,3)}`);
                         if (key.substring(4,6) === 'id') {
-                            let id = `patrollerID.${teams[i]}.${i + 1}`;
+                            let id = `patrollerID.${teams[i]}.${key.substring(2,3)}`;
                             document.getElementById(id).value = localStorage[key];
                             document.getElementById(id).dispatchEvent(event2);
+                            for (let k = 0; k < localStorage.length; k++ ) {
+                                let key = localStorage.key(k);
+                                if (key.substring(4,9) === 'radio') {
+                                    let radio = `radioNum.${teams[i]}.${key.substring(2,3)}`;
+                                    console.log(localStorage[key]);
+                                    document.getElementById(radio).value = localStorage[key];
+                                    document.getElementById(radio).dispatchEvent(event2);
+                                    for (let l = 0; l < localStorage.length; l++ ) {
+                                        let key = localStorage.key(l);
+                                        if (key.substring(4,9) === 'guest') {
+                                            let guest = `guest.${teams[i]}.${key.substring(2, 3)}`;
+                                            console.log(localStorage[key]);
+                                            document.getElementById(guest).value = localStorage[key];
+                                            document.getElementById(guest).dispatchEvent(event2);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

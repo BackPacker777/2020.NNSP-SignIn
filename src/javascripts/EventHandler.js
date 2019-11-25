@@ -134,6 +134,7 @@ export default class EventHandler {
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
+                                console.log(`Changing radio 1`);
                                 let usedRadio = false;
                                 for (let peeps of this.signedIn) {
                                     if (document.getElementById(`radioNum.${teamNum}.${counter}`).value === peeps.RADIO && peeps.RADIO !== '0') {
@@ -179,6 +180,7 @@ export default class EventHandler {
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
+                                console.log(`Changing radio 2`);
                                 this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${counter}`).value, `radio`);
                             });
                             if (teamNum !== 5) {
@@ -588,7 +590,7 @@ export default class EventHandler {
                         }
                     }
                     if (valid) {
-                        this.populatePage();
+                        // this.populatePage();
                         for (let button of this.buttons) {
                             document.getElementById(button.id).disabled = false;
                         }
@@ -660,9 +662,7 @@ export default class EventHandler {
     }
 
     populatePage() {
-        console.log(`Checking WebStorage`);
         if (WebStorage.checkLocalStorage()) {
-            console.log(`WebStorage Exists`);
             WebStorage.populateForm(this.isWeekend, this.dayNight);
         }
     }
