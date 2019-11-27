@@ -11,6 +11,7 @@ export default class EventHandler {
         this.overMax = [false, false, false, false, false];
         this.teamCounts = [0,0,0,0,0];
         this.isWeekend = isWeekend;
+        this.populated = 0;
         this.buttons = document.querySelectorAll("input[type=button]");
         new NarniaEventHandler(this.patrollers);
         this.handleWeekendOverride();
@@ -134,7 +135,6 @@ export default class EventHandler {
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
-                                console.log(`Changing radio 1`);
                                 let usedRadio = false;
                                 for (let peeps of this.signedIn) {
                                     if (document.getElementById(`radioNum.${teamNum}.${counter}`).value === peeps.RADIO && peeps.RADIO !== '0') {
@@ -180,7 +180,7 @@ export default class EventHandler {
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
-                                console.log(`Changing radio 2`);
+                                // console.log(`Changing radio 2`);
                                 this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${counter}`).value, `radio`);
                             });
                             if (teamNum !== 5) {
@@ -223,7 +223,9 @@ export default class EventHandler {
                     if (patroller.HALF_DAYS > 0) {
                         patroller.HALF_DAYS--;
                     }
-                    alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS)}`);
+                    if (this.populated === 0) {
+                        alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS)}`);
+                    }
                 } else if (whichListener === 'halfDaysUp') {
                     patroller.TODAY_HALF = true;
                     patroller.TOTAL_DAYS = radioGuestDays;
@@ -231,7 +233,9 @@ export default class EventHandler {
                     if (patroller.DAYS > 0) {
                         patroller.DAYS--;
                     }
-                    alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS) - .5}`);
+                    if (this.populated === 0) {
+                        alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS) - .5}`);
+                    }
                 }
                 WebStorage.populateLocalStorage(patroller, patroller.POSITION_TEAM);
                 break;
@@ -256,7 +260,9 @@ export default class EventHandler {
             nightsCount = 1;
             dayCount = 0;
         }
-        document.getElementById(`time.${teamNum}.${counter}`).value = `${time.getHours()}:${minutes}`;
+        if (! document.getElementById(`time.${teamNum}.${counter}`).value) {
+            document.getElementById(`time.${teamNum}.${counter}`).value = `${time.getHours()}:${minutes}`;
+        }
         if (document.getElementById(`race.${teamNum}.${counter}`)) {
             race = document.getElementById(`race.${teamNum}.${counter}`).value;
         }
@@ -291,7 +297,9 @@ export default class EventHandler {
         if (teamNum !== 5) {
             patroller.GUEST = document.getElementById(`guest.${teamNum}.${counter}`).value;
         }
-        alert(`TOTAL DAYS: ${patroller.TOTAL_DAYS}`);
+        if (this.populated === 0) {
+            alert(`TOTAL DAYS: ${patroller.TOTAL_DAYS}`);
+        }
         this.signedIn.push(patroller);
         document.getElementById(`name.${teamNum}.${counter}`).value = `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`;
         document.getElementById(`rating.${teamNum}.${counter}`).value = this.patrollers[i].RATING;
@@ -590,7 +598,6 @@ export default class EventHandler {
                         }
                     }
                     if (valid) {
-                        // this.populatePage();
                         for (let button of this.buttons) {
                             document.getElementById(button.id).disabled = false;
                         }
@@ -663,6 +670,7 @@ export default class EventHandler {
 
     populatePage() {
         if (WebStorage.checkLocalStorage()) {
+            this.populated = 1;
             WebStorage.populateForm(this.isWeekend, this.dayNight);
         }
     }

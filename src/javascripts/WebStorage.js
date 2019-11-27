@@ -45,7 +45,6 @@ export default class WebStorage {
      */
     static populateForm(isWeekend, dayNight) {
         let teams = [];
-        // let key, value;
         for (let i = 0; i < localStorage.length; i++ ) {
             let key = localStorage.key(i);
             let value = localStorage[key];
@@ -61,33 +60,29 @@ export default class WebStorage {
                 let event2 = new Event('change');
                 document.getElementById('weekendOverride').dispatchEvent(event);
                 for (let i = 0; i < teams.length; i++) {
-                    document.getElementById(`joinTeam.${teams[i]}`).dispatchEvent(event);
-                    for (let j = 0; j < localStorage.length; j++ ) {
-                        let key = localStorage.key(j);
-                        // console.log(`${key.substring(4,6)} - ${key.substring(2,3)}`);
-                        if (key.substring(4,6) === 'id') {
-                            let id = `patrollerID.${teams[i]}.${key.substring(2,3)}`;
-                            document.getElementById(id).value = localStorage[key];
-                            document.getElementById(id).dispatchEvent(event2);
-                            for (let k = 0; k < localStorage.length; k++ ) {
-                                let key = localStorage.key(k);
-                                if (key.substring(4,9) === 'radio') {
-                                    let radio = `radioNum.${teams[i]}.${key.substring(2,3)}`;
-                                    console.log(localStorage[key]);
-                                    document.getElementById(radio).value = localStorage[key];
-                                    document.getElementById(radio).dispatchEvent(event2);
-                                    for (let l = 0; l < localStorage.length; l++ ) {
-                                        let key = localStorage.key(l);
-                                        if (key.substring(4,9) === 'guest') {
-                                            let guest = `guest.${teams[i]}.${key.substring(2, 3)}`;
-                                            console.log(localStorage[key]);
-                                            document.getElementById(guest).value = localStorage[key];
-                                            document.getElementById(guest).dispatchEvent(event2);
-                                        }
-                                    }
-                                }
+                    let counter = 1;
+                    let MAX_COUNTER = 8;
+                    while (counter <= MAX_COUNTER) {
+                        let teamPosition = `${teams[i]}.${counter}`;
+                        if (localStorage.getItem(`${teamPosition}.id`)) {
+                            document.getElementById(`joinTeam.${teams[i]}`).dispatchEvent(event);
+                            document.getElementById(`patrollerID.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.id`);
+                            document.getElementById(`patrollerID.${teamPosition}`).readOnly = true;
+                            document.getElementById(`time.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.time`);
+                            document.getElementById(`patrollerID.${teamPosition}`).dispatchEvent(event2);
+                            document.getElementById(`name.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.name`);
+                            if (localStorage.getItem(`${teamPosition}.radio`)) {
+                                document.getElementById(`radioNum.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.radio`);
+                                document.getElementById(`radioNum.${teamPosition}`).dispatchEvent(event2);
+                                document.dispatchEvent(event2);
+                            }
+                            document.getElementById(`rating.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.rating`);
+                            if (localStorage.getItem(`${teamPosition}.guest`)) {
+                                document.getElementById(`guest.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.guest`);
+                                document.getElementById(`guest.${teamPosition}`).dispatchEvent(event2);
                             }
                         }
+                        counter++;
                     }
                 }
             }

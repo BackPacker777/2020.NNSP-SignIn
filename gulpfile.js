@@ -49,7 +49,7 @@ gulp.task('watch', () => {
 gulp.task('default', gulp.parallel(
     // 'git-add',
     'minify-ejs',
-    // 'compile-sass'
+    'compile-sass',
     'minify-js'
     // 'watch'
     )

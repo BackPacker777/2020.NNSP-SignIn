@@ -7,28 +7,28 @@ export default class NarniaContents {
         let daysCount = 0;
         let halfDaysCount = 0;
         let nightsCount = 0;
-        let countsDiv = `<div class="grid-x grid-padding-x">
-                <div class="small-5 cell">&nbsp;</div>
+        let countsDiv = `<br><br><div class="grid-x grid-padding-x">
+                <div class="small-3 cell">&nbsp;</div>
                 <div class="small-2 cell"><br><strong>Count Totals:</strong></div>
-                    <div class="small-1 cell">
+                    <div class="small-2 cell">
                         <label>Days:
                             <input type="text" id="daysCount">
                         </div>
                     </label>
-                <div class="small-1 cell">
-                    <label>Half Days:
+                <div class="small-2 cell">
+                    <label>1/2 Days:
                         <input type="text" id="halfDaysCount">
                     </label>
                 </div>
-                <div class="small-1 cell">
+                <div class="small-2 cell">
                     <label>Nights:
                         <input type="text" id="nightsCount">
                     </label>
                 </div>
-                <div class="small-2 cell">&nbsp;</div>
+<!--                <div class="small-1 cell">&nbsp;</div>-->
             </div>`;
 
-        document.getElementById(`narniaWorkHeader`).insertAdjacentHTML('beforeend', countsDiv);
+        document.getElementById(`narniaCounts`).insertAdjacentHTML('beforeend', countsDiv);
 
         while (counter < patrollers.length) {
             let divContents = {

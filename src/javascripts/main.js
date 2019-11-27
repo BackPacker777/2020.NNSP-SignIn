@@ -17,9 +17,8 @@ class Main {
     determineWeekend() {
         const SAT = 6, SUN = 0;
         if (this.date.getDay() === SAT || this.date.getDay() === SUN) {
-            // return true;
+            return true;
         }
-        return false;
     }
 
     getWeekDay() {
@@ -36,7 +35,7 @@ class Main {
         } else {
             dayNight = "Day";
         }
-        dayNight = 'Day';  //Turn on for testing
+        // dayNight = 'Day';  //Turn on for testing
         return dayNight;
     }
 
