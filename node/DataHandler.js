@@ -40,7 +40,7 @@ class DataHandler {
                     HALF_DAYS: protoArray[i][7],
                     SNOWMOBILE: protoArray[i][8],
                     TOBOGGAN: protoArray[i][9],
-                    SPLINT: protoArray[i][10],
+                    SCAVENGER: protoArray[i][10],
                     CPR: protoArray[i][11],
                     CHAIR: protoArray[i][12],
                 }
@@ -56,11 +56,11 @@ class DataHandler {
     static updatePatrollerDays(patrollerData) {
         patrollerData = JSON.parse(patrollerData);
         const finalFilePath = `data/patrollers.csv`;
-        let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,splint,cpr,chair\n`;
+        let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,scavenger,cpr,chair\n`;
         FS.writeFile(finalFilePath, stuff, `utf8`, (err) => {
             if (err) throw err;
             for (let i = 0; i < patrollerData.length; i++) {
-                stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SPLINT},${patrollerData[i].CPR},${patrollerData[i].CHAIR}\n`;
+                stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SCAVENGER},${patrollerData[i].CPR},${patrollerData[i].CHAIR}\n`;
                 FS.appendFile(finalFilePath, stuff, `utf8`, (err) => {
                     if (err) console.log(err);
                 });
@@ -71,11 +71,11 @@ class DataHandler {
     static updateAllPatrollerData(patrollerData) {
         patrollerData = JSON.parse(patrollerData);
         const finalFilePath = `data/patrollers2.csv`;
-        let writeLine = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,splint,cpr,chair\n`;
+        let writeLine = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,scavenger,cpr,chair\n`;
         FS.writeFile(finalFilePath, writeLine, `utf8`, (err) => {
             if (err) throw err;
             for (let i = 0; i < patrollerData.length; i++) {
-                writeLine = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SPLINT},${patrollerData[i].CPR},${patrollerData[i].CHAIR}\n`;
+                writeLine = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SCAVENGER},${patrollerData[i].CPR},${patrollerData[i].CHAIR}\n`;
                 writeLine = writeLine.replace(/null/gi, '');
                 FS.appendFile(finalFilePath, writeLine, `utf8`, (err) => {
                     if (err) console.log(err);

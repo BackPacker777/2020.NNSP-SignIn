@@ -1,11 +1,10 @@
-<% include public/views/header.ejs %>
+<%- include ('public/views/header'); -%>
 
 <div id="tipTop">
     <div class="grid-container fluid">
         <div class="grid-x grid-padding-x black">
             <div class="small-12 cell text-center">
                 <h5><strong>Nub's Nob Ski Patrol Sign-In - 2019</strong></h5>
-                <!--<h5><strong>Second Hour Quiz #5</strong></h5>-->
             </div>
         </div>
     </div>
@@ -72,12 +71,12 @@
 </div>
 </form>
 <div id="narniaDiv">
-    <% include public/views/narnia.ejs %>
+    <%- include ('public/views/narnia'); -%>
 </div>
 
-<% include public/views/no_print.ejs %>
+<%- include ('public/views/no_print'); -%>
 
 <!-- SCRIPTS -->
 <script src="public/javascripts/main.js" type="module"></script>
 
-<% include public/views/footer.ejs %>
+<%- include ('public/views/footer'); -%>

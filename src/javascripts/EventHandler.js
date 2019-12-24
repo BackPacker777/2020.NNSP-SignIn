@@ -129,7 +129,7 @@ export default class EventHandler {
                             this.populateDiv(teamNum, counter, i);
                             this.handleSnowmobile(teamNum, counter);
                             this.handleToboggan(teamNum, counter);
-                            this.handleSplint(teamNum, counter);
+                            this.handleScavenger(teamNum, counter);
                             this.handleCpr(teamNum, counter);
                             this.handleChair(teamNum, counter);
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
@@ -174,7 +174,7 @@ export default class EventHandler {
                             this.populateDiv(teamNum, counter, i);
                             this.handleSnowmobile(teamNum, counter);
                             this.handleToboggan(teamNum, counter);
-                            this.handleSplint(teamNum, counter);
+                            this.handleScavenger(teamNum, counter);
                             this.handleCpr(teamNum, counter);
                             this.handleChair(teamNum, counter);
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
@@ -288,7 +288,7 @@ export default class EventHandler {
             TOTAL_DAYS: totalDays,
             SNOWMOBILE: this.patrollers[i].SNOWMOBILE,
             TOBOGGAN: this.patrollers[i].TOBOGGAN,
-            SPLINT: this.patrollers[i].SPLINT,
+            SCAVENGER: this.patrollers[i].SCAVENGER,
             CPR: this.patrollers[i].CPR,
             CHAIR: this.patrollers[i].CHAIR,
             TODAY_HALF: false,
@@ -341,6 +341,8 @@ export default class EventHandler {
             if (teamNum !== 5) {
                 document.getElementById(`guestDiv.${teamNum}.${counter}`).style.visibility = 'hidden';
             }
+            this.teamCounts[teamNum]--;
+            this.enforceTeamBalance(teamNum);
             /*if (document.getElementById(`days.${teamNum}.${counter}`).value > 0) {
                 document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) - .5;
             } else {
@@ -361,6 +363,8 @@ export default class EventHandler {
                     if (teamNum !== 5) {
                         document.getElementById(`guest.${teamNum}.${counter}`).disabled = true;
                     }
+                    this.teamCounts[teamNum]--;
+                    this.enforceTeamBalance(teamNum);
                     /*if (document.getElementById(`days.${teamNum}.${counter}`).value > 0) {
                         document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) - .5;
                     } else {
@@ -378,6 +382,8 @@ export default class EventHandler {
                     if (teamNum !== 5) {
                         document.getElementById(`guest.${teamNum}.${counter}`).disabled = false;
                     }
+                    this.teamCounts[teamNum]++;
+                    this.enforceTeamBalance(teamNum);
                     // document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) + .5;
                     for (let patroller of this.signedIn) {
                         if (Number(patroller.ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
@@ -455,14 +461,14 @@ export default class EventHandler {
         }
     }
 
-    handleSplint(teamNum, counter) {
+    handleScavenger(teamNum, counter) {
         for (let i = 0; i < this.signedIn.length; i++) {
             if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                if (Number(this.signedIn[i].SPLINT) !== 1) {
-                    document.getElementById(`splint.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
+                if (Number(this.signedIn[i].SCAVENGER) !== 1) {
+                    document.getElementById(`scavenger.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
                     let correctPassword = false;
                     let removeMe;
-                    document.getElementById(`splint.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
+                    document.getElementById(`scavenger.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
                         let password = prompt(`Password: `);
                         for (let person of this.patrollers) {
                             if (person.ID === password && person.LEADER) {
@@ -470,17 +476,17 @@ export default class EventHandler {
                             }
                         }
                         if (correctPassword) {
-                            this.signedIn[i].SPLINT = 1;
-                            document.getElementById(`splint.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                            document.getElementById(`splint.${teamNum}.${counter}`).removeEventListener('click', removeMe);
-                            document.getElementById(`splint.${teamNum}.${counter}`).style.cursor = 'default';
+                            this.signedIn[i].SCAVENGER = 1;
+                            document.getElementById(`scavenger.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                            document.getElementById(`scavenger.${teamNum}.${counter}`).removeEventListener('click', removeMe);
+                            document.getElementById(`scavenger.${teamNum}.${counter}`).style.cursor = 'default';
                         } else {
                             alert(`Incorrect Password`);
                         }
                     });
                 } else {
-                    document.getElementById(`splint.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                    document.getElementById(`splint.${teamNum}.${counter}`).style.cursor = 'default';
+                    document.getElementById(`scavenger.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`scavenger.${teamNum}.${counter}`).style.cursor = 'default';
                 }
                 break;
             }
@@ -578,6 +584,10 @@ export default class EventHandler {
         const MAX_TEAM_COUNT = 4;
         if (this.teamCounts[teamNum] >= MAX_TEAM_COUNT) {
             this.overMax[teamNum] = true;
+        } else {
+            this.overMax[teamNum] = false;
+            document.getElementById(`joinTeam.${teamNum}`).disabled = false;
+            console.log(`Lighting up button.`);
         }
         if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
             for (let i = 1; i < this.overMax.length; i++) {
@@ -685,7 +695,7 @@ export default class EventHandler {
                     this.patrollers[i].HALF_DAYS = this.signedIn[j].HALF_DAYS;
                     this.patrollers[i].SNOWMOBILE = this.signedIn[j].SNOWMOBILE;
                     this.patrollers[i].TOBOGGAN = this.signedIn[j].TOBOGGAN;
-                    this.patrollers[i].SPLINT = this.signedIn[j].SPLINT;
+                    this.patrollers[i].SCAVENGER = this.signedIn[j].SCAVENGER;
                     this.patrollers[i].CPR = this.signedIn[j].CPR;
                     this.patrollers[i].CHAIR = this.signedIn[j].CHAIR;
                     break;

@@ -1,6 +1,6 @@
 {
   "name": "nnsp_sign_in",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "NNSP Sign In App",
   "main": "bin/signin_server",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "Howard Bates",
   "license": "MIT",
   "engines": {
-    "node": ">= 13.0.1"
+    "node": ">= 13.5.0"
   },
   "dependencies": {
     "ejs": "latest",
@@ -19,7 +19,7 @@
     "babel-eslint": "latest",
     "eslint": "latest",
     "gulp": "latest",
-    "gulp-git": "latest",
+    "gulp-git": "^2.10.0",
     "gulp-minify-ejs": "latest",
     "gulp-sass": "latest",
     "gulp-terser": "latest",
