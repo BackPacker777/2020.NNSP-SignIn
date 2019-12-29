@@ -4,6 +4,7 @@ import WebStorage from "./WebStorage.js";
 
 export default class EventHandler {
     constructor(patrollers, dayNight, isWeekend) {
+        this.nightCounter = 0;
         this.signedIn = [];
         this.patrollers = patrollers;
         this.dayNight = dayNight;
@@ -61,6 +62,11 @@ export default class EventHandler {
         let counter = [1,1,1,1,1,1,1];
         const LEADERS = 6, CANDIDATES = 5;
         for (let i = 0; i < this.buttons.length; i++) {
+            let teamNum = Number(this.buttons[i].id.substr(9, 1));
+            if (teamNum === 0) {
+                counter = 1;
+                document.getElementById(`joinTeam.0`).disabled = true;
+            }
             this.buttons[i].addEventListener('click', () => {
                 document.getElementById(`weekendOverride`).disabled = true;
                 let teamNum = Number(this.buttons[i].id.substr(9, 1));
@@ -115,6 +121,7 @@ export default class EventHandler {
     }
 
     changePatrollerDiv(teamNum, counter) {
+        const MAX_NIGHT_COUNTER = 8;
         document.getElementById(`patrollerID.${teamNum}.${counter}`).addEventListener('change', () => {
             let correctID = false;
             if (document.getElementById(`patrollerID.${teamNum}.${counter}`).value !== '') {
@@ -125,6 +132,10 @@ export default class EventHandler {
                             document.getElementById(`patrollerID.${teamNum}.${counter}`).value = '';
                             break;
                         } else if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
+                            this.nightCounter++;
+                            if (this.nightCounter >= MAX_NIGHT_COUNTER) {
+                                document.getElementById(`joinTeam.0`).disabled = false;
+                            }
                             document.getElementById(`patrollerID.${teamNum}.${counter}`).readOnly = true;
                             this.populateDiv(teamNum, counter, i);
                             this.handleSnowmobile(teamNum, counter);
@@ -155,7 +166,9 @@ export default class EventHandler {
                             }
                             if (this.isWeekend) {
                                 this.teamCounts[teamNum]++;
-                                this.enforceTeamBalance(teamNum);
+                                if (teamNum > 0) {
+                                    this.enforceTeamBalance(teamNum);
+                                }
                                 if (teamNum > 0 && teamNum < 5) {
                                     this.handleAdmin(teamNum, counter);
                                 }
@@ -170,6 +183,10 @@ export default class EventHandler {
                 } else {
                     for (let i = 0; i < this.patrollers.length; i++) {
                         if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
+                            this.nightCounter++;
+                            if (this.nightCounter >= MAX_NIGHT_COUNTER) {
+                                document.getElementById(`joinTeam.0`).disabled = false;
+                            }
                             document.getElementById(`patrollerID.${teamNum}.${counter}`).readOnly = true;
                             this.populateDiv(teamNum, counter, i);
                             this.handleSnowmobile(teamNum, counter);
@@ -190,7 +207,9 @@ export default class EventHandler {
                             }
                             if (this.isWeekend) {
                                 this.teamCounts[teamNum]++;
-                                this.enforceTeamBalance(teamNum);
+                                if (teamNum > 0) {
+                                    this.enforceTeamBalance(teamNum);
+                                }
                                 if (teamNum > 0 && teamNum < 5) {
                                     this.handleAdmin(teamNum, counter);
                                 }
@@ -581,17 +600,19 @@ export default class EventHandler {
     }
 
     enforceTeamBalance(teamNum) {
-        const MAX_TEAM_COUNT = 4;
-        if (this.teamCounts[teamNum] >= MAX_TEAM_COUNT) {
-            this.overMax[teamNum] = true;
-        } else {
-            this.overMax[teamNum] = false;
-            document.getElementById(`joinTeam.${teamNum}`).disabled = false;
-            console.log(`Lighting up button.`);
-        }
-        if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
-            for (let i = 1; i < this.overMax.length; i++) {
-                this.overMax[i] = false;
+        if (teamNum > 0) {
+            const MAX_TEAM_COUNT = 4;
+            if (this.teamCounts[teamNum] >= MAX_TEAM_COUNT) {
+                this.overMax[teamNum] = true;
+            } else {
+                this.overMax[teamNum] = false;
+                document.getElementById(`joinTeam.${teamNum}`).disabled = false;
+                console.log(`Lighting up button.`);
+            }
+            if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
+                for (let i = 1; i < this.overMax.length; i++) {
+                    this.overMax[i] = false;
+                }
             }
         }
     }
@@ -631,7 +652,7 @@ export default class EventHandler {
                         }
                     }
                     if (valid) {
-                        document.getElementById('joinTeam.0').disabled = false;
+                        // document.getElementById('joinTeam.0').disabled = false;
                         document.getElementById('formSubmit').disabled = false;
                         this.handlePrintFormButton();
                     }

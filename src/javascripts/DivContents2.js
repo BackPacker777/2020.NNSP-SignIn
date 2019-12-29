@@ -52,6 +52,7 @@ export default class DivContents2 {
                             <input type="text" class="submitInclude" readonly id="days.${teamNum}.${counter}">
                         </label>
                     </div>`;*/
+
         let teamNumb = `<div class="small-1 cell" id="teamNum.${teamNum}.${counter}">
                         <label>Team Number:
                             <input type="number" class="submitInclude" id="teamNum.${teamNum}.${counter}" placeholder="Team">
