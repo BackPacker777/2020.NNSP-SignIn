@@ -1,6 +1,9 @@
 ## Todo:
 
-* Fix 00 own radio checking
+* Fix 0 own radio checking
+* Fix nights so more than 8 can sign in
+* Fix web storage and ensure it doesn't kee saying already logged in
+* Fix guest patroller sign in ability
 * Print meal tickets ??
 * ~~Finish signoffs for night shift~~
 * ~~Make half-day print out with a grey line~~
