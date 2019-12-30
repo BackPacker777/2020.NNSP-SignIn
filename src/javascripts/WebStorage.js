@@ -36,6 +36,7 @@ export default class WebStorage {
      * @return boolean
      */
     static checkLocalStorage() {
+        console.log(localStorage.length);
         return localStorage.length > 0;
     }
 
@@ -44,6 +45,37 @@ export default class WebStorage {
      * @return null
      */
     static populateForm(isWeekend, dayNight) {
+        let runPopulate = (teams) => {
+            let event = new Event('click');
+            let event2 = new Event('change');
+            for (let i = 0; i < teams.length; i++) {
+                let counter = 1;
+                let MAX_COUNTER = 8;
+                while (counter <= MAX_COUNTER) {
+                    let teamPosition = `${teams[i]}.${counter}`;
+                    if (localStorage.getItem(`${teamPosition}.id`)) {
+                        document.getElementById(`joinTeam.${teams[i]}`).dispatchEvent(event);
+                        document.getElementById(`patrollerID.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.id`);
+                        document.getElementById(`patrollerID.${teamPosition}`).readOnly = true;
+                        document.getElementById(`time.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.time`);
+                        document.getElementById(`patrollerID.${teamPosition}`).dispatchEvent(event2);
+                        document.getElementById(`name.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.name`);
+                        if (localStorage.getItem(`${teamPosition}.radio`)) {
+                            document.getElementById(`radioNum.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.radio`);
+                            document.getElementById(`radioNum.${teamPosition}`).dispatchEvent(event2);
+                            document.dispatchEvent(event2);
+                        }
+                        document.getElementById(`rating.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.rating`);
+                        if (localStorage.getItem(`${teamPosition}.guest`)) {
+                            document.getElementById(`guest.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.guest`);
+                            document.getElementById(`guest.${teamPosition}`).dispatchEvent(event2);
+                        }
+                    }
+                    counter++;
+                }
+            }
+        };
+
         let teams = [];
         for (let i = 0; i < localStorage.length; i++ ) {
             let key = localStorage.key(i);
@@ -53,39 +85,18 @@ export default class WebStorage {
             }
             // console.log(`${key}: ${value}`);
         }
-        if (teams[0] > 0) {
-            if (! isWeekend && dayNight === 'Day') {
-                document.getElementById(`weekendOverride`).checked = true;
-                let event = new Event('click');
-                let event2 = new Event('change');
-                document.getElementById('weekendOverride').dispatchEvent(event);
-                for (let i = 0; i < teams.length; i++) {
-                    let counter = 1;
-                    let MAX_COUNTER = 8;
-                    while (counter <= MAX_COUNTER) {
-                        let teamPosition = `${teams[i]}.${counter}`;
-                        if (localStorage.getItem(`${teamPosition}.id`)) {
-                            document.getElementById(`joinTeam.${teams[i]}`).dispatchEvent(event);
-                            document.getElementById(`patrollerID.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.id`);
-                            document.getElementById(`patrollerID.${teamPosition}`).readOnly = true;
-                            document.getElementById(`time.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.time`);
-                            document.getElementById(`patrollerID.${teamPosition}`).dispatchEvent(event2);
-                            document.getElementById(`name.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.name`);
-                            if (localStorage.getItem(`${teamPosition}.radio`)) {
-                                document.getElementById(`radioNum.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.radio`);
-                                document.getElementById(`radioNum.${teamPosition}`).dispatchEvent(event2);
-                                document.dispatchEvent(event2);
-                            }
-                            document.getElementById(`rating.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.rating`);
-                            if (localStorage.getItem(`${teamPosition}.guest`)) {
-                                document.getElementById(`guest.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.guest`);
-                                document.getElementById(`guest.${teamPosition}`).dispatchEvent(event2);
-                            }
-                        }
-                        counter++;
-                    }
-                }
-            }
+        console.log(teams.length);
+        if (! isWeekend && dayNight === 'Day') {
+            let event = new Event('click');
+            console.log(`Running !weekend & Day`);
+            document.getElementById(`weekendOverride`).checked = true;
+            document.getElementById('weekendOverride').dispatchEvent(event);
+            runPopulate(teams);
+        } else if (dayNight === 'Day') {
+            console.log(`Running IS weekend & Day`);
+            runPopulate(teams);
+        } else {
+
         }
     }
 

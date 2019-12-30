@@ -60,11 +60,11 @@ export default class EventHandler {
 
     handleSignOnButtons() {
         let counter = [1,1,1,1,1,1,1];
-        const LEADERS = 6, CANDIDATES = 5;
+        let nightCounter = 9;
+        const LEADERS = 6, CANDIDATES = 5, NIGHT = 0;
         for (let i = 0; i < this.buttons.length; i++) {
             let teamNum = Number(this.buttons[i].id.substr(9, 1));
             if (teamNum === 0) {
-                counter = 1;
                 document.getElementById(`joinTeam.0`).disabled = true;
             }
             this.buttons[i].addEventListener('click', () => {
@@ -106,6 +106,10 @@ export default class EventHandler {
                     if (!isLeader) {
                         alert(`Incorrect ID for leadership/trainers team. Please try again or sign on to a different team.`);
                     }
+                } else if (teamNum === NIGHT) {
+                    document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getExtraNightDiv(teamNum, nightCounter));
+                    this.changePatrollerDiv(teamNum, nightCounter);
+                    nightCounter++;
                 } else {
                     this.buttons[i].disabled = true;
                     document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum]));
@@ -197,7 +201,6 @@ export default class EventHandler {
                             document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
                             correctID = true;
                             document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
-                                // console.log(`Changing radio 2`);
                                 this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${counter}`).value, `radio`);
                             });
                             if (teamNum !== 5) {
@@ -316,7 +319,7 @@ export default class EventHandler {
         if (teamNum !== 5) {
             patroller.GUEST = document.getElementById(`guest.${teamNum}.${counter}`).value;
         }
-        if (this.populated === 0) {
+        if (this.populated === 0 || teamNum === 0) {
             alert(`TOTAL DAYS: ${patroller.TOTAL_DAYS}`);
         }
         this.signedIn.push(patroller);

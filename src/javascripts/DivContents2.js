@@ -182,4 +182,47 @@ export default class DivContents2 {
                     </div>
                 </div>`;
     }
+
+    static getExtraNightDiv(teamNum, counter) {
+        return `<div class="grid-x">
+                    <div class="small-2 cell" id="patroller.${teamNum}.${counter}">
+                        <label>ID:
+                            <input type="number" class="submitInclude secure" maxlength="6" name="patrollerID" id="patrollerID.${teamNum}.${counter}" placeholder="ID #">
+                        </label>
+                    </div>
+                    <div class="small-2 cell">
+                        <label>Name:
+                            <input type="text" class="submitInclude" readonly id="name.${teamNum}.${counter}">
+                        </label>
+                    </div>
+                    <div class="small-1 cell" id="radioDiv.${teamNum}.${counter}">
+                        <label>Radio:
+                            <input type="number" class="submitInclude" maxlength="2" id="radioNum.${teamNum}.${counter}" placeholder="#">
+                        </label>
+                    </div>
+                    <div class="small-1 cell">
+                        <label>Rating:
+                            <input type="text" class="submitInclude" readonly id="rating.${teamNum}.${counter}">
+                        </label>
+                    </div>
+                    <div class="small-1 cell">
+                        <label>Time:
+                            <input type="text" class="submitInclude" readonly id="time.${teamNum}.${counter}">
+                        </label>
+                    </div>
+                    <div class="small-1 cell" id="guestDiv.${teamNum}.${counter}">
+                        <label>Guest:
+                            <input type="text" class="submitInclude" id="guest.${teamNum}.${counter}" placeholder="Guest">
+                        </label>
+                    </div>
+                    <div class="small-2 cell signoffDiv" id="signoffDiv.${teamNum}.${counter}">
+                        <label>Signoffs:</label>
+                        <i class="far fa-snowflake" id="snowmobile.${teamNum}.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="toboggan.${teamNum}.${counter}" title="Toboggan"></i> <i class="fas fa-map-marked" id="scavenger.${teamNum}.${counter}" title="Scavenger Hunt"></i> <i class="fas fa-heartbeat" id="cpr.${teamNum}.${counter}" title="CPR"></i> <i class="fas fa-chair" id="chair.${teamNum}.${counter}" title="Chair Evac"></i>
+                    </div>
+                    <div class="small-1 cell">
+                        <label>_____</label>
+                        <p>Extra Patroller</p>
+                    </div>
+                </div>`;
+    }
 }
