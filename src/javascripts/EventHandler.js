@@ -64,7 +64,7 @@ export default class EventHandler {
         const LEADERS = 6, CANDIDATES = 5, NIGHT = 0;
         for (let i = 0; i < this.buttons.length; i++) {
             let teamNum = Number(this.buttons[i].id.substr(9, 1));
-            if (teamNum === 0) {
+            if (teamNum === 0 && this.dayNight === "Night") {
                 document.getElementById(`joinTeam.0`).disabled = true;
             }
             this.buttons[i].addEventListener('click', () => {
@@ -106,7 +106,7 @@ export default class EventHandler {
                     if (!isLeader) {
                         alert(`Incorrect ID for leadership/trainers team. Please try again or sign on to a different team.`);
                     }
-                } else if (teamNum === NIGHT) {
+                } else if (teamNum === NIGHT && this.dayNight === 'Night') {
                     document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getExtraNightDiv(teamNum, nightCounter));
                     this.changePatrollerDiv(teamNum, nightCounter);
                     nightCounter++;

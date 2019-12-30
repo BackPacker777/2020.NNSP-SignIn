@@ -53,6 +53,7 @@ export default class WebStorage {
                 let MAX_COUNTER = 8;
                 while (counter <= MAX_COUNTER) {
                     let teamPosition = `${teams[i]}.${counter}`;
+                    console.log(`Team Position: ${teamPosition}`);
                     if (localStorage.getItem(`${teamPosition}.id`)) {
                         document.getElementById(`joinTeam.${teams[i]}`).dispatchEvent(event);
                         document.getElementById(`patrollerID.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.id`);
@@ -92,11 +93,9 @@ export default class WebStorage {
             document.getElementById(`weekendOverride`).checked = true;
             document.getElementById('weekendOverride').dispatchEvent(event);
             runPopulate(teams);
-        } else if (dayNight === 'Day') {
-            console.log(`Running IS weekend & Day`);
-            runPopulate(teams);
         } else {
-
+            console.log(`Running others`);
+            runPopulate(teams);
         }
     }
 

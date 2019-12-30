@@ -35,7 +35,7 @@ class Main {
         } else {
             dayNight = "Day";
         }
-        dayNight = 'Day';  //Turn on/off for testing
+        dayNight = 'Night';  //Turn on/off for testing
         return dayNight;
     }
 
@@ -57,6 +57,7 @@ class Main {
                 counter++;
             }
             document.getElementById(`patrollerID.0.1`).required = true;
+            document.getElementById(`joinTeam.0`).value = "-= EXTRA Sign On =- (! ONLY click this if all race time slots are filled !)";
         } else if (this.getDayNight() === 'Day' && this.isWeekend) {
             document.getElementById(`team.0`).style.display = 'none';
         } else {
