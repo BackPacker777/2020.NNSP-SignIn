@@ -19,11 +19,10 @@ export default class EventHandler {
         this.handleSignOnButtons();
         this.validate();
         EventHandler.stopEnterKey();
-        this.populatePage();
     }
 
     handleWeekendOverride() {
-        if (!this.isWeekend && this.dayNight === 'Day') {
+        if (! this.isWeekend && this.dayNight === 'Day') {
             document.getElementById(`weekendOverride`).addEventListener('click', () => {
                 if (document.getElementById(`weekendOverride`).checked) {
                     document.getElementById(`weekendOverrideLabel`).style.backgroundColor = 'yellow';
@@ -259,7 +258,9 @@ export default class EventHandler {
                         alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS) - .5}`);
                     }
                 }
-                WebStorage.populateLocalStorage(patroller, patroller.POSITION_TEAM);
+                if (this.populated === 0) {
+                    WebStorage.populateLocalStorage(patroller, patroller.POSITION_TEAM);
+                }
                 break;
             }
         }
@@ -319,7 +320,7 @@ export default class EventHandler {
         if (teamNum !== 5) {
             patroller.GUEST = document.getElementById(`guest.${teamNum}.${counter}`).value;
         }
-        if (this.populated === 0 || teamNum === 0) {
+        if (this.populated === 0) {
             alert(`TOTAL DAYS: ${patroller.TOTAL_DAYS}`);
         }
         this.signedIn.push(patroller);
@@ -609,8 +610,8 @@ export default class EventHandler {
                 this.overMax[teamNum] = true;
             } else {
                 this.overMax[teamNum] = false;
-                document.getElementById(`joinTeam.${teamNum}`).disabled = false;
-                console.log(`Lighting up button.`);
+                // document.getElementById(`joinTeam.${teamNum}`).disabled = false;
+                // console.log(`Lighting up button.`);
             }
             if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
                 for (let i = 1; i < this.overMax.length; i++) {
@@ -640,11 +641,16 @@ export default class EventHandler {
                                 document.getElementById(`joinTeam.${i}`).disabled = true;
                             }
                         }
-                        let validLeader = document.getElementById('radioNum.6.1');
-                        if (validLeader) {
-                            if (validLeader.value) {
-                                document.getElementById('formSubmit').disabled = false;
-                                this.handlePrintFormButton();
+                        if (document.getElementById('weekendOverride').value === 'on') {
+                            document.getElementById('formSubmit').disabled = false;
+                            this.handlePrintFormButton();
+                        } else {
+                            let validLeader = document.getElementById('radioNum.6.1');
+                            if (validLeader) {
+                                if (validLeader.value) {
+                                    document.getElementById('formSubmit').disabled = false;
+                                    this.handlePrintFormButton();
+                                }
                             }
                         }
                     }
@@ -655,9 +661,12 @@ export default class EventHandler {
                         }
                     }
                     if (valid) {
-                        // document.getElementById('joinTeam.0').disabled = false;
+                        console.log(`valid`);
+                        document.getElementById('joinTeam.0').disabled = false;
                         document.getElementById('formSubmit').disabled = false;
                         this.handlePrintFormButton();
+                    } else {
+                        console.log(`not valid`);
                     }
                 }
             }
@@ -707,6 +716,7 @@ export default class EventHandler {
             this.populated = 1;
             WebStorage.populateForm(this.isWeekend, this.dayNight);
         }
+        this.validate();
     }
 
     updateDays() {

@@ -24,7 +24,7 @@ export default class WebStorage {
         localStorage.setItem(`${counter}.totalDays`, pageData.TOTAL_DAYS);
         localStorage.setItem(`${counter}.snowmobile`, pageData.SNOWMOBILE);
         localStorage.setItem(`${counter}.toboggan`, pageData.TOBOGGAN);
-        localStorage.setItem(`${counter}.splint`, pageData.SPLINT);
+        localStorage.setItem(`${counter}.scavenger`, pageData.SCAVENGER);
         localStorage.setItem(`${counter}.cpr`, pageData.CPR);
         localStorage.setItem(`${counter}.chair`, pageData.CHAIR);
         localStorage.setItem(`${counter}.todayHalf`, pageData.TODAY_HALF);
@@ -36,7 +36,6 @@ export default class WebStorage {
      * @return boolean
      */
     static checkLocalStorage() {
-        console.log(localStorage.length);
         return localStorage.length > 0;
     }
 
@@ -45,15 +44,15 @@ export default class WebStorage {
      * @return null
      */
     static populateForm(isWeekend, dayNight) {
+        let weekendOverride = 0;
         let runPopulate = (teams) => {
             let event = new Event('click');
             let event2 = new Event('change');
             for (let i = 0; i < teams.length; i++) {
                 let counter = 1;
-                let MAX_COUNTER = 8;
+                let MAX_COUNTER = 20;
                 while (counter <= MAX_COUNTER) {
                     let teamPosition = `${teams[i]}.${counter}`;
-                    console.log(`Team Position: ${teamPosition}`);
                     if (localStorage.getItem(`${teamPosition}.id`)) {
                         document.getElementById(`joinTeam.${teams[i]}`).dispatchEvent(event);
                         document.getElementById(`patrollerID.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.id`);
@@ -78,24 +77,29 @@ export default class WebStorage {
         };
 
         let teams = [];
+        let event = new Event('click');
+        // let event2 = new Event('change');
         for (let i = 0; i < localStorage.length; i++ ) {
             let key = localStorage.key(i);
             let value = localStorage[key];
             if (key.substring(4,9) === 'team') {
                 teams.push(Number(localStorage[key]));
             }
+            if (key.substring(0,1) > 0) {
+                weekendOverride = 1;
+            }
             // console.log(`${key}: ${value}`);
         }
-        console.log(teams.length);
-        if (! isWeekend && dayNight === 'Day') {
-            let event = new Event('click');
-            console.log(`Running !weekend & Day`);
+        if (isWeekend) {
+            runPopulate(teams);
+        } else if (weekendOverride && ! isWeekend) {
             document.getElementById(`weekendOverride`).checked = true;
             document.getElementById('weekendOverride').dispatchEvent(event);
             runPopulate(teams);
-        } else {
-            console.log(`Running others`);
+        } else if (dayNight === 'Day') {
             runPopulate(teams);
+        } else {
+            //add nights here
         }
     }
 

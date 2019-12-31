@@ -7,6 +7,7 @@ class Main {
     constructor(people) {
         this.date = new Date();
         this.isWeekend = this.determineWeekend();
+        // this.isWeekend = true;
         document.getElementById("date").innerText = this.getWeekDay();
         document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
         document.getElementById("dayNight").innerText = `${this.getDayNight()} Shift`;
@@ -35,7 +36,7 @@ class Main {
         } else {
             dayNight = "Day";
         }
-        dayNight = 'Night';  //Turn on/off for testing
+        // dayNight = 'Night';  //Turn on/off for testing
         return dayNight;
     }
 
@@ -65,6 +66,11 @@ class Main {
             for (let i = 1; i < teams.length; i++) {
                 document.getElementById(`team.${i}`).style.display = 'none';
             }
+        }
+        this.eventHandler.populatePage();
+        if (this.eventHandler.populated === 1) {
+            let event2 = new Event('change');
+            document.dispatchEvent(event2);
         }
     }
 
