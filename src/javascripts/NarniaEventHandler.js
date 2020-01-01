@@ -50,7 +50,7 @@ export default class EventHandler {
                 let counter = NarniaContents.populateWorkDiv(this.patrollers);
                 this.handleNarniaSnowmobile(counter);
                 this.handleNarniaToboggan(counter);
-                this.handleNarniaSplint(counter);
+                this.handleNarniaScavenger(counter);
                 this.handleNarniaCpr(counter);
                 this.handleNarniaChair(counter);
                 let updateButton = `<input type="submit" class="button success expanded border" id="patrollerUpdateButton" value="Update Patroller Data">`;
@@ -72,7 +72,6 @@ export default class EventHandler {
         while (counter < maximum) {
             document.getElementById(`narniaSnowmobile.${counter}`).addEventListener(`click`, (event) => {
                 let id = event.target.id.substring(17,19);
-                console.log(id);
                 if (Number(this.patrollers[id].SNOWMOBILE) !== 1) {
                     this.patrollers[id].SNOWMOBILE = 1;
                     document.getElementById(`narniaSnowmobileValue.${id}`).value = 1;
@@ -99,7 +98,6 @@ export default class EventHandler {
         while (counter < maximum) {
             document.getElementById(`narniaToboggan.${counter}`).addEventListener(`click`, (event) => {
                 let id = event.target.id.substring(15,17);
-                console.log(id);
                 if (Number(this.patrollers[id].TOBOGGAN) !== 1) {
                     this.patrollers[id].TOBOGGAN = 1;
                     document.getElementById(`narniaTobogganValue.${id}`).value = 1;
@@ -121,28 +119,27 @@ export default class EventHandler {
         }
     }
 
-    handleNarniaSplint(maximum) {
+    handleNarniaScavenger(maximum) {
         let counter = 0;
         while (counter < maximum) {
-            document.getElementById(`narniaSplint.${counter}`).addEventListener(`click`, (event) => {
-                let id = event.target.id.substring(13,15);
-                console.log(id);
-                if (Number(this.patrollers[id].SPLINT) !== 1) {
-                    this.patrollers[id].SPLINT = 1;
-                    document.getElementById(`narniaSplintValue.${id}`).value = 1;
-                    document.getElementById(`narniaSplint.${id}`).style.color = 'rgb(23,121,186)';
-                    document.getElementById(`narniaSplint.${id}`).style.cursor = 'default';
+            document.getElementById(`narniaScavenger.${counter}`).addEventListener(`click`, (event) => {
+                let id = event.target.id.substring(16,18);
+                if (Number(this.patrollers[id].SCAVENGER) !== 1) {
+                    this.patrollers[id].SCAVENGER = 1;
+                    document.getElementById(`narniaScavengerValue.${id}`).value = 1;
+                    document.getElementById(`narniaScavenger.${id}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`narniaScavenger.${id}`).style.cursor = 'default';
                 } else {
-                    this.patrollers[id].SPLINT = 0;
-                    document.getElementById(`narniaSplintValue.${id}`).value = 0;
-                    document.getElementById(`narniaSplint.${id}`).style.color = 'rgb(204,75,55)';
+                    this.patrollers[id].SCAVENGER = 0;
+                    document.getElementById(`narniaScavengerValue.${id}`).value = 0;
+                    document.getElementById(`narniaScavenger.${id}`).style.color = 'rgb(204,75,55)';
                 }
             });
-            if (Number(this.patrollers[counter].SPLINT) !== 1) {
-                document.getElementById(`narniaSplint.${counter}`).style.color = 'rgb(204,75,55)';
+            if (Number(this.patrollers[counter].SCAVENGER) !== 1) {
+                document.getElementById(`narniaScavenger.${counter}`).style.color = 'rgb(204,75,55)';
             } else {
-                document.getElementById(`narniaSplint.${counter}`).style.color = 'rgb(23,121,186)';
-                document.getElementById(`narniaSplint.${counter}`).style.cursor = 'default';
+                document.getElementById(`narniaScavenger.${counter}`).style.color = 'rgb(23,121,186)';
+                document.getElementById(`narniaScavenger.${counter}`).style.cursor = 'default';
             }
             counter++;
         }
@@ -153,7 +150,6 @@ export default class EventHandler {
         while (counter < maximum) {
             document.getElementById(`narniaCpr.${counter}`).addEventListener(`click`, (event) => {
                 let id = event.target.id.substring(10,12);
-                console.log(id);
                 if (Number(this.patrollers[id].CPR) !== 1) {
                     this.patrollers[id].CPR = 1;
                     document.getElementById(`narniaCprValue.${id}`).value = 1;
@@ -180,7 +176,6 @@ export default class EventHandler {
         while (counter < maximum) {
             document.getElementById(`narniaChair.${counter}`).addEventListener(`click`, (event) => {
                 let id = event.target.id.substring(12,14);
-                console.log(id);
                 if (Number(this.patrollers[id].CHAIR) !== 1) {
                     this.patrollers[id].CHAIR = 1;
                     document.getElementById(`narniaChairValue.${id}`).value = 1;
@@ -204,7 +199,7 @@ export default class EventHandler {
 
     handleUploadFileButton() {
         document.getElementById(`uploadFile`).addEventListener(`click`, () => {
-
+            //TODO
         });
     }
 
@@ -222,7 +217,7 @@ export default class EventHandler {
                 "NIGHTS": document.getElementById(`narniaNights.${i}`).value,
                 "SNOWMOBILE": document.getElementById(`narniaSnowmobileValue.${i}`).value,
                 "TOBOGGAN": document.getElementById(`narniaTobogganValue.${i}`).value,
-                "SPLINT": document.getElementById(`narniaSplintValue.${i}`).value,
+                "SCAVENGER": document.getElementById(`narniaScavengerValue.${i}`).value,
                 "CPR": document.getElementById(`narniaCprValue.${i}`).value,
                 "CHAIR": document.getElementById(`narniaChairValue.${i}`).value
             }
