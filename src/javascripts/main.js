@@ -36,7 +36,7 @@ class Main {
         } else {
             dayNight = "Day";
         }
-        // dayNight = 'Night';  //Turn on/off for testing
+        dayNight = 'Night';  //Turn on/off for testing
         return dayNight;
     }
 

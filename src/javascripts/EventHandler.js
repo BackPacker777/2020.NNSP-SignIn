@@ -591,15 +591,19 @@ export default class EventHandler {
 
     handlePrintFormButton() {
         document.getElementById('formSubmit').addEventListener('click', (event) => {
-            console.log(`Print button clicked`);
             event.stopImmediatePropagation();
-            this.updateDays();
-            document.getElementById('formSubmit').disabled = true;
-            for (let button of this.buttons) {
-                document.getElementById(button.id).disabled = true;
+            let saidYes = prompt(`Are you sure you want to clear & print the roster? Please type:  yes`);
+            // let saidYes = 'yes';
+            console.log(`Print button clicked`);
+            if (saidYes === 'yes') {
+                this.updateDays();
+                document.getElementById('formSubmit').disabled = true;
+                for (let button of this.buttons) {
+                    document.getElementById(button.id).disabled = true;
+                }
+                window.open('/public/views/results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
+                WebStorage.purgeLocalStorage();
             }
-            window.open('/public/views/results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
-            WebStorage.purgeLocalStorage();
         });
     }
 
