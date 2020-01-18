@@ -5,13 +5,14 @@ import EventHandler from './EventHandler.js';
 
 class Main {
     constructor(people) {
+        const SIGN_OFFS = ['Snowmobile', 'Toboggan', 'Scavenger', 'Cpr', 'Chair'];
         this.date = new Date();
         this.isWeekend = this.determineWeekend();
-        // this.isWeekend = true;
+        // this.isWeekend = true;  //Turn on/off for testing
         document.getElementById("date").innerText = this.getWeekDay();
         document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
         document.getElementById("dayNight").innerText = `${this.getDayNight()} Shift`;
-        this.eventHandler = new EventHandler(people, this.getDayNight(), this.isWeekend);
+        this.eventHandler = new EventHandler(people, this.getDayNight(), this.isWeekend, SIGN_OFFS);
         this.prepUX();
     }
 
@@ -58,7 +59,7 @@ class Main {
                 counter++;
             }
             document.getElementById(`patrollerID.0.1`).required = true;
-            document.getElementById(`joinTeam.0`).value = "-= EXTRA Sign On =- (! ONLY click this if all race time slots are filled !)";
+            document.getElementById(`joinTeam.0`).value = "EXTRA Sign On (! ONLY click this if all race time slots are filled or you cannot do race course duty !)";
         } else if (this.getDayNight() === 'Day' && this.isWeekend) {
             document.getElementById(`team.0`).style.display = 'none';
         } else {

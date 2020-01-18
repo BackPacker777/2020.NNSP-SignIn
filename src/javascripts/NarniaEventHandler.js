@@ -3,11 +3,13 @@
 import NarniaContents from "./NarniaContents.js";
 
 export default class EventHandler {
-    constructor(patrollers) {
+
+    constructor(patrollers, SIGN_OFFS) {
         this.patrollers = patrollers;
+        console.log(this.patrollers);
         this.handleNarniaButton();
         this.handleReturnButton();
-        this.handlePatrollerWorkButton();
+        this.handlePatrollerWorkButton(SIGN_OFFS);
         this.handleUploadFileButton();
     }
 
@@ -42,12 +44,13 @@ export default class EventHandler {
         });
     }
 
-    handlePatrollerWorkButton() {
+    handlePatrollerWorkButton(SIGN_OFFS) {
         let alreadyRun = false;
         document.getElementById(`patrollerWork`).addEventListener(`click`, (event) => {
             if (!alreadyRun) {
                 event.stopImmediatePropagation();
                 let counter = NarniaContents.populateWorkDiv(this.patrollers);
+                // this.handleSignOffs(counter, SIGN_OFFS);
                 this.handleNarniaSnowmobile(counter);
                 this.handleNarniaToboggan(counter);
                 this.handleNarniaScavenger(counter);
@@ -65,6 +68,40 @@ export default class EventHandler {
             }
             alreadyRun = true;
         });
+    }
+
+    handleSignOffs(maximum, SIGN_OFFS) {
+        console.log(SIGN_OFFS);
+        for (let signOff of SIGN_OFFS) {
+            let counter = 0;
+            let SIGN_OFF = signOff.toUpperCase();
+            let patrollerSignOff = eval(`this.patrollers[${counter}].${SIGN_OFF}`);
+            console.log(`Patroller Sign Off = ${patrollerSignOff}`);
+            while (counter < maximum) {
+                document.getElementById(`narnia${signOff}.${counter}`).addEventListener(`click`, (event) => {
+                    let id = event.target.id.substring(17,19);
+                    console.log(id);
+                    let currentSignOff = eval(`this.patrollers[${id}].${SIGN_OFF}`);
+                    console.log(`Current Sign Off = ${currentSignOff}`);
+                    if (Number(currentSignOff) !== 1) {
+                        document.getElementById(`narnia${signOff}Value.${id}`).value = 1;
+                        document.getElementById(`narnia${signOff}.${id}`).style.color = 'rgb(23,121,186)';
+                        document.getElementById(`narnia${signOff}.${id}`).style.cursor = 'default';
+                    } else {
+                        currentSignOff = 0;
+                        document.getElementById(`narnia${signOff}Value.${id}`).value = 0;
+                        document.getElementById(`narnia${signOff}.${id}`).style.color = 'rgb(204,75,55)';
+                    }
+                });
+                if (Number(patrollerSignOff) !== 1) {
+                    document.getElementById(`narnia${signOff}.${counter}`).style.color = 'rgb(204,75,55)';
+                } else {
+                    document.getElementById(`narnia${signOff}.${counter}`).style.color = 'rgb(23,121,186)';
+                    document.getElementById(`narnia${signOff}.${counter}`).style.cursor = 'default';
+                }
+                counter++;
+            }
+        }
     }
 
     handleNarniaSnowmobile(maximum) {

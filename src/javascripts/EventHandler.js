@@ -3,7 +3,8 @@ import NarniaEventHandler from "./NarniaEventHandler.js";
 import WebStorage from "./WebStorage.js";
 
 export default class EventHandler {
-    constructor(patrollers, dayNight, isWeekend) {
+    constructor(patrollers, dayNight, isWeekend, SIGN_OFFS) {
+        this.SIGN_OFFS = SIGN_OFFS;
         this.nightCounter = 0;
         this.signedIn = [];
         this.patrollers = patrollers;
@@ -14,7 +15,7 @@ export default class EventHandler {
         this.isWeekend = isWeekend;
         this.populated = 0;
         this.buttons = document.querySelectorAll("input[type=button]");
-        new NarniaEventHandler(this.patrollers);
+        new NarniaEventHandler(this.patrollers, this.SIGN_OFFS);
         this.handleWeekendOverride();
         this.handleSignOnButtons();
         this.validate();
@@ -63,9 +64,6 @@ export default class EventHandler {
         const LEADERS = 6, CANDIDATES = 5, NIGHT = 0;
         for (let i = 0; i < this.buttons.length; i++) {
             let teamNum = Number(this.buttons[i].id.substr(9, 1));
-            if (teamNum === 0 && this.dayNight === "Night") {
-                document.getElementById(`joinTeam.0`).disabled = true;
-            }
             this.buttons[i].addEventListener('click', () => {
                 document.getElementById(`weekendOverride`).disabled = true;
                 let teamNum = Number(this.buttons[i].id.substr(9, 1));
@@ -124,7 +122,6 @@ export default class EventHandler {
     }
 
     changePatrollerDiv(teamNum, counter) {
-        const MAX_NIGHT_COUNTER = 8;
         document.getElementById(`patrollerID.${teamNum}.${counter}`).addEventListener('change', () => {
             let correctID = false;
             if (document.getElementById(`patrollerID.${teamNum}.${counter}`).value !== '') {
@@ -135,10 +132,6 @@ export default class EventHandler {
                             document.getElementById(`patrollerID.${teamNum}.${counter}`).value = '';
                             break;
                         } else if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                            this.nightCounter++;
-                            if (this.nightCounter >= MAX_NIGHT_COUNTER) {
-                                document.getElementById(`joinTeam.0`).disabled = false;
-                            }
                             document.getElementById(`patrollerID.${teamNum}.${counter}`).readOnly = true;
                             this.populateDiv(teamNum, counter, i);
                             this.handleSnowmobile(teamNum, counter);
@@ -186,10 +179,6 @@ export default class EventHandler {
                 } else {
                     for (let i = 0; i < this.patrollers.length; i++) {
                         if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                            this.nightCounter++;
-                            if (this.nightCounter >= MAX_NIGHT_COUNTER) {
-                                document.getElementById(`joinTeam.0`).disabled = false;
-                            }
                             document.getElementById(`patrollerID.${teamNum}.${counter}`).readOnly = true;
                             this.populateDiv(teamNum, counter, i);
                             this.handleSnowmobile(teamNum, counter);
