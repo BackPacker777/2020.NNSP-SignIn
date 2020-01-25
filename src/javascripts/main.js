@@ -24,7 +24,7 @@ class Main {
     }
 
     getWeekDay() {
-        let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         return days[this.date.getDay()];
     }
 
@@ -37,7 +37,7 @@ class Main {
         } else {
             dayNight = "Day";
         }
-        dayNight = 'Night';  //Turn on/off for testing
+        // dayNight = 'Night';  //Turn on/off for testing
         return dayNight;
     }
 

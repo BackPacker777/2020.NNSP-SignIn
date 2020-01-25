@@ -5,8 +5,7 @@ import NarniaContents from "./NarniaContents.js";
 export default class EventHandler {
 
     constructor(patrollers, SIGN_OFFS) {
-        this.patrollers = patrollers;
-        console.log(this.patrollers);
+        this.patrollers = patrollers.slice();
         this.handleNarniaButton();
         this.handleReturnButton();
         this.handlePatrollerWorkButton(SIGN_OFFS);

@@ -92,7 +92,7 @@ class app {
                         try {
                             body = Buffer.concat(body).toString();
                             this.#ejsData = JSON.parse(body);
-                            this.fileName = `results.ejs`;
+                            this.#fileName = `results.ejs`;
                         } catch (error) {
                             console.log(error);
                         }
