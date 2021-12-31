@@ -25,7 +25,7 @@ class app {
      */
     loadServer() {
         const HTTP = require('http');
-        // const HTTP2 = require('http2');
+        const HTTP2 = require('http2');
         const EJS = require('ejs');
         const PORT = process.env.PORT || 8111;
         const SSL_OPTIONS = {
@@ -36,7 +36,7 @@ class app {
         };
 
 
-/*
+///*
         HTTP.createServer((request, response) => {
             response.writeHead(301, {
                 'Location': `https://${request.headers['host']}${request.url}`
@@ -44,10 +44,10 @@ class app {
             response.end();
         }).listen(80);
 
-*/
+//*/
 
-        // HTTP2.createSecureServer(SSL_OPTIONS, async (request, response) => {
-        HTTP.createServer((request, response) => {
+        HTTP2.createSecureServer(SSL_OPTIONS, async (request, response) => {
+        // HTTP.createServer((request, response) => {
 
             let httpHandler = (error, string, contentType) => {
                 if (error) {

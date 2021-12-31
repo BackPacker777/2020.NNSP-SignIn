@@ -32,5 +32,6 @@ class results {
 }
 
 window.addEventListener('load', () => {
+    localStorage.clear();
     new results();
 });

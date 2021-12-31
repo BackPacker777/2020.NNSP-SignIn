@@ -1,12 +1,12 @@
 {
-	"parser": "babel-eslint",
 	"parserOptions": {
-		"ecmaVersion": 2019,
+		"ecmaVersion": "latest",
 		"sourceType": "module"
 	},
 	"env": {
 		"browser": true,
 		"es6": true,
-		"node": true
+		"node": true,
+		"es2021": true
 	}
 }

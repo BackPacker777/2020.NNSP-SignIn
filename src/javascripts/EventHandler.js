@@ -16,10 +16,30 @@ export default class EventHandler {
         this.populated = 0;
         this.buttons = document.querySelectorAll("input[type=button]");
         new NarniaEventHandler(this.patrollers, this.SIGN_OFFS);
+        this.handleFixButton();
         this.handleWeekendOverride();
         this.handleSignOnButtons();
         this.validate();
         EventHandler.stopEnterKey();
+    }
+
+    handleFixButton() {
+        let correctPassword = false;
+        document.getElementById(`fixButton`).addEventListener('click', () => {
+            let password = prompt(`Password: `);
+            for (let person of this.patrollers) {
+                if (person.ID === password && person.LEADER) {
+                    correctPassword = true;
+                }
+            }
+            if (correctPassword) {
+                localStorage.clear();
+                location.reload();
+                return false;
+            } else {
+                alert(`Incorrect Password`);
+            }
+        });
     }
 
     handleWeekendOverride() {
@@ -63,7 +83,7 @@ export default class EventHandler {
         let nightCounter = 9;
         const LEADERS = 6, CANDIDATES = 5, NIGHT = 0;
         for (let i = 0; i < this.buttons.length; i++) {
-            let teamNum = Number(this.buttons[i].id.substr(9, 1));
+            // let teamNum = Number(this.buttons[i].id.substr(9, 1));
             this.buttons[i].addEventListener('click', () => {
                 document.getElementById(`weekendOverride`).disabled = true;
                 let teamNum = Number(this.buttons[i].id.substr(9, 1));
@@ -163,7 +183,7 @@ export default class EventHandler {
                             if (this.isWeekend) {
                                 this.teamCounts[teamNum]++;
                                 if (teamNum > 0) {
-                                    this.enforceTeamBalance(teamNum);
+                                    // this.enforceTeamBalance(teamNum);
                                 }
                                 if (teamNum > 0 && teamNum < 5) {
                                     this.handleAdmin(teamNum, counter);
@@ -199,7 +219,7 @@ export default class EventHandler {
                             if (this.isWeekend) {
                                 this.teamCounts[teamNum]++;
                                 if (teamNum > 0) {
-                                    this.enforceTeamBalance(teamNum);
+                                    // this.enforceTeamBalance(teamNum);
                                 }
                                 if (teamNum > 0 && teamNum < 5) {
                                     this.handleAdmin(teamNum, counter);
@@ -354,7 +374,7 @@ export default class EventHandler {
                 document.getElementById(`guestDiv.${teamNum}.${counter}`).style.visibility = 'hidden';
             }
             this.teamCounts[teamNum]--;
-            this.enforceTeamBalance(teamNum);
+            // this.enforceTeamBalance(teamNum);
             /*if (document.getElementById(`days.${teamNum}.${counter}`).value > 0) {
                 document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) - .5;
             } else {
@@ -376,7 +396,7 @@ export default class EventHandler {
                         document.getElementById(`guest.${teamNum}.${counter}`).disabled = true;
                     }
                     this.teamCounts[teamNum]--;
-                    this.enforceTeamBalance(teamNum);
+                    // this.enforceTeamBalance(teamNum);
                     /*if (document.getElementById(`days.${teamNum}.${counter}`).value > 0) {
                         document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) - .5;
                     } else {
@@ -395,7 +415,7 @@ export default class EventHandler {
                         document.getElementById(`guest.${teamNum}.${counter}`).disabled = false;
                     }
                     this.teamCounts[teamNum]++;
-                    this.enforceTeamBalance(teamNum);
+                    // this.enforceTeamBalance(teamNum);
                     // document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) + .5;
                     for (let patroller of this.signedIn) {
                         if (Number(patroller.ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
@@ -687,7 +707,7 @@ export default class EventHandler {
                     document.getElementById(`team.${team}`).appendChild(div);
                     this.teamCounts[team]++;
                     this.teamCounts[teamNum]--;
-                    this.enforceTeamBalance(team);
+                    // this.enforceTeamBalance(team);
                 }
             } else {
                 alert(`Incorrect Password`);
