@@ -306,10 +306,13 @@ export default class EventHandler {
         let halfDays = this.patrollers[i].HALF_DAYS + halfDayCount;
         let halfs = halfDays / 2;
         let totalDays = days + nights + halfs;
+        let displayName = (this.patrollers[i].NICK_NAME.length > 0) ? this.patrollers[i].NICK_NAME : this.patrollers[i].FIRST_NAME;
+        displayName += ' ' + this.patrollers[i].LAST_NAME;
+
         let patroller = {
             ID: Number(this.patrollers[i].ID),
             RADIO: document.getElementById(`radioNum.${teamNum}.${counter}`).value,
-            NAME: `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`,
+            NAME: displayName,
             RATING: this.patrollers[i].RATING,
             TIME: document.getElementById(`time.${teamNum}.${counter}`).value,
             DAYS: days,
@@ -326,14 +329,15 @@ export default class EventHandler {
             TODAY_HALF: false,
             POSITION_TEAM: counter
         };
+
         if (teamNum !== 5) {
             patroller.GUEST = document.getElementById(`guest.${teamNum}.${counter}`).value;
         }
         if (this.populated === 0) {
-            alert(`TOTAL DAYS: ${patroller.TOTAL_DAYS}`);
+          alert(`PATROLLER: ${displayName}\nTOTAL DAYS: ${patroller.TOTAL_DAYS}`);
         }
         this.signedIn.push(patroller);
-        document.getElementById(`name.${teamNum}.${counter}`).value = `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`;
+        document.getElementById(`name.${teamNum}.${counter}`).value = displayName;
         document.getElementById(`rating.${teamNum}.${counter}`).value = this.patrollers[i].RATING;
         // document.getElementById(`days.${teamNum}.${counter}`).value = this.signedIn[this.signedIn.length - 1].TOTAL_DAYS;
     }
