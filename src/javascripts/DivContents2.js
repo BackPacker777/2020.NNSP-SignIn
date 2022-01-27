@@ -89,7 +89,6 @@ export default class DivContents2 {
                         ${halfDay}
                         ${guest}
                         ${signOffs}
-                        ${admin}
                     </div>`;
             } else if (teamNum > 0 && teamNum < TEAMS.CANDIDATES) {
                 return `<div class="grid-x" id="person.${teamNum}.${counter}">

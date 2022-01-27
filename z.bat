@@ -1,1 +1,0 @@
-cls && gulp && cls && npm start

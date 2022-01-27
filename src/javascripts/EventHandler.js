@@ -12,6 +12,7 @@ export default class EventHandler {
         this.halfDay = false;
         this.overMax = [false, false, false, false, false];
         this.teamCounts = [0,0,0,0,0];
+        this.counter = [1,1,1,1,1,1,1];
         this.isWeekend = isWeekend;
         this.populated = 0;
         this.buttons = document.querySelectorAll("input[type=button]");
@@ -53,7 +54,6 @@ export default class EventHandler {
                     let counter = 1;
                     const MAX_TEAM = 6;
                     while (counter <= MAX_TEAM) {
-                        // console.log(`Displaying team div team.${counter}`);
                         document.getElementById(`team.1`).style.display = 'block';
                         document.getElementById(`team.${counter}`).style.display = 'block';
                         counter++;
@@ -79,11 +79,9 @@ export default class EventHandler {
     }
 
     handleSignOnButtons() {
-        let counter = [1,1,1,1,1,1,1];
         let nightCounter = 9;
         const LEADERS = 6, CANDIDATES = 5, NIGHT = 0;
         for (let i = 0; i < this.buttons.length; i++) {
-            // let teamNum = Number(this.buttons[i].id.substr(9, 1));
             this.buttons[i].addEventListener('click', () => {
                 document.getElementById(`weekendOverride`).disabled = true;
                 let teamNum = Number(this.buttons[i].id.substr(9, 1));
@@ -101,18 +99,17 @@ export default class EventHandler {
                             for (let button of this.buttons) {
                                 document.getElementById(button.id).disabled = true;
                             }
-                            document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum], person.LEADER));
-                            document.getElementById(`patrollerID.${LEADERS}.${counter[teamNum]}`).value = person.ID;
-                            this.handleUndo(teamNum, counter[teamNum]);
-                            this.changePatrollerDiv(LEADERS, counter[LEADERS]);
+                            document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, this.counter[teamNum], person.LEADER));
+                            document.getElementById(`patrollerID.${LEADERS}.${this.counter[teamNum]}`).value = person.ID;
+                            this.handleUndo(teamNum, this.counter[teamNum]);
+                            this.changePatrollerDiv(LEADERS, this.counter[LEADERS]);
                             if (this.dayNight === 'Day') {
-                                this.handleHalfDay(teamNum, counter[teamNum]);
+                                this.handleHalfDay(teamNum, this.counter[teamNum]);
                             }
-                            let element = document.getElementById(`patrollerID.${LEADERS}.${counter[teamNum]}`);
+                            let element = document.getElementById(`patrollerID.${LEADERS}.${this.counter[teamNum]}`);
                             let event = new Event('change');
                             element.dispatchEvent(event);
-                            //http://2ality.com/2013/06/triggering-events.html
-                            counter[teamNum]++;
+                            this.counter[teamNum]++;
                             break;
                         } else {
                             for (let button of this.buttons) {
@@ -129,114 +126,78 @@ export default class EventHandler {
                     nightCounter++;
                 } else {
                     this.buttons[i].disabled = true;
-                    document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, counter[teamNum]));
+                    document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, this.teamCounts[teamNum] + 1));
                     if (this.dayNight === 'Day') {
-                        this.handleHalfDay(teamNum, counter[teamNum]);
+                        this.handleHalfDay(teamNum, this.counter[teamNum]);
                     }
-                    this.handleUndo(teamNum, counter[teamNum]);
-                    this.changePatrollerDiv(teamNum, counter[teamNum]);
-                    counter[teamNum]++;
+                    if (teamNum > 0) {
+                        this.handleUndo(teamNum, this.counter[teamNum]);
+                    }
+                    this.changePatrollerDiv(teamNum, this.counter[teamNum]);
                 }
             });
         }
     }
 
-    changePatrollerDiv(teamNum, counter) {
-        document.getElementById(`patrollerID.${teamNum}.${counter}`).addEventListener('change', () => {
+    changePatrollerDiv(teamNum, count) {
+        document.getElementById(`patrollerID.${teamNum}.${count}`).addEventListener('change', () => {
             let correctID = false;
-            if (document.getElementById(`patrollerID.${teamNum}.${counter}`).value !== '') {
-                if (this.signedIn.length > 0) {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (i < this.signedIn.length && this.signedIn[i].ID === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                            alert(`You are already logged in.`);
-                            document.getElementById(`patrollerID.${teamNum}.${counter}`).value = '';
-                            break;
-                        } else if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                            document.getElementById(`patrollerID.${teamNum}.${counter}`).readOnly = true;
-                            this.populateDiv(teamNum, counter, i);
-                            this.handleSnowmobile(teamNum, counter);
-                            this.handleToboggan(teamNum, counter);
-                            this.handleScavenger(teamNum, counter);
-                            this.handleCpr(teamNum, counter);
-                            this.handleChair(teamNum, counter);
-                            document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
-                            correctID = true;
-                            document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
-                                let usedRadio = false;
-                                for (let peeps of this.signedIn) {
-                                    if (document.getElementById(`radioNum.${teamNum}.${counter}`).value === peeps.RADIO && peeps.RADIO !== '0') {
-                                        usedRadio = true;
-                                    }
+            if (document.getElementById(`patrollerID.${teamNum}.${count}`).value !== '') {
+                for (let i = 0; i < this.patrollers.length; i++) {
+                    if (i < this.signedIn.length && this.signedIn[i].ID === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
+                        alert(`You are already logged in.`);
+                        document.getElementById(`patrollerID.${teamNum}.${count}`).value = '';
+                        break;
+                    } else if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
+                        correctID = true;
+                        this.completeDivChange(teamNum, i, count);
+                        document.getElementById(`radioNum.${teamNum}.${count}`).required = true;
+                        document.getElementById(`radioNum.${teamNum}.${count}`).addEventListener('change', () => {
+                            let usedRadio = false;
+                            for (let peeps of this.signedIn) {
+                                if (document.getElementById(`radioNum.${teamNum}.${count}`).value === peeps.RADIO && peeps.RADIO !== '0') {
+                                    usedRadio = true;
                                 }
-                                if (usedRadio) {
-                                    alert(`Radio already in use....`);
-                                    document.getElementById(`radioNum.${teamNum}.${counter}`).value = '';
-                                } else {
-                                    this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${counter}`).value, `radio`);
-                                }
+                            }
+                            if (usedRadio) {
+                                alert(`Radio already in use....`);
+                                document.getElementById(`radioNum.${teamNum}.${count}`).value = '';
+                            } else {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${count}`).value, `radio`);
+                            }
+                        });
+                        if (teamNum !== 5) {
+                            document.getElementById(`guest.${teamNum}.${count}`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.${teamNum}.${count}`).value, `guest`);
                             });
-                            if (teamNum !== 5) {
-                                document.getElementById(`guest.${teamNum}.${counter}`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.${teamNum}.${counter}`).value, `guest`);
-                                });
-                            }
-                            if (this.isWeekend) {
-                                this.teamCounts[teamNum]++;
-                                if (teamNum > 0) {
-                                    // this.enforceTeamBalance(teamNum);
-                                }
-                                if (teamNum > 0 && teamNum < 5) {
-                                    this.handleAdmin(teamNum, counter);
-                                }
-                            }
-                            break;
                         }
-                    }
-                    if (correctID !== true) {
-                        alert(`Invalid ID number. Please try again... Or don't...`);
-                        document.getElementById(`patrollerID.${teamNum}.${counter}`).value = '';
-                    }
-                } else {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                            document.getElementById(`patrollerID.${teamNum}.${counter}`).readOnly = true;
-                            this.populateDiv(teamNum, counter, i);
-                            this.handleSnowmobile(teamNum, counter);
-                            this.handleToboggan(teamNum, counter);
-                            this.handleScavenger(teamNum, counter);
-                            this.handleCpr(teamNum, counter);
-                            this.handleChair(teamNum, counter);
-                            document.getElementById(`radioNum.${teamNum}.${counter}`).required = true;
-                            correctID = true;
-                            document.getElementById(`radioNum.${teamNum}.${counter}`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${counter}`).value, `radio`);
-                            });
-                            if (teamNum !== 5) {
-                                document.getElementById(`guest.${teamNum}.${counter}`).addEventListener('change', () => {
-                                    this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.${teamNum}.${counter}`).value, `guest`);
-                                });
-                            }
-                            if (this.isWeekend) {
-                                this.teamCounts[teamNum]++;
-                                if (teamNum > 0) {
-                                    // this.enforceTeamBalance(teamNum);
-                                }
-                                if (teamNum > 0 && teamNum < 5) {
-                                    this.handleAdmin(teamNum, counter);
-                                }
-                            }
-                            break;
-                        }
-                    }
-                    if (!correctID) {
-                        alert(`Invalid ID number. Please try again... Or don't...`);
-                        document.getElementById(`patrollerID.${teamNum}.${counter}`).value = '';
+                        break;
                     }
                 }
+                if (correctID !== true) {
+                    alert(`Invalid ID number. Please try again... Or don't...`);
+                    document.getElementById(`patrollerID.${teamNum}.${count}`).value = '';
+                }
             } else {
-                this.clearDiv(teamNum, counter);
+                this.clearDiv(teamNum, count);
             }
         });
+    }
+
+    completeDivChange(teamNum, i, count) {
+        document.getElementById(`patrollerID.${teamNum}.${count}`).readOnly = true;
+        this.populateDiv(teamNum, i, count);
+        this.handleSignOffs(teamNum, count);
+        this.teamCounts[teamNum]++;
+        if (this.isWeekend) {
+            /*if (teamNum > 0) {
+                this.enforceTeamBalance(teamNum);
+            }*/
+            if (teamNum > 0 && teamNum < 5) {
+                this.handleAdmin(teamNum, count);
+            }
+        }
+        this.counter[teamNum]++;
     }
 
     updatePatrollerInfo(patrollerID, radioGuestDays, whichListener) {
@@ -276,7 +237,7 @@ export default class EventHandler {
         // WebStorage.retrieveLocalStorage();
     }
 
-    populateDiv(teamNum, counter, i) {
+    populateDiv(teamNum, i, count) {
         let time = new Date();
         let minutes = time.getMinutes();
         if (minutes < 10) {
@@ -292,11 +253,11 @@ export default class EventHandler {
             nightsCount = 1;
             dayCount = 0;
         }
-        if (! document.getElementById(`time.${teamNum}.${counter}`).value) {
-            document.getElementById(`time.${teamNum}.${counter}`).value = `${time.getHours()}:${minutes}`;
+        if (! document.getElementById(`time.${teamNum}.${count}`).value) {
+            document.getElementById(`time.${teamNum}.${count}`).value = `${time.getHours()}:${minutes}`;
         }
-        if (document.getElementById(`race.${teamNum}.${counter}`)) {
-            race = document.getElementById(`race.${teamNum}.${counter}`).value;
+        if (document.getElementById(`race.${teamNum}.${count}`)) {
+            race = document.getElementById(`race.${teamNum}.${count}`).value;
         }
         this.patrollers[i].DAYS = Number(this.patrollers[i].DAYS);
         this.patrollers[i].NIGHTS = Number(this.patrollers[i].NIGHTS);
@@ -308,10 +269,10 @@ export default class EventHandler {
         let totalDays = days + nights + halfs;
         let patroller = {
             ID: Number(this.patrollers[i].ID),
-            RADIO: document.getElementById(`radioNum.${teamNum}.${counter}`).value,
+            RADIO: document.getElementById(`radioNum.${teamNum}.${count}`).value,
             NAME: `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`,
             RATING: this.patrollers[i].RATING,
-            TIME: document.getElementById(`time.${teamNum}.${counter}`).value,
+            TIME: document.getElementById(`time.${teamNum}.${count}`).value,
             DAYS: days,
             TEAM: teamNum,
             RACE: race,
@@ -324,266 +285,138 @@ export default class EventHandler {
             CPR: this.patrollers[i].CPR,
             CHAIR: this.patrollers[i].CHAIR,
             TODAY_HALF: false,
-            POSITION_TEAM: counter
+            POSITION_TEAM: this.counter[teamNum]
         };
         if (teamNum !== 5) {
-            patroller.GUEST = document.getElementById(`guest.${teamNum}.${counter}`).value;
+            patroller.GUEST = document.getElementById(`guest.${teamNum}.${count}`).value;
         }
         if (this.populated === 0) {
             alert(`TOTAL DAYS: ${patroller.TOTAL_DAYS}`);
         }
         this.signedIn.push(patroller);
-        document.getElementById(`name.${teamNum}.${counter}`).value = `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`;
-        document.getElementById(`rating.${teamNum}.${counter}`).value = this.patrollers[i].RATING;
-        // document.getElementById(`days.${teamNum}.${counter}`).value = this.signedIn[this.signedIn.length - 1].TOTAL_DAYS;
+        document.getElementById(`name.${teamNum}.${count}`).value = `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`;
+        document.getElementById(`rating.${teamNum}.${count}`).value = this.patrollers[i].RATING;
+        // document.getElementById(`days.${teamNum}.${count}`).value = this.signedIn[this.signedIn.length - 1].TOTAL_DAYS;
     }
 
-    clearDiv(teamNum, counter) {
-        let getIds = document.getElementsByName('patrollerID');
-        let patrollerIDs = [];
-        for (let i = 0; i < getIds.length; i++) {
-            patrollerIDs.push(Number(getIds[i].value));
-        }
-        let difference;  //https://stackoverflow.com/a/30288946/466246  Answer for difference between 2 arrays
-        for (let i = 0; i < this.signedIn.length; i++) {
-            if (this.signedIn.indexOf(patrollerIDs[i].ID) === -1) {
-                difference = this.signedIn[i].ID;
-            }
-        }
-        this.signedIn.splice(this.signedIn.indexOf(difference), 1);
-        document.getElementById(`name.${teamNum}.${counter}`).value = ``;
-        document.getElementById(`radioNum.${teamNum}.${counter}`).value = ``;
-        document.getElementById(`rating.${teamNum}.${counter}`).value = ``;
-        document.getElementById(`time.${teamNum}.${counter}`).value = ``;
-        document.getElementById(`halfDay.${teamNum}.${counter}`).checked = false;
-        // document.getElementById(`days.${teamNum}.${counter}`).value = ``;
+    clearDiv(teamNum, count) {
+        console.log(`Team: ${teamNum}, count: ${count}`);
+        console.log(this.signedIn);
+        let patroller = this.signedIn.findIndex(patroller => patroller.ID === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value));
+        this.signedIn.splice(patroller, 1);
+        console.log(this.signedIn);
+        document.getElementById(`name.${teamNum}.${count}`).value = ``;
+        document.getElementById(`radioNum.${teamNum}.${count}`).value = ``;
+        document.getElementById(`rating.${teamNum}.${count}`).value = ``;
+        document.getElementById(`time.${teamNum}.${count}`).value = ``;
+        document.getElementById(`halfDay.${teamNum}.${count}`).checked = false;
+        // document.getElementById(`days.${teamNum}.${count}`).value = ``;
         if (teamNum !== 5) {
-            document.getElementById(`guest.${teamNum}.${counter}`).value = ``;
+            document.getElementById(`guest.${teamNum}.${count}`).value = ``;
         }
-        document.getElementById(`person.${teamNum}.${counter}`).outerHTML = ''; //https://stackoverflow.com/a/19298575/466246
-        this.teamCounts[teamNum]--;
+        document.getElementById(`person.${teamNum}.${count}`).outerHTML = ''; //https://stackoverflow.com/a/19298575/466246
+        localStorage.removeItem(`${teamNum}.${count}.cpr`);
+        localStorage.removeItem(`${teamNum}.${count}.name`);
+        localStorage.removeItem(`${teamNum}.${count}.time`);
+        localStorage.removeItem(`${teamNum}.${count}.scavenger`);
+        localStorage.removeItem(`${teamNum}.${count}.days`);
+        localStorage.removeItem(`${teamNum}.${count}.rating`);
+        localStorage.removeItem(`${teamNum}.${count}.id`);
+        localStorage.removeItem(`${teamNum}.${count}.todayHalf`);
+        localStorage.removeItem(`${teamNum}.${count}.halfDays`);
+        localStorage.removeItem(`${teamNum}.${count}.toboggan`);
+        localStorage.removeItem(`${teamNum}.${count}.chair`);
+        localStorage.removeItem(`${teamNum}.${count}.positionTeam`);
+        localStorage.removeItem(`${teamNum}.${count}.radio`);
+        localStorage.removeItem(`${teamNum}.${count}.team`);
+        localStorage.removeItem(`${teamNum}.${count}.nights`);
+        localStorage.removeItem(`${teamNum}.${count}.totalDays`);
+        localStorage.removeItem(`${teamNum}.${count}.snowmobile`);
+        /*if (this.counter[teamNum] > 1) {
+            this.counter[teamNum]--;
+        }*/
+        /*if (this.teamCounts > 0) {
+            this.teamCounts--;
+        }*/
     }
 
-    handleHalfDay(teamNum, counter) {
-        let time = new Date();
-        const DAY_CUTOFF = 9;
-        if (time.getHours() > DAY_CUTOFF) {
-            document.getElementById(`halfDay.${teamNum}.${counter}`).setAttribute('checked', 'checked');
-            document.getElementById(`halfDay.${teamNum}.${counter}`).disabled = true;
-            if (teamNum !== 5) {
-                document.getElementById(`guestDiv.${teamNum}.${counter}`).style.visibility = 'hidden';
-            }
-            this.teamCounts[teamNum]--;
-            // this.enforceTeamBalance(teamNum);
-            /*if (document.getElementById(`days.${teamNum}.${counter}`).value > 0) {
-                document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) - .5;
+    handleHalfDay(teamNum, count) {
+        // let time = new Date();
+        // const DAY_CUTOFF = 9;
+        document.getElementById(`halfDay.${teamNum}.${count}`).addEventListener('click', () => {
+            if (document.getElementById(`halfDay.${teamNum}.${count}`).checked) {
+                document.getElementById(`person.${teamNum}.${count}`).style.backgroundColor = 'rgb(247,223,30)';
+                if (teamNum !== 5) {
+                    document.getElementById(`guest.${teamNum}.${count}`).disabled = true;
+                }
+                this.teamCounts[teamNum]--;
+                // this.enforceTeamBalance(teamNum);
+                /*if (document.getElementById(`days.${teamNum}.${count}`).value > 0) {
+                    document.getElementById(`days.${teamNum}.${count}`).value = Number(document.getElementById(`days.${teamNum}.${count}`).value) - .5;
+                } else {
+                    document.getElementById(`days.${teamNum}.${count}`).value = 0;
+                }*/
+                for (let patroller of this.signedIn) {
+                    if (Number(patroller.ID) === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
+                        this.updatePatrollerInfo(patroller.ID, patroller.TOTAL_DAYS, `halfDaysUp`);
+                        break;
+                    }
+                }
+
             } else {
-                document.getElementById(`days.${teamNum}.${counter}`).value = 0;
-            }*/
-            for (let patroller of this.signedIn) {
-                if (Number(patroller.ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                    this.updatePatrollerInfo(patroller.ID, patroller.TOTAL_DAYS, `halfDaysUp`);
-                    break;
+                document.getElementById(`person.${teamNum}.${count}`).style.backgroundColor = 'white';
+                if (teamNum !== 5) {
+                    document.getElementById(`guest.${teamNum}.${count}`).disabled = false;
                 }
-            }
-            // this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${counter}`).value, document.getElementById(`days.${teamNum}.${counter}`).value, `halfDaysUp`);
-            this.halfDay = true;
-        } else {
-            document.getElementById(`halfDay.${teamNum}.${counter}`).addEventListener('click', () => {
-                if (document.getElementById(`halfDay.${teamNum}.${counter}`).checked) {
-                    document.getElementById(`person.${teamNum}.${counter}`).style.backgroundColor = 'rgb(247,223,30)';
-                    if (teamNum !== 5) {
-                        document.getElementById(`guest.${teamNum}.${counter}`).disabled = true;
+                this.teamCounts[teamNum]++;
+                // this.enforceTeamBalance(teamNum);
+                // document.getElementById(`days.${teamNum}.${count}`).value = Number(document.getElementById(`days.${teamNum}.${count}`).value) + .5;
+                for (let patroller of this.signedIn) {
+                    if (Number(patroller.ID) === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
+                        this.updatePatrollerInfo(patroller.ID, patroller.TOTAL_DAYS, `halfDaysDown`);
+                        break;
                     }
-                    this.teamCounts[teamNum]--;
-                    // this.enforceTeamBalance(teamNum);
-                    /*if (document.getElementById(`days.${teamNum}.${counter}`).value > 0) {
-                        document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) - .5;
+                }
+                // this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${count}`).value, document.getElementById(`days.${teamNum}.${count}`).value, `halfDaysDown`);
+            }
+        });
+    }
+
+    handleSignOffs(teamNum, count) {
+        let setSignOffs = function (signOff, signOff2, value, patrollers, i) {
+            if (value !== 1) {
+                document.getElementById(`${signOff}.${teamNum}.${count}`).style.color = 'rgb(204,75,55)';
+                let correctPassword = false;
+                let removeMe;
+                document.getElementById(`${signOff}.${teamNum}.${count}`).addEventListener(`click`, removeMe = () => {
+                    let password = prompt(`Password: `);
+                    for (let person of patrollers) {
+                        if (person.ID === password && person.LEADER) {
+                            correctPassword = true;
+                        }
+                    }
+                    if (correctPassword) {
+                        this.signedIn[i][signOff2] = 1; // https://stackoverflow.com/questions/11508463/javascript-set-object-key-by-variable
+                        document.getElementById(`${signOff}.${teamNum}.${count}`).style.color = 'rgb(23,121,186)';
+                        document.getElementById(`${signOff}.${teamNum}.${count}`).removeEventListener('click', removeMe);
+                        document.getElementById(`${signOff}.${teamNum}.${count}`).style.cursor = 'default';
                     } else {
-                        document.getElementById(`days.${teamNum}.${counter}`).value = 0;
-                    }*/
-                    for (let patroller of this.signedIn) {
-                        if (Number(patroller.ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                            this.updatePatrollerInfo(patroller.ID, patroller.TOTAL_DAYS, `halfDaysUp`);
-                            break;
-                        }
+                        alert(`Incorrect Password`);
                     }
-
-                } else {
-                    document.getElementById(`person.${teamNum}.${counter}`).style.backgroundColor = 'white';
-                    if (teamNum !== 5) {
-                        document.getElementById(`guest.${teamNum}.${counter}`).disabled = false;
-                    }
-                    this.teamCounts[teamNum]++;
-                    // this.enforceTeamBalance(teamNum);
-                    // document.getElementById(`days.${teamNum}.${counter}`).value = Number(document.getElementById(`days.${teamNum}.${counter}`).value) + .5;
-                    for (let patroller of this.signedIn) {
-                        if (Number(patroller.ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                            this.updatePatrollerInfo(patroller.ID, patroller.TOTAL_DAYS, `halfDaysDown`);
-                            break;
-                        }
-                    }
-                    // this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${counter}`).value, document.getElementById(`days.${teamNum}.${counter}`).value, `halfDaysDown`);
-                }
-            });
-        }
-    }
-
-    handleSnowmobile(teamNum, counter) {
-        for (let i = 0; i < this.signedIn.length; i++) {
-            if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                if (Number(this.signedIn[i].SNOWMOBILE) !== 1) {
-                    document.getElementById(`snowmobile.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
-                    let correctPassword = false;
-                    let removeMe;
-                    document.getElementById(`snowmobile.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
-                        let password = prompt(`Password: `);
-                        for (let person of this.patrollers) {
-                            if (person.ID === password && person.LEADER) {
-                                correctPassword = true;
-                            }
-                        }
-                        if (correctPassword) {
-                            this.signedIn[i].SNOWMOBILE = 1;
-                            document.getElementById(`snowmobile.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                            document.getElementById(`snowmobile.${teamNum}.${counter}`).removeEventListener("click", removeMe);
-                            document.getElementById(`snowmobile.${teamNum}.${counter}`).style.cursor = 'default';
-                        } else {
-                            alert(`Incorrect Password`);
-                        }
-                    });
-                } else {
-                    document.getElementById(`snowmobile.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                    document.getElementById(`snowmobile.${teamNum}.${counter}`).style.cursor = 'default';
-                }
-                break;
+                });
+            } else {
+                document.getElementById(`${signOff}.${teamNum}.${count}`).style.color = 'rgb(23,121,186)';
+                document.getElementById(`${signOff}.${teamNum}.${count}`).style.cursor = 'default';
             }
-        }
-    }
+        }.bind(this);  // https://stackoverflow.com/questions/346015/javascript-closures-and-this
 
-    handleToboggan(teamNum, counter) {
         for (let i = 0; i < this.signedIn.length; i++) {
-            if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                if (Number(this.signedIn[i].TOBOGGAN) !== 1) {
-                    document.getElementById(`toboggan.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
-                    let correctPassword = false;
-                    let removeMe;
-                    document.getElementById(`toboggan.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
-                        let password = prompt(`Password: `);
-                        for (let person of this.patrollers) {
-                            if (person.ID === password && person.LEADER) {
-                                correctPassword = true;
-                            }
-                        }
-                        if (correctPassword) {
-                            this.signedIn[i].TOBOGGAN = 1;
-                            document.getElementById(`toboggan.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                            document.getElementById(`toboggan.${teamNum}.${counter}`).removeEventListener("click", removeMe);
-                            document.getElementById(`toboggan.${teamNum}.${counter}`).style.cursor = 'default';
-                        } else {
-                            alert(`Incorrect Password`);
-                        }
-                    });
-                } else {
-                    document.getElementById(`toboggan.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                    document.getElementById(`toboggan.${teamNum}.${counter}`).style.cursor = 'default';
-                }
-                break;
-            }
-        }
-    }
-
-    handleScavenger(teamNum, counter) {
-        for (let i = 0; i < this.signedIn.length; i++) {
-            if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                if (Number(this.signedIn[i].SCAVENGER) !== 1) {
-                    document.getElementById(`scavenger.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
-                    let correctPassword = false;
-                    let removeMe;
-                    document.getElementById(`scavenger.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
-                        let password = prompt(`Password: `);
-                        for (let person of this.patrollers) {
-                            if (person.ID === password && person.LEADER) {
-                                correctPassword = true;
-                            }
-                        }
-                        if (correctPassword) {
-                            this.signedIn[i].SCAVENGER = 1;
-                            document.getElementById(`scavenger.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                            document.getElementById(`scavenger.${teamNum}.${counter}`).removeEventListener('click', removeMe);
-                            document.getElementById(`scavenger.${teamNum}.${counter}`).style.cursor = 'default';
-                        } else {
-                            alert(`Incorrect Password`);
-                        }
-                    });
-                } else {
-                    document.getElementById(`scavenger.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                    document.getElementById(`scavenger.${teamNum}.${counter}`).style.cursor = 'default';
-                }
-                break;
-            }
-        }
-    }
-
-    handleCpr(teamNum, counter) {
-        for (let i = 0; i < this.signedIn.length; i++) {
-            if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                if (Number(this.signedIn[i].CPR) !== 1) {
-                    document.getElementById(`cpr.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
-                    let correctPassword = false;
-                    let removeMe;
-                    document.getElementById(`cpr.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
-                        let password = prompt(`Password: `);
-                        for (let person of this.patrollers) {
-                            if (person.ID === password && person.LEADER) {
-                                correctPassword = true;
-                            }
-                        }
-                        if (correctPassword) {
-                            this.signedIn[i].CPR = 1;
-                            document.getElementById(`cpr.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                            document.getElementById(`cpr.${teamNum}.${counter}`).removeEventListener('click', removeMe);
-                            document.getElementById(`cpr.${teamNum}.${counter}`).style.cursor = 'default';
-                        } else {
-                            alert(`Incorrect Password`);
-                        }
-                    });
-                } else {
-                    document.getElementById(`cpr.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                    document.getElementById(`cpr.${teamNum}.${counter}`).style.cursor = 'default';
-                }
-                break;
-            }
-        }
-    }
-
-    handleChair(teamNum, counter) {
-        for (let i = 0; i < this.signedIn.length; i++) {
-            if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${counter}`).value)) {
-                if (Number(this.signedIn[i].CHAIR) !== 1) {
-                    document.getElementById(`chair.${teamNum}.${counter}`).style.color = 'rgb(204,75,55)';
-                    let correctPassword = false;
-                    let removeMe;
-                    document.getElementById(`chair.${teamNum}.${counter}`).addEventListener(`click`, removeMe = () => {
-                        let password = prompt(`Password: `);
-                        for (let person of this.patrollers) {
-                            if (person.ID === password && person.LEADER) {
-                                correctPassword = true;
-                            }
-                        }
-                        if (correctPassword) {
-                            this.signedIn[i].CHAIR = 1;
-                            document.getElementById(`chair.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                            document.getElementById(`chair.${teamNum}.${counter}`).removeEventListener('click', removeMe);
-                            document.getElementById(`chair.${teamNum}.${counter}`).style.cursor = 'default';
-                        } else {
-                            alert(`Incorrect Password`);
-                        }
-                    });
-                } else {
-                    document.getElementById(`chair.${teamNum}.${counter}`).style.color = 'rgb(23,121,186)';
-                    document.getElementById(`chair.${teamNum}.${counter}`).style.cursor = 'default';
-                }
+            if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
+                setSignOffs("snowmobile", "SNOWMOBILE", Number(this.signedIn[i].SNOWMOBILE), this.patrollers, i);
+                setSignOffs("toboggan", "TOBOGGAN", Number(this.signedIn[i].TOBOGGAN), this.patrollers, i);
+                setSignOffs("scavenger", "SCAVENGER", Number(this.signedIn[i].SCAVENGER), this.patrollers, i);
+                setSignOffs("cpr", "CPR", Number(this.signedIn[i].CPR), this.patrollers, i);
+                setSignOffs("chair", "CHAIR", Number(this.signedIn[i].CHAIR), this.patrollers, i);
                 break;
             }
         }
@@ -602,21 +435,20 @@ export default class EventHandler {
         document.getElementById('formSubmit').addEventListener('click', (event) => {
             event.stopImmediatePropagation();
             let saidYes = prompt(`Are you sure you want to clear & print the roster? Please type:  yes`);
-            // let saidYes = 'yes';
-            console.log(`Print button clicked`);
             if (saidYes === 'yes') {
                 this.updateDays();
                 document.getElementById('formSubmit').disabled = true;
                 for (let button of this.buttons) {
                     document.getElementById(button.id).disabled = true;
                 }
-                window.open('/public/views/results.ejs', '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
+                window.open('/public/views/results.ejs' + '?x=' + new Date().getTime(), '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
                 WebStorage.purgeLocalStorage();
+                window.location.href = window.location.href;
             }
         });
     }
 
-    enforceTeamBalance(teamNum) {
+    /*enforceTeamBalance(teamNum) {
         if (teamNum > 0) {
             const MAX_TEAM_COUNT = 4;
             if (this.teamCounts[teamNum] >= MAX_TEAM_COUNT) {
@@ -632,7 +464,7 @@ export default class EventHandler {
                 }
             }
         }
-    }
+    }*/
 
     validate() {
         document.addEventListener('change', () => {
@@ -674,21 +506,22 @@ export default class EventHandler {
                         }
                     }
                     if (valid) {
-                        console.log(`valid`);
+                        // console.log(`valid`);
                         document.getElementById('joinTeam.0').disabled = false;
                         document.getElementById('formSubmit').disabled = false;
                         this.handlePrintFormButton();
-                    } else {
-                        console.log(`not valid`);
-                    }
+                    } //else {
+                    //     console.log(`not valid`);
+                    // }
                 }
             }
         });
     }
 
-    handleAdmin(teamNum, counter) {
+    handleAdmin(teamNum, count) {
+        console.log(this.signedIn);
         let correctPassword = false;
-        document.getElementById(`admin.${teamNum}.${counter}`).addEventListener('click', () => {
+        document.getElementById(`admin.${teamNum}.${count}`).addEventListener('click', () => {
             let password = prompt(`Password: `);
             for (let person of this.patrollers) {
                 if (person.ID === password && person.LEADER) {
@@ -703,11 +536,35 @@ export default class EventHandler {
                 } else if (Number(team) === Number(teamNum)) {
                     alert(`Patroller is already in this team!`);
                 } else {
-                    let div = document.getElementById(`person.${teamNum}.${counter}`);
-                    document.getElementById(`team.${team}`).appendChild(div);
-                    this.teamCounts[team]++;
-                    this.teamCounts[teamNum]--;
+                    let teamPosition = this.teamCounts[team] + 1;
+                    console.log(teamPosition);
+                    let event1 = new Event("click");
+                    document.getElementById(`joinTeam.${team}`).dispatchEvent(event1);
+                    document.getElementById(`patrollerID.${team}.${teamPosition}`).value = document.getElementById(`patrollerID.${teamNum}.${count}`).value;
+                    document.getElementById(`name.${team}.${teamPosition}`).value = document.getElementById(`name.${teamNum}.${count}`).value;
+                    document.getElementById(`radioNum.${team}.${teamPosition}`).value = document.getElementById(`radioNum.${teamNum}.${count}`).value;
+                    document.getElementById(`rating.${team}.${teamPosition}`).value = document.getElementById(`rating.${teamNum}.${count}`).value;
+                    document.getElementById(`time.${team}.${teamPosition}`).value = document.getElementById(`time.${teamNum}.${count}`).value;
+                    document.getElementById(`halfDay.${team}.${teamPosition}`).value = document.getElementById(`halfDay.${teamNum}.${count}`).value;
+                    document.getElementById(`guestDiv.${team}.${teamPosition}`).value = document.getElementById(`guestDiv.${teamNum}.${count}`).value;
+                    this.clearDiv(teamNum, count);
+                    for (let i = 0; i < this.patrollers.length; i++) {
+                        if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${team}.${teamPosition}`).value)) {
+                            this.completeDivChange(team, i, teamPosition);
+                            break;
+                        }
+                    }
+                    this.updatePatrollerInfo(document.getElementById(`patrollerID.${team}.${teamPosition}`).value, document.getElementById(`radioNum.${team}.${teamPosition}`).value, "radio");
+                    this.updatePatrollerInfo(document.getElementById(`patrollerID.${team}.${teamPosition}`).value, document.getElementById(`guestDiv.${team}.${teamPosition}`).value, "guest");
+                    // if (this.counter[teamNum] > 1) {
+                    //     this.counter[teamNum]--;
+                    // }
+                    for (let button of this.buttons) {
+                        document.getElementById(button.id).disabled = false;
+                    }
                     // this.enforceTeamBalance(team);
+                    console.log(this.counter);
+                    console.log(this.teamCounts);
                 }
             } else {
                 alert(`Incorrect Password`);
@@ -715,9 +572,9 @@ export default class EventHandler {
         });
     }
 
-    handleUndo(teamNum, counter) {
-        document.getElementById(`undo.${teamNum}.${counter}`).addEventListener('click', () => {
-            this.clearDiv(teamNum, counter);
+    handleUndo(teamNum, count) {
+        document.getElementById(`undo.${teamNum}.${count}`).addEventListener('click', () => {
+            this.clearDiv(teamNum, count);
             for (let button of this.buttons) {
                 document.getElementById(button.id).disabled = false;
             }
@@ -740,6 +597,7 @@ export default class EventHandler {
                     this.patrollers[i].DAYS = this.signedIn[j].DAYS;
                     this.patrollers[i].NIGHTS = this.signedIn[j].NIGHTS;
                     this.patrollers[i].HALF_DAYS = this.signedIn[j].HALF_DAYS;
+                    console.log(this.signedIn[j].SNOWMOBILE);
                     this.patrollers[i].SNOWMOBILE = this.signedIn[j].SNOWMOBILE;
                     this.patrollers[i].TOBOGGAN = this.signedIn[j].TOBOGGAN;
                     this.patrollers[i].SCAVENGER = this.signedIn[j].SCAVENGER;

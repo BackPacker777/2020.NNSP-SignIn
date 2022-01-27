@@ -8,7 +8,6 @@ class Main {
         const SIGN_OFFS = ['Snowmobile', 'Toboggan', 'Scavenger', 'Cpr', 'Chair'];
         this.date = new Date();
         this.isWeekend = this.determineWeekend();
-        // this.isWeekend = true;  //Turn on/off for testing
         document.getElementById("date").innerText = this.getWeekDay();
         document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
         document.getElementById("dayNight").innerText = `${this.getDayNight()} Shift`;
@@ -18,9 +17,11 @@ class Main {
 
     determineWeekend() {
         const SAT = 6, SUN = 0;
+        let isWeekend = false;
         if (this.date.getDay() === SAT || this.date.getDay() === SUN) {
-            return true;
+            isWeekend = true;
         }
+        return isWeekend;
     }
 
     getWeekDay() {
@@ -37,7 +38,7 @@ class Main {
         } else {
             dayNight = "Day";
         }
-        dayNight = 'Night';  //Turn on/off for testing
+        // dayNight = "Day"; // Used for testing
         return dayNight;
     }
 
