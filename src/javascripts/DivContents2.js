@@ -5,7 +5,8 @@ export default class DivContents2 {
     static getDivs(teamNum, counter, leaderNum, RACE_TIMES) {
         const TEAMS = {
             CANDIDATES: 5,
-            LEADERS: 6
+            LEADERS: 6,
+            MODAL: 7
         };
 
         let patrollerID = `<div class="small-1 cell" id="patroller.${teamNum}.${counter}">
@@ -65,6 +66,12 @@ export default class DivContents2 {
                         </label>
                     </div>`;
 
+        let modalGuest = `<div class="small-2 cell" id="guestDiv.${teamNum}.${counter}">
+                        <label>Guest:
+                            <input type="text" class="submitInclude" id="guest.${teamNum}.${counter}" placeholder="Guest">
+                        </label>
+                    </div>`;
+
         let signOffs = `<div class="small-2 cell signoffDiv" id="signoffDiv.${teamNum}.${counter}">
                         <label>Signoffs:</label>
                         <i class="far fa-snowflake" id="snowmobile.${teamNum}.${counter}" title="Snowmobile"></i> <i class="fas fa-ambulance" id="toboggan.${teamNum}.${counter}" title="Toboggan"></i> <i class="fas fa-map-marked" id="scavenger.${teamNum}.${counter}" title="Scavenger Hunt"></i> <i class="fas fa-heartbeat" id="cpr.${teamNum}.${counter}" title="CPR"></i> <i class="fas fa-chair" id="chair.${teamNum}.${counter}" title="Chair Evac"></i>
@@ -76,6 +83,8 @@ export default class DivContents2 {
                     </div>`;
 
         let blank = `<div class="small-1 cell"></div>`;
+
+        let submit = `<div class="small-2 cell v-center" id="modalButton"><input type="submit" id='modalSubmit' value="SUBMIT" class="button large expanded border"></div>`;
 
         if (!RACE_TIMES) {
             if (teamNum === 0) {
@@ -115,6 +124,18 @@ export default class DivContents2 {
                         ${teamNumb}
                         ${signOffs}
                         ${admin}
+                    </div>`;
+            } else if (teamNum === TEAMS.MODAL) {
+                return `<div class="grid-x" id="person.${teamNum}.${counter}">
+                        ${patrollerID}
+                        ${name}
+                        ${radio}
+                        ${rating}
+                        ${time}
+                        ${halfDay}
+                        ${modalGuest}
+                        ${blank}
+                        ${submit}
                     </div>`;
             } else {
                 let leaders = `<div class="small-1 cell">

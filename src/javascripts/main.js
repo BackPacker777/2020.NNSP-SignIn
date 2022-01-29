@@ -11,7 +11,7 @@ class Main {
         document.getElementById("date").innerText = this.getWeekDay();
         document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
         document.getElementById("dayNight").innerText = `${this.getDayNight()} Shift`;
-        this.eventHandler = new EventHandler(people, this.getDayNight(), this.isWeekend, SIGN_OFFS);
+        this.eventHandler = new EventHandler(people, SIGN_OFFS);
         this.prepUX();
     }
 
@@ -45,8 +45,10 @@ class Main {
     prepUX() {
         document.getElementById('noPrint').style.display = 'none';
         document.getElementById('narniaDiv').style.display = 'none';
+        document.getElementById('masterDiv').style.display = 'none';  // !! TESTING ONLY !!
+        document.getElementById('modalDiv').style.display = 'none'; // !! TESTING ONLY !!
         document.getElementById('formSubmit').disabled = true;
-        if (this.getDayNight() === 'Night') {
+        /*if (this.getDayNight() === 'Night') {
             let counter = 1;
             const RACE_TIMES = ['', '7:00', '7:15', '7:30', '7:45', '8:00', '8:15', '8:30', '8:45'];
             let teams = document.querySelectorAll("fieldset");
@@ -68,7 +70,7 @@ class Main {
             for (let i = 1; i < teams.length; i++) {
                 document.getElementById(`team.${i}`).style.display = 'none';
             }
-        }
+        }*/
         this.eventHandler.populatePage();
         if (this.eventHandler.populated === 1) {
             let event2 = new Event('change');

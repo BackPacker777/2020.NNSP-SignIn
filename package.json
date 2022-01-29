@@ -9,7 +9,7 @@
   "author": "Howard Bates",
   "license": "MIT",
   "engines": {
-    "node": ">= 13.5.0"
+    "node": ">= 17.2.0"
   },
   "dependencies": {
     "ejs": "latest",
@@ -19,10 +19,11 @@
     "babel-eslint": "latest",
     "eslint": "latest",
     "gulp": "latest",
-    "gulp-git": "^2.10.0",
+    "gulp-git": "latest",
     "gulp-minify-ejs": "latest",
     "gulp-sass": "latest",
     "gulp-terser": "latest",
+    "node-sass": "latest",
     "jsdoc": "latest"
   },
   "repository": {

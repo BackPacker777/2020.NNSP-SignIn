@@ -3,7 +3,7 @@
 const gulp = require('gulp');
 const ejs = require('gulp-minify-ejs');
 const terser = require('gulp-terser');
-const sass = require('gulp-sass');
+const sass = require('gulp-sass')(require('node-sass'));
 const git = require('gulp-git');
 // const babel = require('gulp-babel');
 

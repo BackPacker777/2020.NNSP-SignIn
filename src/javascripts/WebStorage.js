@@ -93,8 +93,8 @@ export default class WebStorage {
         if (isWeekend) {
             runPopulate(teams);
         } else if (weekendOverride && ! isWeekend) {
-            document.getElementById(`weekendOverride`).checked = true;
-            document.getElementById('weekendOverride').dispatchEvent(event);
+            /*document.getElementById(`weekendOverride`).checked = true;
+            document.getElementById('weekendOverride').dispatchEvent(event);*/
             runPopulate(teams);
         } else if (dayNight === 'Day') {
             runPopulate(teams);
