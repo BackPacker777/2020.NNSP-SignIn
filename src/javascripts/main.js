@@ -7,21 +7,10 @@ class Main {
     constructor(people) {
         const SIGN_OFFS = ['Snowmobile', 'Toboggan', 'Scavenger', 'Cpr', 'Chair'];
         this.date = new Date();
-        this.isWeekend = this.determineWeekend();
         document.getElementById("date").innerText = this.getWeekDay();
         document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
-        document.getElementById("dayNight").innerText = `${this.getDayNight()} Shift`;
         this.eventHandler = new EventHandler(people, SIGN_OFFS);
         this.prepUX();
-    }
-
-    determineWeekend() {
-        const SAT = 6, SUN = 0;
-        let isWeekend = false;
-        if (this.date.getDay() === SAT || this.date.getDay() === SUN) {
-            isWeekend = true;
-        }
-        return isWeekend;
     }
 
     getWeekDay() {
@@ -29,48 +18,13 @@ class Main {
         return days[this.date.getDay()];
     }
 
-    getDayNight() {
-        const BEGIN_NIGHT = 14;
-        const END_NIGHT = 23;
-        let dayNight;
-        if (this.date.getHours() > BEGIN_NIGHT && this.date.getHours() < END_NIGHT) {
-            dayNight = "Night";
-        } else {
-            dayNight = "Day";
-        }
-        // dayNight = "Day"; // Used for testing
-        return dayNight;
-    }
-
     prepUX() {
+        // document.documentElement.requestFullscreen();
         document.getElementById('noPrint').style.display = 'none';
         document.getElementById('narniaDiv').style.display = 'none';
         document.getElementById('masterDiv').style.display = 'none';  // !! TESTING ONLY !!
         document.getElementById('modalDiv').style.display = 'none'; // !! TESTING ONLY !!
         document.getElementById('formSubmit').disabled = true;
-        /*if (this.getDayNight() === 'Night') {
-            let counter = 1;
-            const RACE_TIMES = ['', '7:00', '7:15', '7:30', '7:45', '8:00', '8:15', '8:30', '8:45'];
-            let teams = document.querySelectorAll("fieldset");
-            for (let i = 1; i < teams.length; i++) {
-                document.getElementById(`team.${i}`).style.display = 'none';
-            }
-            while (counter < RACE_TIMES.length) {
-                document.getElementById(`team.0`).insertAdjacentHTML('beforeend', DivContents.getNightRaceDivs(0, counter, RACE_TIMES));
-                DivContents.getDivs(0, counter, null, RACE_TIMES);
-                this.eventHandler.changePatrollerDiv(0, counter);
-                counter++;
-            }
-            document.getElementById(`patrollerID.0.1`).required = true;
-            document.getElementById(`joinTeam.0`).value = "EXTRA Sign On (! ONLY click this if all race time slots are filled or you cannot do race course duty !)";
-        } else if (this.getDayNight() === 'Day' && this.isWeekend) {
-            document.getElementById(`team.0`).style.display = 'none';
-        } else {
-            let teams = document.querySelectorAll("fieldset");
-            for (let i = 1; i < teams.length; i++) {
-                document.getElementById(`team.${i}`).style.display = 'none';
-            }
-        }*/
         this.eventHandler.populatePage();
         if (this.eventHandler.populated === 1) {
             let event2 = new Event('change');

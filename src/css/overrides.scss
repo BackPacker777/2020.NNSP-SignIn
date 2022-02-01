@@ -29,7 +29,7 @@ $desktop: 840px;
 }
 
 @mixin v-center {
-  margin-top: 1%;
+  margin-top: 3%;
 }
 
 @media print {
@@ -104,8 +104,12 @@ $desktop: 840px;
     }
   }
 
-  #modalButton {
+  .modalButtonClass {
     @include v-center;
+  }
+
+  .modalButton {
+    margin-left: 2px !important;
   }
 
   #tipTop {

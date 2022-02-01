@@ -2,7 +2,7 @@
 
 export default class DivContents2 {
 
-    static getDivs(teamNum, counter, leaderNum, RACE_TIMES) {
+    static getDivs(teamNum, counter, leaderNum, RACE_TIMES, isCandidate, nightModal) {
         const TEAMS = {
             CANDIDATES: 5,
             LEADERS: 6,
@@ -23,7 +23,7 @@ export default class DivContents2 {
 
         let radio = `<div class="small-1 cell" id="radioDiv.${teamNum}.${counter}">
                         <label>Radio:
-                            <input type="number" class="submitInclude" maxlength="2" id="radioNum.${teamNum}.${counter}" placeholder="#">
+                            <input type="number" class="submitInclude" maxlength="2" id="radioNum.${teamNum}.${counter}" placeholder="#" required>
                         </label>
                     </div>`;
 
@@ -48,11 +48,11 @@ export default class DivContents2 {
                         </div>
                     </div>`;
 
-        /*let days = `<div class="small-1 cell">
+        let days = `<div class="small-1 cell">
                         <label>Days:
                             <input type="text" class="submitInclude" readonly id="days.${teamNum}.${counter}">
                         </label>
-                    </div>`;*/
+                    </div>`;
 
         let teamNumb = `<div class="small-1 cell" id="teamNum.${teamNum}.${counter}">
                         <label>Team Number:
@@ -66,7 +66,7 @@ export default class DivContents2 {
                         </label>
                     </div>`;
 
-        let modalGuest = `<div class="small-2 cell" id="guestDiv.${teamNum}.${counter}">
+        let modalGuest = `<div class="small-1 cell" id="guestDiv.${teamNum}.${counter}">
                         <label>Guest:
                             <input type="text" class="submitInclude" id="guest.${teamNum}.${counter}" placeholder="Guest">
                         </label>
@@ -84,7 +84,15 @@ export default class DivContents2 {
 
         let blank = `<div class="small-1 cell"></div>`;
 
-        let submit = `<div class="small-2 cell v-center" id="modalButton"><input type="submit" id='modalSubmit' value="SUBMIT" class="button large expanded border"></div>`;
+        let submit = `<div class="small-1 cell" id="modalSubmitDiv">
+                          <label>&nbsp;</label>
+                          <input type="submit" id='modalSubmitButton' value="SUBMIT" class="button modalButton">                     
+                      </div>`;
+
+        let modalCancel = `<div class="small-1 cell" id="modalCancelDiv">
+                              <label>&nbsp;</label>
+                              <span id='modalCancelButton' class="button alert modalButton">CANCEL</span>
+                           </div>`;
 
         if (!RACE_TIMES) {
             if (teamNum === 0) {
@@ -114,19 +122,19 @@ export default class DivContents2 {
                     </div>`;
             } else if (teamNum === TEAMS.CANDIDATES) {
                 return `<div class="grid-x" id="person.${teamNum}.${counter}">
-                        ${patrollerID}
-                        ${blank}
+                        ${patrollerID}                       
                         ${name}
                         ${radio}
                         ${rating}
                         ${time}
                         ${halfDay}
-                        ${teamNumb}
+                        ${blank}
                         ${signOffs}
                         ${admin}
                     </div>`;
-            } else if (teamNum === TEAMS.MODAL) {
-                return `<div class="grid-x" id="person.${teamNum}.${counter}">
+            } else if (teamNum === TEAMS.MODAL && ! nightModal) {
+                if (!isCandidate) {
+                    return `<div class="grid-x" id="person.${teamNum}.${counter}">
                         ${patrollerID}
                         ${name}
                         ${radio}
@@ -134,8 +142,39 @@ export default class DivContents2 {
                         ${time}
                         ${halfDay}
                         ${modalGuest}
+                        ${days}
                         ${blank}
                         ${submit}
+                        ${modalCancel}
+                    </div>`;
+                } else {
+                    return `<div class="grid-x" id="person.${teamNum}.${counter}">
+                        ${patrollerID}
+                        ${name}
+                        ${radio}
+                        ${rating}
+                        ${time}
+                        ${halfDay}
+                        ${blank}
+                        ${days}
+                        ${blank}
+                        ${submit}
+                        ${modalCancel}
+                    </div>`;
+                }
+            } else if (teamNum === TEAMS.MODAL && nightModal) {
+                return `<div class="grid-x" id="person.${teamNum}.${counter}">
+                        ${patrollerID}
+                        ${blank}
+                        ${name}
+                        ${radio}
+                        ${rating}
+                        ${time}                      
+                        ${guest}
+                        ${days}
+                        ${blank}
+                        ${submit}
+                        ${modalCancel}
                     </div>`;
             } else {
                 let leaders = `<div class="small-1 cell">
@@ -161,7 +200,11 @@ export default class DivContents2 {
 
     static getNightRaceDivs(teamNum, counter, RACE_TIMES) {
         return `<div class="grid-x">
-                    <div class="small-2 cell" id="patroller.${teamNum}.${counter}">
+                    <div class="small-1 cell" id="joinNight.${teamNum}.${counter}">
+                        <label>&nbsp;</label>
+                        <span id="joinNight.${counter}" class="button modalButton">Sign In</span>
+                    </div>
+                    <div class="small-1 cell" id="patroller.${teamNum}.${counter}">
                         <label>ID:
                             <input type="number" class="submitInclude secure" maxlength="6" name="patrollerID" id="patrollerID.${teamNum}.${counter}" placeholder="ID #">
                         </label>

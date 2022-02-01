@@ -15,12 +15,12 @@ export default class EventHandler {
         this.counter = [1,1,1,1,1,1,1];
         this.isWeekend = '';
         this.populated = 0;
+        this.isAdmin = false;
         this.buttons = document.querySelectorAll("input[type=button]");
         new NarniaEventHandler(this.patrollers, this.SIGN_OFFS);
         this.handleFixButton();
         this.handleWhichForm();
         this.handleSignOnButtons();
-        this.validate();
         EventHandler.stopEnterKey();
     }
 
@@ -66,6 +66,7 @@ export default class EventHandler {
                         counter++;
                     }
                     document.getElementById('formSubmit').disabled = true;
+                    document.getElementById("dayNight").innerText = `Day Shift`;
                 } else if (item === "weekday") {
                     document.getElementById(`team.0`).style.display = 'block';
                     this.isWeekend = false;
@@ -76,6 +77,7 @@ export default class EventHandler {
                         counter++;
                     }
                     document.getElementById('formSubmit').disabled = true;
+                    document.getElementById("dayNight").innerText = `Day Shift`;
                 } else {
                     const RACE_TIMES = ['', '7:00', '7:15', '7:30', '7:45', '8:00', '8:15', '8:30', '8:45'];
                     let teams = document.querySelectorAll("fieldset");
@@ -86,88 +88,51 @@ export default class EventHandler {
                     }
                     while (counter < RACE_TIMES.length) {
                         document.getElementById(`team.0`).insertAdjacentHTML('beforeend', DivContents.getNightRaceDivs(0, counter, RACE_TIMES));
-                        DivContents.getDivs(0, counter, null, RACE_TIMES);
-                        this.checkDiv(0, counter);
+                        DivContents.getDivs(0, counter, null, RACE_TIMES, false);
+                        document.getElementById(`joinNight.${counter}`).addEventListener('click', (event) => {
+                            console.log(event.target.id);
+                            let button = Number(event.target.id.substr(10, 1));
+                            console.log(button);
+                            document.getElementById(`joinTeam.0`).disabled = true;
+                            this.throwModal(0, button);
+                        });
+                        document.getElementById(`patrollerID.0.${counter}`).disabled = true;
+                        document.getElementById(`radioNum.0.${counter}`).disabled = true;
+                        document.getElementById(`guest.0.${counter}`).disabled = true;
                         counter++;
                     }
                     document.getElementById(`patrollerID.0.1`).required = true;
                     document.getElementById(`joinTeam.0`).value = "EXTRA Sign On (! ONLY click this if all race time slots are filled or you cannot do race course duty !)";
+                    document.getElementById("dayNight").innerText = `Night Shift`;
                 }
             });
         });
     }
 
-    /*handleWeekendOverride() {
-        if (! this.isWeekend && this.dayNight === 'Day') {
-            document.getElementById(`weekendOverride`).addEventListener('click', () => {
-                if (document.getElementById(`weekendOverride`).checked) {
-                    document.getElementById(`weekendOverrideLabel`).style.backgroundColor = 'yellow';
-                    document.getElementById(`weekendOverrideP`).style.backgroundColor = 'yellow';
-                    document.getElementById(`team.0`).style.display = 'none';
-                    this.isWeekend = true;
-                    let counter = 1;
-                    const MAX_TEAM = 6;
-                    while (counter <= MAX_TEAM) {
-                        document.getElementById(`team.1`).style.display = 'block';
-                        document.getElementById(`team.${counter}`).style.display = 'block';
-                        counter++;
-                    }
-                    document.getElementById('formSubmit').disabled = true;
-                } else {
-                    document.getElementById(`weekendOverrideLabel`).style.backgroundColor = `rgb(213, 213, 213)`;
-                    document.getElementById(`weekendOverrideP`).style.backgroundColor = `rgb(213, 213, 213)`;
-                    document.getElementById(`team.0`).style.display = 'block';
-                    this.isWeekend = false;
-                    let counter = 1;
-                    const MAX_TEAM = 6;
-                    while (counter <= MAX_TEAM) {
-                        document.getElementById(`team.${counter}`).style.display = 'none';
-                        counter++;
-                    }
-                    document.getElementById('formSubmit').disabled = true;
-                }
-            });
-        } else {
-            document.getElementById(`weekendOverride`).disabled = true;
-        }
-    }*/
-
     handleSignOnButtons() {
         let nightCounter = 9;
-        const LEADERS = 6, CANDIDATES = 5, NIGHT = 0;
+        const LEADERS = 6, CANDIDATES = 5, NIGHT = 0, MODAL_NUM = 7;
         for (let i = 0; i < this.buttons.length; i++) {
-            this.buttons[i].addEventListener('click', () => {
-                console.log(this.dayNight);
+            this.buttons[i].addEventListener('click', (event) => {
                 let teamNum = Number(this.buttons[i].id.substr(9, 1));
-                /*if (teamNum > 0) {
-                    for (let button of this.buttons) {
-
-                        // document.getElementById(button.id).disabled = true;
-                        document.getElementById('masterDiv').style.display = 'none';
-                        document.getElementById('modalDiv').style.display = 'block';
-                    }
-                }*/
                 if (teamNum === LEADERS) {
                     let isLeader = false;
                     let password = prompt(`What is your Patroller ID?`);
                     for (let person of this.patrollers) {
                         if (person.ID === password && person.LEADER) {
                             isLeader = true;
-                            /*for (let button of this.buttons) {
-                                document.getElementById(button.id).disabled = true;
-                            }*/
                             document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, this.counter[teamNum], person.LEADER));
-                            document.getElementById(`patrollerID.${LEADERS}.${this.counter[teamNum]}`).value = person.ID;
-                            this.handleUndo(teamNum, this.counter[teamNum]);
                             this.throwModal(LEADERS, this.counter[LEADERS]);
+                            document.getElementById(`patrollerID.7.1`).value = person.ID;
+                            this.handleUndo(teamNum, this.counter[teamNum]);
                             // this.changePatrollerDiv(LEADERS, this.counter[LEADERS]);
                             if (this.dayNight === 'Day') {
                                 this.handleHalfDay(teamNum, this.counter[teamNum]);
                             }
-                            let element = document.getElementById(`patrollerID.${LEADERS}.${this.counter[teamNum]}`);
+                            let element = document.getElementById(`patrollerID.7.1`);
                             let event = new Event('change');
                             element.dispatchEvent(event);
-                            this.counter[teamNum]++;
+                            // this.counter[teamNum]++;
                             break;
                         } else {
                             for (let button of this.buttons) {
@@ -180,66 +145,100 @@ export default class EventHandler {
                     }
                 } else if (teamNum === NIGHT && this.dayNight === 'Night') {
                     document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getExtraNightDiv(teamNum, nightCounter));
-                    // this.changePatrollerDiv(teamNum, nightCounter);
-                    // this.throwModal(teamNum, this.counter[teamNum]);
+                    this.throwModal(teamNum, nightCounter);
                     nightCounter++;
                 } else {
-                    // this.buttons[i].disabled = true;
-                    document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, this.teamCounts[teamNum] + 1));
-                    /*if (this.dayNight === 'Day') {
-                        this.handleHalfDay(teamNum, this.counter[teamNum]);
-                    }*/
-                    if (teamNum > 0) {
-                        this.handleUndo(teamNum, this.counter[teamNum]);
+                    if (! this.isAdmin) {
+                        document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, this.counter[teamNum]));
+                        if (teamNum > 0) {
+                            this.handleUndo(teamNum, this.counter[teamNum]);
+                        }
+                        document.getElementById(`joinTeam.${teamNum}`).disabled = true;
+                        this.throwModal(teamNum, this.counter[teamNum]);
+                    } else {
+                        document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, this.counter[teamNum]));
+                        if (teamNum > 0) {
+                            this.handleUndo(teamNum, this.counter[teamNum]);
+                            if (! this.isAdmin) {
+                                if (teamNum === CANDIDATES) {
+                                    this.handleHalfDay(MODAL_NUM, 1, true);
+                                } else {
+                                    this.handleHalfDay(MODAL_NUM, 1, false);
+                                }
+                            }
+                        }
                     }
-                    // this.changePatrollerDiv(teamNum, this.counter[teamNum]);
-                    this.throwModal(teamNum, this.counter[teamNum]);
                 }
             });
         }
     }
 
     throwModal(teamNum, count) {
-        const MODAL_NUM = 7;
-        document.getElementById('modalDiv').style.display = 'block';
-        document.getElementById("modalTitle").insertAdjacentHTML('beforeend', `<h3>Joining Team: ${teamNum}</h3>`);
-        document.getElementById("dataEntryDiv").insertAdjacentHTML('beforeend', DivContents.getDivs(MODAL_NUM, 1));
-        this.handleHalfDay(MODAL_NUM,1);
-        this.checkDiv(MODAL_NUM, 1);
-    }
-
-    checkDiv(teamNum, count) {
-        const MODAL_NUM = 7;
+        const MODAL_NUM = 7, CANDIDATES = 5;
         let correctID = false;
         let patrollerNum;
-        document.getElementById(`patrollerID.${teamNum}.${count}`).addEventListener('change', () => {
-            if (document.getElementById(`patrollerID.${teamNum}.${count}`).value !== '') {
+        let realTeamNum = teamNum;
+        let realCount = count;
+        console.log(`realTeam=${realTeamNum}, count=${count}`);
+        document.getElementById('modalDiv').style.display = 'block';
+        if (this.dayNight === "Night") {
+            document.getElementById("modalTitle").insertAdjacentHTML('beforeend', `<h3>Joining Night Team</h3>`);
+            document.getElementById("dataEntryDiv").insertAdjacentHTML('beforeend', DivContents.getDivs(MODAL_NUM, 1, null, null, null, true));
+        } else if (teamNum < CANDIDATES) {
+            document.getElementById("modalTitle").insertAdjacentHTML('beforeend', `<h3>Joining Team: ${teamNum}</h3>`);
+            document.getElementById("dataEntryDiv").insertAdjacentHTML('beforeend', DivContents.getDivs(MODAL_NUM, 1));
+        } else if (teamNum === CANDIDATES) {
+            document.getElementById("modalTitle").insertAdjacentHTML('beforeend', `<h3>Joining Team: CANDIDATES/AUXILIARY/ALUMNI</h3>`);
+            document.getElementById("dataEntryDiv").insertAdjacentHTML('beforeend', DivContents.getDivs(MODAL_NUM, 1, null, null, true));
+        } else {
+            document.getElementById("modalTitle").insertAdjacentHTML('beforeend', `<h3>Joining Team: LEADERSHIP/TRAINERS</h3>`);
+            document.getElementById("dataEntryDiv").insertAdjacentHTML('beforeend', DivContents.getDivs(MODAL_NUM, 1));
+        }
+        document.getElementById('modalSubmitButton').disabled = true;
+        document.getElementById(`fixButton`).classList.add('disabled');
+        document.getElementById(`nspLogo`).classList.add('disabled');
+        if (this.dayNight !== "Night") {
+            if (teamNum === CANDIDATES) {
+                this.handleHalfDay(MODAL_NUM, 1, true);
+            } else {
+                this.handleHalfDay(MODAL_NUM, 1, false);
+            }
+        }
+        document.getElementById('modalCancelButton').addEventListener('click', () => {
+            document.getElementById(`fixButton`).classList.remove('disabled');
+            document.getElementById(`nspLogo`).classList.remove('disabled');
+            this.handleUndo(realTeamNum, realCount, MODAL_NUM);
+        });
+        document.getElementById(`patrollerID.7.1`).addEventListener('change', () => {
+            if (document.getElementById(`patrollerID.7.1`).value !== '') {
                 for (let i = 0; i < this.patrollers.length; i++) {
-                    if (i < this.signedIn.length && this.signedIn[i].ID === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
+                    if (i < this.signedIn.length && this.signedIn[i].ID === Number(document.getElementById(`patrollerID.7.1`).value)) {
                         alert(`You are already logged in.`);
-                        document.getElementById(`patrollerID.${teamNum}.${count}`).value = '';
+                        document.getElementById(`patrollerID.7.1`).value = '';
                         break;
-                    } else if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
+                    } else if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.7.1`).value)) {
+                        patrollerNum = i;
                         correctID = true;
-                        this.completeDivChange(teamNum, count, i);
-                        document.getElementById(`radioNum.${teamNum}.${count}`).required = true;
-                        document.getElementById(`radioNum.${teamNum}.${count}`).addEventListener('change', () => {
+                        this.completeDivChange(MODAL_NUM, 1, patrollerNum);
+                        document.getElementById(`radioNum.7.1`).required = true;
+                        document.getElementById(`radioNum.7.1`).addEventListener('change', () => {
                             let usedRadio = false;
                             for (let peeps of this.signedIn) {
-                                if (document.getElementById(`radioNum.${teamNum}.${count}`).value === peeps.RADIO && peeps.RADIO !== '0') {
+                                if (document.getElementById(`radioNum.7.1`).value === peeps.RADIO && peeps.RADIO !== '0') {
                                     usedRadio = true;
                                 }
                             }
                             if (usedRadio) {
                                 alert(`Radio already in use....`);
-                                document.getElementById(`radioNum.${teamNum}.${count}`).value = '';
+                                document.getElementById(`radioNum.7.1`).value = '';
                             } else {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${count}`).value, `radio`);
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.7.1`).value, `radio`);
+                                document.getElementById('modalSubmitButton').disabled = false;
                             }
                         });
-                        if (teamNum !== 5) {
-                            document.getElementById(`guest.${teamNum}.${count}`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.${teamNum}.${count}`).value, `guest`);
+                        if (realTeamNum !== 5) {
+                            document.getElementById(`guest.7.1`).addEventListener('change', () => {
+                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.7.1`).value, `guest`);
                             });
                         }
                         break;
@@ -247,103 +246,85 @@ export default class EventHandler {
                 }
                 if (correctID !== true) {
                     alert(`Invalid ID number. Please try again... Or don't...`);
-                    document.getElementById(`patrollerID.${teamNum}.${count}`).value = '';
-                } else if (teamNum === MODAL_NUM) {
-                    document.getElementById('modalSubmit').addEventListener('click', () => {
-                        this.changePatrollerDiv(teamNum, count, patrollerNum);
+                    document.getElementById(`patrollerID.7.1`).value = '';
+                } else if (MODAL_NUM) {
+                    document.getElementById('modalSubmitButton').addEventListener('click', () => {
+                        document.getElementById('formSubmit').disabled = false;
+                        document.getElementById(`fixButton`).classList.remove('disabled');
+                        document.getElementById(`nspLogo`).classList.remove('disabled');
+                        // document.getElementById(`joinTeam.${realTeamNum}`).disabled = false;
+                        for (let button of this.buttons) {
+                            document.getElementById(button.id).disabled = false;
+                        }
+                        this.changePatrollerDiv(realTeamNum, realCount, patrollerNum);
+                        this.handlePrintFormButton();
                     });
                 }
             } else {
-                this.clearDiv(teamNum, count);
+                this.clearDiv(MODAL_NUM, 1);
             }
         });
     }
 
     changePatrollerDiv(teamNum, count, patrollerNum) {
+        const CANDIDATES = 5;
         console.log(`team=${teamNum}, count=${count}, patrollerNum=${patrollerNum}`);
-        if (teamNum === 0) {
-            this.checkDiv(teamNum, count)
-        }
         document.getElementById(`patrollerID.${teamNum}.${count}`).value = document.getElementById(`patrollerID.7.1`).value;
         document.getElementById(`name.${teamNum}.${count}`).value = document.getElementById(`name.7.1`).value;
         document.getElementById(`radioNum.${teamNum}.${count}`).value = document.getElementById(`radioNum.7.1`).value;
         document.getElementById(`rating.${teamNum}.${count}`).value = document.getElementById(`rating.7.1`).value;
         document.getElementById(`time.${teamNum}.${count}`).value = document.getElementById(`time.7.1`).value;
-        if (document.getElementById(`halfDay.7.1`).checked) {
-            document.getElementById(`halfDay.${teamNum}.${count}`).checked = true;
-        } else {
-            document.getElementById(`halfDay.${teamNum}.${count}`).checked = false;
+        if (this.dayNight !== "Night") {
+            if (document.getElementById(`halfDay.7.1`).checked) {
+                document.getElementById(`halfDay.${teamNum}.${count}`).checked = true;
+            } else {
+                document.getElementById(`halfDay.${teamNum}.${count}`).checked = false;
+            }
+            this.handleHalfDay(teamNum, count);
         }
-        document.getElementById(`guest.${teamNum}.${count}`).value = document.getElementById(`guest.7.1`).value;
-        this.updatePatrollerInfo(document.getElementById(`patrollerID.7.1`).value, document.getElementById("guest.7.1").value, "guest");
-        document.getElementById(`radioNum.${teamNum}.${count}`).addEventListener('change', () => {
-            this.updatePatrollerInfo(this.patrollers[patrollerNum].ID, document.getElementById(`radioNum.${teamNum}.${count}`).value, `radio`);
-        });
-        if (teamNum !== 5) {
+        if (teamNum !== CANDIDATES) {
+            document.getElementById(`guest.${teamNum}.${count}`).value = document.getElementById(`guest.7.1`).value;
+            this.updatePatrollerInfo(document.getElementById(`patrollerID.7.1`).value, document.getElementById("guest.7.1").value, "guest");
             document.getElementById(`guest.${teamNum}.${count}`).addEventListener('change', () => {
                 this.updatePatrollerInfo(this.patrollers[patrollerNum].ID, document.getElementById(`guest.${teamNum}.${count}`).value, `guest`);
             });
         }
+        document.getElementById(`radioNum.${teamNum}.${count}`).addEventListener('change', () => {
+            this.updatePatrollerInfo(this.patrollers[patrollerNum].ID, document.getElementById(`radioNum.${teamNum}.${count}`).value, `radio`);
+        });
         document.getElementById("modalTitle").innerHTML = "";
         document.getElementById("dataEntryDiv").innerHTML = "";
         document.getElementById('modalDiv').style.display = 'none';
+        document.getElementById(`radioNum.${teamNum}.${count}`).disabled = false;
+        document.getElementById(`guest.${teamNum}.${count}`).disabled = false;
         this.completeDivChange(teamNum, count, patrollerNum);
     }
 
-    /*changePatrollerDivx(teamNum, count) {
-        console.log(`patrollerID.${teamNum}.${count}`);
-        document.getElementById(`patrollerID.${teamNum}.${count}`).addEventListener('change', () => {
-            let correctID = false;
-            if (document.getElementById(`patrollerID.${teamNum}.${count}`).value !== '') {
-                for (let i = 0; i < this.patrollers.length; i++) {
-                    if (i < this.signedIn.length && this.signedIn[i].ID === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
-                        alert(`You are already logged in.`);
-                        document.getElementById(`patrollerID.${teamNum}.${count}`).value = '';
-                        break;
-                    } else if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
-                        correctID = true;
-                        this.completeDivChange(teamNum, i, count);
-                        document.getElementById(`radioNum.${teamNum}.${count}`).required = true;
-                        document.getElementById(`radioNum.${teamNum}.${count}`).addEventListener('change', () => {
-                            let usedRadio = false;
-                            for (let peeps of this.signedIn) {
-                                if (document.getElementById(`radioNum.${teamNum}.${count}`).value === peeps.RADIO && peeps.RADIO !== '0') {
-                                    usedRadio = true;
-                                }
-                            }
-                            if (usedRadio) {
-                                alert(`Radio already in use....`);
-                                document.getElementById(`radioNum.${teamNum}.${count}`).value = '';
-                            } else {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`radioNum.${teamNum}.${count}`).value, `radio`);
-                            }
-                        });
-                        if (teamNum !== 5) {
-                            document.getElementById(`guest.${teamNum}.${count}`).addEventListener('change', () => {
-                                this.updatePatrollerInfo(this.patrollers[i].ID, document.getElementById(`guest.${teamNum}.${count}`).value, `guest`);
-                            });
-                        }
-                        break;
-                    }
-                }
-                if (correctID !== true) {
-                    alert(`Invalid ID number. Please try again... Or don't...`);
-                    document.getElementById(`patrollerID.${teamNum}.${count}`).value = '';
-                }
-            } else {
-                this.clearDiv(teamNum, count);
-            }
-        });
-    }*/
-
     completeDivChange(teamNum, count, patrollerNum) {
-        console.log(`team=${teamNum}, count=${count}, patrollerNum=${patrollerNum}`);
+        console.log(`team=${teamNum}, count=${count}, patrollerNum=${this.patrollers[patrollerNum].LAST_NAME}`);
+        let days = Number(this.patrollers[patrollerNum].DAYS);
+        let nights = Number(this.patrollers[patrollerNum].NIGHTS);
+        let halfDays = Number(this.patrollers[patrollerNum].HALF_DAYS);
+        let halfs = Number(halfDays / 2);
+        let totalDays = Number(days + nights + halfs);
         const MODAL_NUM = 7;
         document.getElementById(`patrollerID.${teamNum}.${count}`).readOnly = true;
-        this.populateDiv(teamNum, patrollerNum, count);
-        if (teamNum < MODAL_NUM && this.dayNight !== "Night") {
+        if (teamNum === MODAL_NUM) {
+            document.getElementById(`days.${teamNum}.${count}`).value = totalDays;
+        }
+        if (teamNum === MODAL_NUM) {
+            this.populateDiv(MODAL_NUM, 1, patrollerNum);
+        } else {
+            this.populateDiv(teamNum, count, patrollerNum);
+            if (this.isAdmin) {
+                this.isAdmin = false;
+            }
+        }
+        if (teamNum !== MODAL_NUM && this.dayNight !== "Night") {
             this.handleHalfDay(teamNum, count);
             this.handleSignOffs(teamNum, count);
+        }
+        if (this.dayNight !== "Night") {
             if (document.getElementById(`halfDay.${teamNum}.${count}`).checked) {
                 this.updatePatrollerInfo(this.patrollers[patrollerNum].ID, document.getElementById(`radioNum.${teamNum}.${count}`).value, "halfDaysUp");
             } else {
@@ -359,30 +340,9 @@ export default class EventHandler {
         this.teamCounts[teamNum]++;
     }
 
-    updatePatrollerInfo(patrollerID, radioGuestDays, whichListener) {
+    updatePatrollerInfo(patrollerID) {
         for (let patroller of this.signedIn) {
             if (Number(patroller.ID) === Number(patrollerID)) {
-                if (whichListener === `halfDaysDown`) {
-                    patroller.TODAY_HALF = false;
-                    patroller.TOTAL_DAYS = radioGuestDays;
-                    patroller.DAYS++;
-                    if (patroller.HALF_DAYS > 0) {
-                        patroller.HALF_DAYS--;
-                    }
-                    if (this.populated === 0) {
-                        alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS)}`);
-                    }
-                } else if (whichListener === 'halfDaysUp') {
-                    patroller.TODAY_HALF = true;
-                    patroller.TOTAL_DAYS = radioGuestDays;
-                    patroller.HALF_DAYS++;
-                    if (patroller.DAYS > 0) {
-                        patroller.DAYS--;
-                    }
-                    if (this.populated === 0) {
-                        alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS) - .5}`);
-                    }
-                }
                 if (this.populated === 0) {
                     WebStorage.populateLocalStorage(patroller, patroller.POSITION_TEAM);
                 }
@@ -391,45 +351,9 @@ export default class EventHandler {
         }
     }
 
-    /*updatePatrollerInfox(patrollerID, radioGuestDays, whichListener) {
-        for (let patroller of this.signedIn) {
-            if (Number(patroller.ID) === Number(patrollerID)) {
-                if (whichListener === `radio`) {
-                    patroller.RADIO = radioGuestDays;
-                } else if (whichListener === `guest`) {
-                    patroller.GUEST = radioGuestDays;
-                } else if (whichListener === `halfDaysDown`) {
-                    patroller.TODAY_HALF = false;
-                    patroller.TOTAL_DAYS = radioGuestDays;
-                    patroller.DAYS++;
-                    if (patroller.HALF_DAYS > 0) {
-                        patroller.HALF_DAYS--;
-                    }
-                    if (this.populated === 0) {
-                        alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS)}`);
-                    }
-                } else if (whichListener === 'halfDaysUp') {
-                    patroller.TODAY_HALF = true;
-                    patroller.TOTAL_DAYS = radioGuestDays;
-                    patroller.HALF_DAYS++;
-                    if (patroller.DAYS > 0) {
-                        patroller.DAYS--;
-                    }
-                    if (this.populated === 0) {
-                        alert(`TOTAL DAYS:  ${Number(patroller.TOTAL_DAYS) - .5}`);
-                    }
-                }
-                if (this.populated === 0) {
-                    WebStorage.populateLocalStorage(patroller, patroller.POSITION_TEAM);
-                }
-                break;
-            }
-        }
-        // WebStorage.retrieveLocalStorage();
-    }*/
-
-    populateDiv(teamNum, i, count) {
+    populateDiv(teamNum, count, patrollerNum) {
         const MODAL_NUM = 7;
+        console.log(`team=${teamNum}, count=${count}, patrollerNum=${this.patrollers[patrollerNum].LAST_NAME}`);
         let time = new Date();
         let minutes = time.getMinutes();
         if (minutes < 10) {
@@ -452,19 +376,19 @@ export default class EventHandler {
             race = document.getElementById(`race.${teamNum}.${count}`).value;
         }
         if (teamNum !== MODAL_NUM) {
-            this.patrollers[i].DAYS = Number(this.patrollers[i].DAYS);
-            this.patrollers[i].NIGHTS = Number(this.patrollers[i].NIGHTS);
-            this.patrollers[i].HALF_DAYS = Number(this.patrollers[i].HALF_DAYS);
-            let days = this.patrollers[i].DAYS + dayCount;
-            let nights = this.patrollers[i].NIGHTS + nightsCount;
-            let halfDays = this.patrollers[i].HALF_DAYS + halfDayCount;
+            this.patrollers[patrollerNum].DAYS = Number(this.patrollers[patrollerNum].DAYS);
+            this.patrollers[patrollerNum].NIGHTS = Number(this.patrollers[patrollerNum].NIGHTS);
+            this.patrollers[patrollerNum].HALF_DAYS = Number(this.patrollers[patrollerNum].HALF_DAYS);
+            let days = this.patrollers[patrollerNum].DAYS + dayCount;
+            let nights = this.patrollers[patrollerNum].NIGHTS + nightsCount;
+            let halfDays = this.patrollers[patrollerNum].HALF_DAYS + halfDayCount;
             let halfs = halfDays / 2;
             let totalDays = days + nights + halfs;
             let patroller = {
-                ID: Number(this.patrollers[i].ID),
+                ID: Number(this.patrollers[patrollerNum].ID),
                 RADIO: document.getElementById(`radioNum.${teamNum}.${count}`).value,
-                NAME: `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`,
-                RATING: this.patrollers[i].RATING,
+                NAME: `${this.patrollers[patrollerNum].FIRST_NAME} ${this.patrollers[patrollerNum].LAST_NAME}`,
+                RATING: this.patrollers[patrollerNum].RATING,
                 TIME: document.getElementById(`time.${teamNum}.${count}`).value,
                 DAYS: days,
                 TEAM: teamNum,
@@ -472,24 +396,24 @@ export default class EventHandler {
                 NIGHTS: nights,
                 HALF_DAYS: halfDays,
                 TOTAL_DAYS: totalDays,
-                SNOWMOBILE: this.patrollers[i].SNOWMOBILE,
-                TOBOGGAN: this.patrollers[i].TOBOGGAN,
-                SCAVENGER: this.patrollers[i].SCAVENGER,
-                CPR: this.patrollers[i].CPR,
-                CHAIR: this.patrollers[i].CHAIR,
+                SNOWMOBILE: this.patrollers[patrollerNum].SNOWMOBILE,
+                TOBOGGAN: this.patrollers[patrollerNum].TOBOGGAN,
+                SCAVENGER: this.patrollers[patrollerNum].SCAVENGER,
+                CPR: this.patrollers[patrollerNum].CPR,
+                CHAIR: this.patrollers[patrollerNum].CHAIR,
                 TODAY_HALF: false,
                 POSITION_TEAM: this.counter[teamNum]
             };
-            if (teamNum !== 5) {
+            if (teamNum !== 5 && document.getElementById(`guest.${teamNum}.${count}`)) {
                 patroller.GUEST = document.getElementById(`guest.${teamNum}.${count}`).value;
             }
             if (this.populated === 0) {
-                alert(`TOTAL DAYS: ${patroller.TOTAL_DAYS}`);
+                // alert(`TOTAL DAYS: ${patroller.TOTAL_DAYS}`);
             }
             this.signedIn.push(patroller);
         }
-        document.getElementById(`name.${teamNum}.${count}`).value = `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`;
-        document.getElementById(`rating.${teamNum}.${count}`).value = this.patrollers[i].RATING;
+        document.getElementById(`name.${teamNum}.${count}`).value = `${this.patrollers[patrollerNum].FIRST_NAME} ${this.patrollers[patrollerNum].LAST_NAME}`;
+        document.getElementById(`rating.${teamNum}.${count}`).value = this.patrollers[patrollerNum].RATING;
         // document.getElementById(`days.${teamNum}.${count}`).value = this.signedIn[this.signedIn.length - 1].TOTAL_DAYS;
     }
 
@@ -534,47 +458,33 @@ export default class EventHandler {
         }*/
     }
 
-    handleHalfDay(teamNum, count) {
+    handleHalfDay(teamNum, count, isCandidate) {
+        const MODAL_NUM = 7, CANDIDATES = 5;
         console.log(`Team: ${teamNum}, count: ${count}`);
-        // let time = new Date();
-        // const DAY_CUTOFF = 9;
-        document.getElementById(`halfDay.${teamNum}.${count}`).addEventListener('click', () => {
+        function calculateHalf() {
             if (document.getElementById(`halfDay.${teamNum}.${count}`).checked) {
                 document.getElementById(`person.${teamNum}.${count}`).style.backgroundColor = 'rgb(247,223,30)';
-                if (teamNum !== 5) {
+                if (! isCandidate && teamNum !== CANDIDATES) {
                     document.getElementById(`guest.${teamNum}.${count}`).disabled = true;
                 }
-                this.teamCounts[teamNum]--;
-                // this.enforceTeamBalance(teamNum);
-                /*if (document.getElementById(`days.${teamNum}.${count}`).value > 0) {
-                    document.getElementById(`days.${teamNum}.${count}`).value = Number(document.getElementById(`days.${teamNum}.${count}`).value) - .5;
-                } else {
-                    document.getElementById(`days.${teamNum}.${count}`).value = 0;
-                }*/
-                for (let patroller of this.signedIn) {
-                    if (Number(patroller.ID) === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
-                        this.updatePatrollerInfo(patroller.ID, patroller.TOTAL_DAYS, `halfDaysUp`);
-                        break;
-                    }
+                if (teamNum === MODAL_NUM) {
+                    document.getElementById(`days.${teamNum}.${count}`).value = Number(document.getElementById(`days.${teamNum}.${count}`).value - .5);
                 }
-
             } else {
                 document.getElementById(`person.${teamNum}.${count}`).style.backgroundColor = 'white';
-                if (teamNum !== 5) {
+                if (! isCandidate && teamNum !== CANDIDATES) {
                     document.getElementById(`guest.${teamNum}.${count}`).disabled = false;
                 }
-                this.teamCounts[teamNum]++;
-                // this.enforceTeamBalance(teamNum);
-                // document.getElementById(`days.${teamNum}.${count}`).value = Number(document.getElementById(`days.${teamNum}.${count}`).value) + .5;
-                for (let patroller of this.signedIn) {
-                    if (Number(patroller.ID) === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
-                        this.updatePatrollerInfo(patroller.ID, patroller.TOTAL_DAYS, `halfDaysDown`);
-                        break;
-                    }
+                if (teamNum === MODAL_NUM) {
+                    let oldNum = Number(document.getElementById(`days.${teamNum}.${count}`).value);
+                    document.getElementById(`days.${teamNum}.${count}`).value = oldNum + .5;
                 }
-                // this.updatePatrollerInfo(document.getElementById(`patrollerID.${teamNum}.${count}`).value, document.getElementById(`days.${teamNum}.${count}`).value, `halfDaysDown`);
             }
+        }
+        document.getElementById(`halfDay.${teamNum}.${count}`).addEventListener('click', () => {
+            calculateHalf();
         });
+        calculateHalf();
     }
 
     handleSignOffs(teamNum, count) {
@@ -644,89 +554,11 @@ export default class EventHandler {
         });
     }
 
-    /*enforceTeamBalance(teamNum) {
-        if (teamNum > 0) {
-            const MAX_TEAM_COUNT = 4;
-            if (this.teamCounts[teamNum] >= MAX_TEAM_COUNT) {
-                this.overMax[teamNum] = true;
-            } else {
-                this.overMax[teamNum] = false;
-                // document.getElementById(`joinTeam.${teamNum}`).disabled = false;
-                // console.log(`Lighting up button.`);
-            }
-            if (this.teamCounts[1] >= MAX_TEAM_COUNT && this.teamCounts[2] >= MAX_TEAM_COUNT && this.teamCounts[3] >= MAX_TEAM_COUNT && this.teamCounts[4] >= MAX_TEAM_COUNT) {
-                for (let i = 1; i < this.overMax.length; i++) {
-                    this.overMax[i] = false;
-                }
-            }
-        }
-    }*/
-
-    validate() {
-        document.addEventListener('change', () => {
-            if (window.event.target !== document.getElementById('weekendOverride')) {
-                let form = document.getElementById('rosterForm');
-                let valid = true;
-                if (this.isWeekend && this.dayNight === 'Day') {
-                    for (let i = 0; i < form.elements.length; i++) {
-                        if (form.elements[i].hasAttribute("required") && !form.elements[i].value) {
-                            valid = false;
-                        }
-                    }
-                    if (valid) {
-                        for (let button of this.buttons) {
-                            document.getElementById(button.id).disabled = false;
-                        }
-                        for (let i = 1; i < this.overMax.length; i++) {
-                            if (this.overMax[i]) {
-                                document.getElementById(`joinTeam.${i}`).disabled = true;
-                            }
-                        }
-                        let validLeader = document.getElementById('radioNum.6.1');
-                        if (validLeader) {
-                            if (validLeader.value) {
-                                document.getElementById('formSubmit').disabled = false;
-                                this.handlePrintFormButton();
-                            }
-                        }
-
-                        /*if (document.getElementById('weekendOverride').value === 'on') {
-                            document.getElementById('formSubmit').disabled = false;
-                            this.handlePrintFormButton();
-                        } else {
-                            let validLeader = document.getElementById('radioNum.6.1');
-                            if (validLeader) {
-                                if (validLeader.value) {
-                                    document.getElementById('formSubmit').disabled = false;
-                                    this.handlePrintFormButton();
-                                }
-                            }
-                        }*/
-
-                    }
-                } else {
-                    for (let i = 0; i < form.elements.length; i++) {
-                        if (form.elements[i].hasAttribute("required") && !form.elements[i].value) {
-                            valid = false;
-                        }
-                    }
-                    if (valid) {
-                        // console.log(`valid`);
-                        document.getElementById('joinTeam.0').disabled = false;
-                        document.getElementById('formSubmit').disabled = false;
-                        this.handlePrintFormButton();
-                    } //else {
-                    //     console.log(`not valid`);
-                    // }
-                }
-            }
-        });
-    }
-
     handleAdmin(teamNum, count) {
         console.log(this.signedIn);
         let correctPassword = false;
         document.getElementById(`admin.${teamNum}.${count}`).addEventListener('click', () => {
+            this.isAdmin = true;
             let password = prompt(`Password: `);
             for (let person of this.patrollers) {
                 if (person.ID === password && person.LEADER) {
@@ -755,21 +587,15 @@ export default class EventHandler {
                     this.clearDiv(teamNum, count);
                     for (let i = 0; i < this.patrollers.length; i++) {
                         if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${team}.${teamPosition}`).value)) {
-                            this.completeDivChange(team, i, teamPosition);
+                            this.completeDivChange(team, teamPosition, i);
                             break;
                         }
                     }
                     this.updatePatrollerInfo(document.getElementById(`patrollerID.${team}.${teamPosition}`).value, document.getElementById(`radioNum.${team}.${teamPosition}`).value, "radio");
                     this.updatePatrollerInfo(document.getElementById(`patrollerID.${team}.${teamPosition}`).value, document.getElementById(`guestDiv.${team}.${teamPosition}`).value, "guest");
-                    // if (this.counter[teamNum] > 1) {
-                    //     this.counter[teamNum]--;
-                    // }
                     for (let button of this.buttons) {
                         document.getElementById(button.id).disabled = false;
                     }
-                    // this.enforceTeamBalance(team);
-                    console.log(this.counter);
-                    console.log(this.teamCounts);
                 }
             } else {
                 alert(`Incorrect Password`);
@@ -777,13 +603,24 @@ export default class EventHandler {
         });
     }
 
-    handleUndo(teamNum, count) {
-        document.getElementById(`undo.${teamNum}.${count}`).addEventListener('click', () => {
+    handleUndo(teamNum, count, MODAL_NUM) {
+        if (MODAL_NUM) {
             this.clearDiv(teamNum, count);
+            this.clearDiv(MODAL_NUM, 1);
+            document.getElementById("modalTitle").innerHTML = "";
+            document.getElementById("dataEntryDiv").innerHTML = "";
+            document.getElementById('modalDiv').style.display = 'none';
             for (let button of this.buttons) {
                 document.getElementById(button.id).disabled = false;
             }
-        });
+        } else {
+            document.getElementById(`undo.${teamNum}.${count}`).addEventListener('click', () => {
+                this.clearDiv(teamNum, count);
+                for (let button of this.buttons) {
+                    document.getElementById(button.id).disabled = false;
+                }
+            });
+        }
     }
 
     populatePage() {
@@ -791,7 +628,7 @@ export default class EventHandler {
             this.populated = 1;
             WebStorage.populateForm(this.isWeekend, this.dayNight);
         }
-        this.validate();
+        // this.validate();
     }
 
     updateDays() {
