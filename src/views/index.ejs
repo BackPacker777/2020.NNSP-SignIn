@@ -14,10 +14,15 @@
     <div class="grid-container fluid">
         <div class="grid-x grid-padding-x" id="topMastFill">
             <div class="cell small-3 text-center" id="whichFormDiv">
-                <legend><strong>Choose the form to display:</strong></legend>
-                <input type="radio" id="weekdayOverride" name="formDisplay" value="weekend"><label for="weekendOverride" id="weekendOverrideLabel">Weekend/Holiday Day</label>
-                <input type="radio" id="weekdayOverride" name="formDisplay" value="weekday"><label for="weekdayOverride" id="weekdayOverrideLabel">Weekday</label>
-                <input type="radio" id="nightOverride" name="formDisplay" value="night"><label for="nightOverride" id="nightOverrideLabel">Night</label>
+                <div id="chooser">
+                    <legend><strong>Choose the form to display:</strong></legend>
+                    <input type="radio" id="weekdayOverride" name="formDisplay" value="weekend"><label for="weekendOverride" id="weekendOverrideLabel">Weekend/Holiday Day</label>
+                    <input type="radio" id="weekdayOverride" name="formDisplay" value="weekday"><label for="weekdayOverride" id="weekdayOverrideLabel">Weekday</label>
+                    <input type="radio" id="nightOverride" name="formDisplay" value="night"><label for="nightOverride" id="nightOverrideLabel">Night</label>
+                </div>
+                <div class="vertical-center" id="chosen">
+                    <h4>Have a great shift!</h4>
+                </div>
             </div>
             <div class="small-2 cell"><input type="submit" id='formSubmit' value="PRINT ROSTER" class="button large expanded border" title="Only lights up when proper conditions are met"></div>
             <div class="small-1 cell"><span id="fixButton" class="button large expanded alert border" title="Use to clear cache & fix app. LEADERSHIP ONLY!">! FIX !</span></div>

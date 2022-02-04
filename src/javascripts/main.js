@@ -1,6 +1,5 @@
 "use strict";
 
-import DivContents from './DivContents2.js';
 import EventHandler from './EventHandler.js';
 
 class Main {
@@ -19,11 +18,11 @@ class Main {
     }
 
     prepUX() {
-        // document.documentElement.requestFullscreen();
         document.getElementById('noPrint').style.display = 'none';
         document.getElementById('narniaDiv').style.display = 'none';
-        document.getElementById('masterDiv').style.display = 'none';  // !! TESTING ONLY !!
-        document.getElementById('modalDiv').style.display = 'none'; // !! TESTING ONLY !!
+        document.getElementById('masterDiv').style.display = 'none';
+        document.getElementById('modalDiv').style.display = 'none';
+        document.getElementById('chosen').style.display = 'none';
         document.getElementById('formSubmit').disabled = true;
         this.eventHandler.populatePage();
         if (this.eventHandler.populated === 1) {

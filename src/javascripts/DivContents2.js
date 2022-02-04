@@ -136,8 +136,8 @@ export default class DivContents2 {
                 if (!isCandidate) {
                     return `<div class="grid-x" id="person.${teamNum}.${counter}">
                         ${patrollerID}
-                        ${name}
                         ${radio}
+                        ${name}
                         ${rating}
                         ${time}
                         ${halfDay}
@@ -150,8 +150,8 @@ export default class DivContents2 {
                 } else {
                     return `<div class="grid-x" id="person.${teamNum}.${counter}">
                         ${patrollerID}
-                        ${name}
                         ${radio}
+                        ${name}
                         ${rating}
                         ${time}
                         ${halfDay}
@@ -165,9 +165,9 @@ export default class DivContents2 {
             } else if (teamNum === TEAMS.MODAL && nightModal) {
                 return `<div class="grid-x" id="person.${teamNum}.${counter}">
                         ${patrollerID}
-                        ${blank}
-                        ${name}
                         ${radio}
+                        ${blank}
+                        ${name}                        
                         ${rating}
                         ${time}                      
                         ${guest}
@@ -247,7 +247,7 @@ export default class DivContents2 {
     }
 
     static getExtraNightDiv(teamNum, counter) {
-        return `<div class="grid-x">
+        return `<div class="grid-x" id="person.${teamNum}.${counter}">
                     <div class="small-2 cell" id="patroller.${teamNum}.${counter}">
                         <label>ID:
                             <input type="number" class="submitInclude secure" maxlength="6" name="patrollerID" id="patrollerID.${teamNum}.${counter}" placeholder="ID #">
