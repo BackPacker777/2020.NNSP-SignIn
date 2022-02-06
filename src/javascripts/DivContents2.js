@@ -49,7 +49,7 @@ export default class DivContents2 {
                     </div>`;
 
         let days = `<div class="small-1 cell">
-                        <label>Days:
+                        <label>Shifts:
                             <input type="text" class="submitInclude" readonly id="days.${teamNum}.${counter}">
                         </label>
                     </div>`;
@@ -199,7 +199,7 @@ export default class DivContents2 {
     }
 
     static getNightRaceDivs(teamNum, counter, RACE_TIMES) {
-        return `<div class="grid-x">
+        return `<div class="grid-x" id="person.0.8">
                     <div class="small-1 cell" id="joinNight.${teamNum}.${counter}">
                         <label>&nbsp;</label>
                         <span id="joinNight.${counter}" class="button modalButton">Sign In</span>
