@@ -6,29 +6,35 @@
 export default class WebStorage {
     /**
      * @param pageData
+     * @param count
+     * @param whichForm
      */
-    static populateLocalStorage(pageData) {
-        let counter = `${pageData.TEAM}.${pageData.POSITION_TEAM}`;
-        if (pageData.GUEST) {
-            localStorage.setItem(`${counter}.guest`, pageData.GUEST);
+    static populateLocalStorage(pageData, count, whichForm) {
+        if (whichForm) {
+            localStorage.setItem("whichForm", whichForm);
+        } else {
+            let counter = `${pageData.TEAM}.${pageData.POSITION_TEAM}`;
+            if (pageData.GUEST) {
+                localStorage.setItem(`${counter}.guest`, pageData.GUEST);
+            }
+            localStorage.setItem(`${counter}.id`, pageData.ID);
+            localStorage.setItem(`${counter}.radio`, pageData.RADIO);
+            localStorage.setItem(`${counter}.name`, pageData.NAME);
+            localStorage.setItem(`${counter}.rating`, pageData.RATING);
+            localStorage.setItem(`${counter}.time`, pageData.TIME);
+            localStorage.setItem(`${counter}.days`, pageData.DAYS);
+            localStorage.setItem(`${counter}.team`, pageData.TEAM);
+            localStorage.setItem(`${counter}.nights`, pageData.NIGHTS);
+            localStorage.setItem(`${counter}.halfDays`, pageData.HALF_DAYS);
+            localStorage.setItem(`${counter}.totalDays`, pageData.TOTAL_DAYS);
+            localStorage.setItem(`${counter}.snowmobile`, pageData.SNOWMOBILE);
+            localStorage.setItem(`${counter}.toboggan`, pageData.TOBOGGAN);
+            localStorage.setItem(`${counter}.scavenger`, pageData.SCAVENGER);
+            localStorage.setItem(`${counter}.cpr`, pageData.CPR);
+            localStorage.setItem(`${counter}.chair`, pageData.CHAIR);
+            localStorage.setItem(`${counter}.todayHalf`, pageData.TODAY_HALF);
+            localStorage.setItem(`${counter}.positionTeam`, pageData.POSITION_TEAM);
         }
-        localStorage.setItem(`${counter}.id`, pageData.ID);
-        localStorage.setItem(`${counter}.radio`, pageData.RADIO);
-        localStorage.setItem(`${counter}.name`, pageData.NAME);
-        localStorage.setItem(`${counter}.rating`, pageData.RATING);
-        localStorage.setItem(`${counter}.time`, pageData.TIME);
-        localStorage.setItem(`${counter}.days`, pageData.DAYS);
-        localStorage.setItem(`${counter}.team`, pageData.TEAM);
-        localStorage.setItem(`${counter}.nights`, pageData.NIGHTS);
-        localStorage.setItem(`${counter}.halfDays`, pageData.HALF_DAYS);
-        localStorage.setItem(`${counter}.totalDays`, pageData.TOTAL_DAYS);
-        localStorage.setItem(`${counter}.snowmobile`, pageData.SNOWMOBILE);
-        localStorage.setItem(`${counter}.toboggan`, pageData.TOBOGGAN);
-        localStorage.setItem(`${counter}.scavenger`, pageData.SCAVENGER);
-        localStorage.setItem(`${counter}.cpr`, pageData.CPR);
-        localStorage.setItem(`${counter}.chair`, pageData.CHAIR);
-        localStorage.setItem(`${counter}.todayHalf`, pageData.TODAY_HALF);
-        localStorage.setItem(`${counter}.positionTeam`, pageData.POSITION_TEAM);
     }
 
     /**
@@ -36,71 +42,87 @@ export default class WebStorage {
      * @return boolean
      */
     static checkLocalStorage() {
-        return localStorage.length > 0;
+        return localStorage.length > 1;
+    }
+
+    static checkWhichForm() {
+        return localStorage.getItem("whichForm");
     }
 
     /**
      * Get all localStorage items
      * @return null
      */
-    static populateForm(isWeekend, dayNight) {
-        let weekendOverride = 0;
+    static populateForm(whichForm) {
+        let patrollers = [];
         let runPopulate = (teams) => {
             let event = new Event('click');
-            let event2 = new Event('change');
+            let isHalf = false;
+            console.log(teams);
             for (let i = 0; i < teams.length; i++) {
-                let counter = 1;
-                let MAX_COUNTER = 20;
-                while (counter <= MAX_COUNTER) {
-                    let teamPosition = `${teams[i]}.${counter}`;
-                    if (localStorage.getItem(`${teamPosition}.id`)) {
-                        document.getElementById(`joinTeam.${teams[i]}`).dispatchEvent(event);
-                        document.getElementById(`patrollerID.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.id`);
-                        document.getElementById(`patrollerID.${teamPosition}`).readOnly = true;
-                        document.getElementById(`time.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.time`);
-                        document.getElementById(`patrollerID.${teamPosition}`).dispatchEvent(event2);
-                        document.getElementById(`name.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.name`);
-                        if (localStorage.getItem(`${teamPosition}.radio`)) {
-                            document.getElementById(`radioNum.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.radio`);
-                            document.getElementById(`radioNum.${teamPosition}`).dispatchEvent(event2);
-                            document.dispatchEvent(event2);
-                        }
-                        document.getElementById(`rating.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.rating`);
-                        if (localStorage.getItem(`${teamPosition}.guest`)) {
-                            document.getElementById(`guest.${teamPosition}`).value = localStorage.getItem(`${teamPosition}.guest`);
-                            document.getElementById(`guest.${teamPosition}`).dispatchEvent(event2);
-                        }
+                console.log(`TeamPosition=${teams[i]}`);
+                if (localStorage.getItem(`${teams[i]}.id`)) {
+                    document.getElementById(`joinTeam.${teams[i].substring(0,1)}`).dispatchEvent(event);
+                    document.getElementById(`patrollerID.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.id`);
+                    document.getElementById(`patrollerID.${teams[i]}`).readOnly = true;
+                    document.getElementById(`time.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.time`);
+                    document.getElementById(`name.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.name`);
+                    if (localStorage.getItem(`${teams[i]}.todayHalf`)) {
+                        document.getElementById(`halfDay.${teams[i]}`).checked = true;
+                        isHalf = true;
+                        document.getElementById(`halfDay.${teams[i]}`).dispatchEvent(event);
                     }
-                    counter++;
+                    if (localStorage.getItem(`${teams[i]}.radio`)) {
+                        document.getElementById(`radioNum.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.radio`);
+                        /*document.getElementById(`radioNum.${teams[i]}`).dispatchEvent(event2);
+                        document.dispatchEvent(event2);*/
+                    }
+                    document.getElementById(`rating.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.rating`);
+                    if (localStorage.getItem(`${teams[i]}.guest`)) {
+                        document.getElementById(`guest.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.guest`);
+                        // document.getElementById(`guest.${teams[i]}`).dispatchEvent(event2);
+                    }
+                    let patroller = {
+                        ID: localStorage.getItem(`${teams[i]}.id`),
+                        RADIO: localStorage.getItem(`${teams[i]}.radio`),
+                        NAME: localStorage.getItem(`${teams[i]}.name`),
+                        RATING: localStorage.getItem(`${teams[i]}.rating`),
+                        TIME: localStorage.getItem(`${teams[i]}.time`),
+                        DAYS: localStorage.getItem(`${teams[i]}.days`),
+                        TEAM: localStorage.getItem(`${teams[i]}.team`),
+                        NIGHTS: localStorage.getItem(`${teams[i]}.night`),
+                        HALF_DAYS: localStorage.getItem(`${teams[i]}.halfDays`),
+                        TOTAL_DAYS: localStorage.getItem(`${teams[i]}.totalDays`),
+                        SNOWMOBILE: localStorage.getItem(`${teams[i]}.snowmobile`),
+                        TOBOGGAN: localStorage.getItem(`${teams[i]}.toboggan`),
+                        SCAVENGER: localStorage.getItem(`${teams[i]}.scavenger`),
+                        CPR: localStorage.getItem(`${teams[i]}.cpr`),
+                        CHAIR: localStorage.getItem(`${teams[i]}.chair`),
+                        TODAY_HALF: isHalf,
+                        POSITION_TEAM: teams[i].substring(2,3)
+                    };
+                    console.log(patroller.POSITION_TEAM);
+                    patrollers.push(patroller);
                 }
             }
         };
 
         let teams = [];
-        let event = new Event('click');
-        // let event2 = new Event('change');
         for (let i = 0; i < localStorage.length; i++ ) {
             let key = localStorage.key(i);
-            let value = localStorage[key];
             if (key.substring(4,9) === 'team') {
-                teams.push(Number(localStorage[key]));
+                teams.push(key.substring(0,3));
+                console.log(teams[i]);
             }
-            if (key.substring(0,1) > 0) {
-                weekendOverride = 1;
-            }
-            // console.log(`${key}: ${value}`);
         }
-        if (isWeekend) {
+        if (whichForm === "weekend") {
             runPopulate(teams);
-        } else if (weekendOverride && ! isWeekend) {
-            /*document.getElementById(`weekendOverride`).checked = true;
-            document.getElementById('weekendOverride').dispatchEvent(event);*/
-            runPopulate(teams);
-        } else if (dayNight === 'Day') {
-            runPopulate(teams);
-        } else {
-            //add nights here
+        } else if (whichForm === "weekday") {
+            // days
+        } else  {
+            // nights
         }
+        return patrollers;
     }
 
     /**
