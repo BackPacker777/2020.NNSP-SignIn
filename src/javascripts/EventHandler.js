@@ -148,16 +148,25 @@ export default class EventHandler {
                     nightCounter++;
                 } else {
                     document.getElementById(`team.${teamNum}`).insertAdjacentHTML('beforeend', DivContents.getDivs(teamNum, this.counter[teamNum]));
-                    document.getElementById(`halfDay.${teamNum}.${this.counter[teamNum]}`).addEventListener('click', () => {
-                        this.handleHalfDay(teamNum, this.counter[teamNum]);
-                    });
+                    if (!this.isAdmin || this.populated === 1) {
+                        // console.log(`halfDay.${teamNum}.${this.counter[teamNum]}`);
+                        document.getElementById(`halfDay.${teamNum}.${this.counter[teamNum]}`).addEventListener('click', (event) => {
+                            // console.log(event.target.id.substring(10,11));
+                            this.handleHalfDay(event.target.id.substring(8,9), event.target.id.substring(10,11));
+                        });
+                    }
                     if (teamNum > 0) {
                         this.handleUndo(teamNum, this.counter[teamNum]);
                     }
-                    if (! this.isAdmin) {
+                    if (!this.isAdmin) {
                         console.log('not admin');
                         document.getElementById(`joinTeam.${teamNum}`).disabled = true;
                         this.throwModal(teamNum, this.counter[teamNum]);
+                    }
+                    if (this.populated === 1) {
+                        this.handleAdmin(teamNum, this.counter[teamNum]);
+                        this.counter[teamNum]++;
+                        // console.log(this.counter);
                     }
                 }
             });
@@ -294,6 +303,7 @@ export default class EventHandler {
     }
 
     completeDivChange(teamNum, count, patrollerNum) {
+        console.log(`team=${teamNum}.${count}`);
         let days = Number(this.patrollers[patrollerNum].DAYS);
         let nights = Number(this.patrollers[patrollerNum].NIGHTS);
         let halfDays = Number(this.patrollers[patrollerNum].HALF_DAYS);
@@ -318,6 +328,7 @@ export default class EventHandler {
                 this.handleHalfDay(teamNum, count);
             }
             if (teamNum !== MODAL_NUM) {
+                console.log(`Handling SignOffs ${teamNum}.${count}`);
                 this.handleSignOffs(teamNum, count);
             }
             this.divTransition = false;
@@ -330,7 +341,9 @@ export default class EventHandler {
                 this.handleAdmin(teamNum, count);
             }
         }
-        this.counter[teamNum]++;
+        if (this.populated === 0) {
+            this.counter[teamNum]++;
+        }
         this.teamCounts[teamNum]++;
     }
 
@@ -389,6 +402,7 @@ export default class EventHandler {
             minutes = `0${minutes}`;
         }
         let race;
+        let isHalf = false;
         if (! document.getElementById(`time.${teamNum}.${count}`).value) {
             document.getElementById(`time.${teamNum}.${count}`).value = `${time.getHours()}:${minutes}`;
         }
@@ -396,6 +410,9 @@ export default class EventHandler {
             race = document.getElementById(`race.${teamNum}.${count}`).value;
         }
         if (teamNum !== MODAL_NUM) {
+            if (document.getElementById(`halfDay.${teamNum}.${count}`).checked === true) {
+                isHalf = true;
+            }
             // console.log(`days=${days}, nights=${nights}, halfDays=${halfDays}, totalDays=${totalDays}`);
             let patroller = {
                 ID: Number(this.patrollers[patrollerNum].ID),
@@ -414,7 +431,7 @@ export default class EventHandler {
                 SCAVENGER: this.patrollers[patrollerNum].SCAVENGER,
                 CPR: this.patrollers[patrollerNum].CPR,
                 CHAIR: this.patrollers[patrollerNum].CHAIR,
-                TODAY_HALF: false,
+                TODAY_HALF: isHalf,
                 POSITION_TEAM: this.counter[teamNum]
             };
             if (teamNum !== 5 && document.getElementById(`guest.${teamNum}.${count}`)) {
@@ -423,6 +440,7 @@ export default class EventHandler {
             if (this.populated === 0) {
                 // alert(`TOTAL SHIFTS: ${patroller.TOTAL_DAYS}`);
             }
+            console.log(patroller);
             this.signedIn.push(patroller);
             /*if (teamNum !== MODAL_NUM) {
                 // this.updatePatrollerInfo(patroller.ID, patroller.TOTAL_DAYS);
@@ -472,6 +490,7 @@ export default class EventHandler {
     handleHalfDay(teamNum, count, isCandidate) {
         const MODAL_NUM = 7, CANDIDATES = 5;
         let calculateHalf = function () {
+            // console.log(`halfDay.${teamNum}.${count}`);
             if (document.getElementById(`halfDay.${teamNum}.${count}`).checked) {
                 document.getElementById(`person.${teamNum}.${count}`).style.backgroundColor = 'rgb(247,223,30)';
                 if (! isCandidate && teamNum !== CANDIDATES) {
@@ -542,6 +561,7 @@ export default class EventHandler {
         }.bind(this);  // https://stackoverflow.com/questions/346015/javascript-closures-and-this
 
         for (let i = 0; i < this.signedIn.length; i++) {
+            // console.log(`patrollerID.${teamNum}.${count}`);
             if (Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value)) {
                 setSignOffs("snowmobile", "SNOWMOBILE", Number(this.signedIn[i].SNOWMOBILE), this.patrollers, i);
                 setSignOffs("toboggan", "TOBOGGAN", Number(this.signedIn[i].TOBOGGAN), this.patrollers, i);
@@ -592,6 +612,7 @@ export default class EventHandler {
     }
 
     handleAdmin(teamNum, count) {
+        // console.log(`admin.${teamNum}.${count}`);
         let correctPassword = false;
         document.getElementById(`admin.${teamNum}.${count}`).addEventListener('click', () => {
             this.isAdmin = true;
@@ -609,7 +630,9 @@ export default class EventHandler {
                 } else if (Number(team) === Number(teamNum)) {
                     alert(`Patroller is already in this team!`);
                 } else {
-                    let teamPosition = this.teamCounts[team] + 1;
+                    // let teamPosition = this.teamCounts[team] + 1;
+                    let teamPosition = this.counter[team];
+                    console.log(`teamPosition=${teamPosition}`);
                     let event1 = new Event("click");
                     document.getElementById(`joinTeam.${team}`).dispatchEvent(event1);
                     document.getElementById(`patrollerID.${team}.${teamPosition}`).value = document.getElementById(`patrollerID.${teamNum}.${count}`).value;
@@ -617,8 +640,14 @@ export default class EventHandler {
                     document.getElementById(`radioNum.${team}.${teamPosition}`).value = document.getElementById(`radioNum.${teamNum}.${count}`).value;
                     document.getElementById(`rating.${team}.${teamPosition}`).value = document.getElementById(`rating.${teamNum}.${count}`).value;
                     document.getElementById(`time.${team}.${teamPosition}`).value = document.getElementById(`time.${teamNum}.${count}`).value;
-                    document.getElementById(`halfDay.${team}.${teamPosition}`).value = document.getElementById(`halfDay.${teamNum}.${count}`).value;
                     document.getElementById(`guest.${team}.${teamPosition}`).value = document.getElementById(`guest.${teamNum}.${count}`).value;
+                    if (document.getElementById(`halfDay.${teamNum}.${count}`).checked) {
+                        document.getElementById(`halfDay.${team}.${teamPosition}`).checked = true;
+                        this.handleHalfDay(team, teamPosition);
+                    }
+                    document.getElementById(`halfDay.${team}.${teamPosition}`).addEventListener('click', () => {
+                        this.handleHalfDay(team, teamPosition);
+                    });
                     this.clearDiv(teamNum, count);
                     for (let i = 0; i < this.patrollers.length; i++) {
                         if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${team}.${teamPosition}`).value)) {
@@ -678,8 +707,14 @@ export default class EventHandler {
             }
             document.querySelector('input[name="formDisplay"]').dispatchEvent(event);
             this.signedIn = WebStorage.populateForm(whichForm);
+            // console.log(this.signedIn);
+            WebStorage.purgeLocalStorage();
+            WebStorage.populateLocalStorage(null, null, whichForm);
             for (let patroller of this.signedIn) {
+                // console.log(patroller);
+                // console.log(`${patroller.TEAM}.${patroller.POSITION_TEAM}`);
                 this.handleSignOffs(patroller.TEAM, patroller.POSITION_TEAM);
+                WebStorage.populateLocalStorage(patroller, patroller.POSITION_TEAM);
             }
             this.divTransition = false;
             this.isLocalStorage = false;

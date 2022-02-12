@@ -55,42 +55,44 @@ export default class WebStorage {
      */
     static populateForm(whichForm) {
         let patrollers = [];
+        let teamPosition = [1,1,1,1,1];
         let runPopulate = (teams) => {
             let event = new Event('click');
-            let isHalf = false;
             console.log(teams);
             for (let i = 0; i < teams.length; i++) {
-                console.log(`TeamPosition=${teams[i]}`);
                 if (localStorage.getItem(`${teams[i]}.id`)) {
-                    document.getElementById(`joinTeam.${teams[i].substring(0,1)}`).dispatchEvent(event);
-                    document.getElementById(`patrollerID.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.id`);
-                    document.getElementById(`patrollerID.${teams[i]}`).readOnly = true;
-                    document.getElementById(`time.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.time`);
-                    document.getElementById(`name.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.name`);
-                    if (localStorage.getItem(`${teams[i]}.todayHalf`)) {
-                        document.getElementById(`halfDay.${teams[i]}`).checked = true;
-                        isHalf = true;
-                        document.getElementById(`halfDay.${teams[i]}`).dispatchEvent(event);
+                    let isHalf = localStorage.getItem(`${teams[i]}.todayHalf`);
+                    let team = teams[i].substring(0,1);
+                    document.getElementById(`joinTeam.${team}`).dispatchEvent(event);
+                    document.getElementById(`patrollerID.${team}.${teamPosition[team]}`).value = localStorage.getItem(`${teams[i]}.id`);
+                    document.getElementById(`patrollerID.${team}.${teamPosition[team]}`).readOnly = true;
+                    document.getElementById(`time.${team}.${teamPosition[team]}`).value = localStorage.getItem(`${teams[i]}.time`);
+                    document.getElementById(`name.${team}.${teamPosition[team]}`).value = localStorage.getItem(`${teams[i]}.name`);
+                    if (isHalf === "true") {
+                        // console.log(localStorage.getItem(`${teams[i]}.todayHalf`));
+                        document.getElementById(`halfDay.${team}.${teamPosition[team]}`).checked = true;
+                        document.getElementById(`halfDay.${team}.${teamPosition[team]}`).dispatchEvent(event);
                     }
                     if (localStorage.getItem(`${teams[i]}.radio`)) {
-                        document.getElementById(`radioNum.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.radio`);
+                        document.getElementById(`radioNum.${team}.${teamPosition[team]}`).value = localStorage.getItem(`${teams[i]}.radio`);
                         /*document.getElementById(`radioNum.${teams[i]}`).dispatchEvent(event2);
                         document.dispatchEvent(event2);*/
                     }
-                    document.getElementById(`rating.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.rating`);
+                    document.getElementById(`rating.${team}.${teamPosition[team]}`).value = localStorage.getItem(`${teams[i]}.rating`);
                     if (localStorage.getItem(`${teams[i]}.guest`)) {
-                        document.getElementById(`guest.${teams[i]}`).value = localStorage.getItem(`${teams[i]}.guest`);
+                        document.getElementById(`guest.${team}.${teamPosition[team]}`).value = localStorage.getItem(`${teams[i]}.guest`);
                         // document.getElementById(`guest.${teams[i]}`).dispatchEvent(event2);
                     }
+                    // console.log(teamPosition[team]);
                     let patroller = {
-                        ID: localStorage.getItem(`${teams[i]}.id`),
-                        RADIO: localStorage.getItem(`${teams[i]}.radio`),
-                        NAME: localStorage.getItem(`${teams[i]}.name`),
-                        RATING: localStorage.getItem(`${teams[i]}.rating`),
-                        TIME: localStorage.getItem(`${teams[i]}.time`),
+                        ID: document.getElementById(`patrollerID.${team}.${teamPosition[team]}`).value,
+                        RADIO: document.getElementById(`radioNum.${team}.${teamPosition[team]}`).value,
+                        NAME: document.getElementById(`name.${team}.${teamPosition[team]}`).value,
+                        RATING: document.getElementById(`rating.${team}.${teamPosition[team]}`).value,
+                        TIME: document.getElementById(`time.${team}.${teamPosition[team]}`).value,
                         DAYS: localStorage.getItem(`${teams[i]}.days`),
-                        TEAM: localStorage.getItem(`${teams[i]}.team`),
-                        NIGHTS: localStorage.getItem(`${teams[i]}.night`),
+                        TEAM: team,
+                        NIGHTS: localStorage.getItem(`${teams[i]}.nights`),
                         HALF_DAYS: localStorage.getItem(`${teams[i]}.halfDays`),
                         TOTAL_DAYS: localStorage.getItem(`${teams[i]}.totalDays`),
                         SNOWMOBILE: localStorage.getItem(`${teams[i]}.snowmobile`),
@@ -99,10 +101,11 @@ export default class WebStorage {
                         CPR: localStorage.getItem(`${teams[i]}.cpr`),
                         CHAIR: localStorage.getItem(`${teams[i]}.chair`),
                         TODAY_HALF: isHalf,
-                        POSITION_TEAM: teams[i].substring(2,3)
+                        POSITION_TEAM: teamPosition[team]
                     };
-                    console.log(patroller.POSITION_TEAM);
                     patrollers.push(patroller);
+                    // console.log(patrollers);
+                    teamPosition[team]++;
                 }
             }
         };
@@ -112,7 +115,7 @@ export default class WebStorage {
             let key = localStorage.key(i);
             if (key.substring(4,9) === 'team') {
                 teams.push(key.substring(0,3));
-                console.log(teams[i]);
+                // console.log(teams);
             }
         }
         if (whichForm === "weekend") {
