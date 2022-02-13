@@ -20,6 +20,7 @@ export default class WebStorage {
             localStorage.setItem(`${counter}.id`, pageData.ID);
             localStorage.setItem(`${counter}.radio`, pageData.RADIO);
             localStorage.setItem(`${counter}.name`, pageData.NAME);
+            localStorage.setItem(`${counter}.position`, pageData.LEADER);
             localStorage.setItem(`${counter}.rating`, pageData.RATING);
             localStorage.setItem(`${counter}.time`, pageData.TIME);
             localStorage.setItem(`${counter}.days`, pageData.DAYS);
@@ -54,16 +55,23 @@ export default class WebStorage {
      * @return null
      */
     static populateForm(whichForm) {
+        const LEADERS = 6, MAX_NIGHT = 8;
         let patrollers = [];
-        let teamPosition = [1,1,1,1,1];
-        let runPopulate = (teams) => {
+        let teamPosition = [1,1,1,1,1,1,1];
+        let leader = "";
+        let runWeekendPopulate = (teams) => {
             let event = new Event('click');
-            console.log(teams);
             for (let i = 0; i < teams.length; i++) {
                 if (localStorage.getItem(`${teams[i]}.id`)) {
                     let isHalf = localStorage.getItem(`${teams[i]}.todayHalf`);
                     let team = teams[i].substring(0,1);
-                    document.getElementById(`joinTeam.${team}`).dispatchEvent(event);
+                    if (whichForm === "night") {
+                        if (teamPosition[team] > MAX_NIGHT) {
+                            document.getElementById(`joinTeam.${team}`).dispatchEvent(event);
+                        }
+                    } else {
+                        document.getElementById(`joinTeam.${team}`).dispatchEvent(event);
+                    }
                     document.getElementById(`patrollerID.${team}.${teamPosition[team]}`).value = localStorage.getItem(`${teams[i]}.id`);
                     document.getElementById(`patrollerID.${team}.${teamPosition[team]}`).readOnly = true;
                     document.getElementById(`time.${team}.${teamPosition[team]}`).value = localStorage.getItem(`${teams[i]}.time`);
@@ -79,15 +87,24 @@ export default class WebStorage {
                         document.dispatchEvent(event2);*/
                     }
                     document.getElementById(`rating.${team}.${teamPosition[team]}`).value = localStorage.getItem(`${teams[i]}.rating`);
+                    if (whichForm === "night") {
+                        document.getElementById(`guest.${team}.${teamPosition[team]}`).disabled = false;
+                    }
                     if (localStorage.getItem(`${teams[i]}.guest`)) {
                         document.getElementById(`guest.${team}.${teamPosition[team]}`).value = localStorage.getItem(`${teams[i]}.guest`);
                         // document.getElementById(`guest.${teams[i]}`).dispatchEvent(event2);
                     }
                     // console.log(teamPosition[team]);
+                    if (localStorage.getItem(`${teams[i]}.position`).length > 2 && team === LEADERS) {
+                        leader = localStorage.getItem(`${teams[i]}.position`);
+                        console.log(`position.${team}.${teamPosition[team]}`);
+                        document.getElementById(`position.${team}.${teamPosition[team]}`).value = leader;
+                    }
                     let patroller = {
                         ID: document.getElementById(`patrollerID.${team}.${teamPosition[team]}`).value,
                         RADIO: document.getElementById(`radioNum.${team}.${teamPosition[team]}`).value,
                         NAME: document.getElementById(`name.${team}.${teamPosition[team]}`).value,
+                        LEADER: leader,
                         RATING: document.getElementById(`rating.${team}.${teamPosition[team]}`).value,
                         TIME: document.getElementById(`time.${team}.${teamPosition[team]}`).value,
                         DAYS: localStorage.getItem(`${teams[i]}.days`),
@@ -106,8 +123,17 @@ export default class WebStorage {
                     patrollers.push(patroller);
                     // console.log(patrollers);
                     teamPosition[team]++;
+                    console.log(teamPosition[team]);
                 }
             }
+        };
+
+        let runWeekdayPopulate = (teams) => {
+            runWeekendPopulate(teams);
+        };
+
+        let runNightPopulate = (teams) => {
+            runWeekendPopulate(teams);
         };
 
         let teams = [];
@@ -118,12 +144,13 @@ export default class WebStorage {
                 // console.log(teams);
             }
         }
+        let event = new Event('click');
         if (whichForm === "weekend") {
-            runPopulate(teams);
+            runWeekendPopulate(teams);
         } else if (whichForm === "weekday") {
-            // days
+            runWeekdayPopulate(teams);
         } else  {
-            // nights
+            runNightPopulate(teams);
         }
         return patrollers;
     }

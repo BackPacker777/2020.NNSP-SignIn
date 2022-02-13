@@ -122,7 +122,8 @@ export default class DivContents2 {
                     </div>`;
             } else if (teamNum === TEAMS.CANDIDATES) {
                 return `<div class="grid-x" id="person.${teamNum}.${counter}">
-                        ${patrollerID}                       
+                        ${patrollerID}
+                        ${blank}
                         ${name}
                         ${radio}
                         ${rating}

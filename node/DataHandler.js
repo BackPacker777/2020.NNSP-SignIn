@@ -75,7 +75,7 @@ class DataHandler {
         FS.writeFile(finalFilePath, writeLine, `utf8`, (err) => {
             if (err) throw err;
             for (let i = 0; i < patrollerData.length; i++) {
-                writeLine = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SCAVENGER},${patrollerData[i].CPR},${patrollerData[i].CHAIR}\n`;
+                writeLine = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SCAVENGER},${patrollerData[i].CPR},${patrollerData[i].CHAIR},${patrollerData[i].TODAY_HALF}\n`;
                 writeLine = writeLine.replace(/null/gi, '');
                 FS.appendFile(finalFilePath, writeLine, `utf8`, (err) => {
                     if (err) console.log(err);
