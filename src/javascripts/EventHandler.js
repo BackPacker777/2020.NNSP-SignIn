@@ -464,7 +464,7 @@ export default class EventHandler {
     }
 
     clearDiv(teamNum, count) {
-        const LEADERS = 6, CANDIDATES = 5;
+        const LEADERS = 6, CANDIDATES = 5, MODAL_NUM = 7;
         let patroller = this.signedIn.findIndex(patroller => patroller.ID === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value));
         this.signedIn.splice(patroller, 1);
         document.getElementById(`name.${teamNum}.${count}`).value = ``;
@@ -474,7 +474,7 @@ export default class EventHandler {
         if (this.dayNight !== "Night") {
             document.getElementById(`halfDay.${teamNum}.${count}`).checked = false;
         }
-        if (teamNum !== CANDIDATES) {
+        if (teamNum !== CANDIDATES && teamNum !== MODAL_NUM) {
             document.getElementById(`guest.${teamNum}.${count}`).value = ``;
             localStorage.removeItem(`${teamNum}.${count}.guest`);
         }
