@@ -123,7 +123,7 @@ export default class WebStorage {
                     patrollers.push(patroller);
                     // console.log(patrollers);
                     teamPosition[team]++;
-                    console.log(teamPosition[team]);
+                    // console.log(teamPosition[team]);
                 }
             }
         };

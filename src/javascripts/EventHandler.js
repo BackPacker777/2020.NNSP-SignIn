@@ -56,7 +56,7 @@ export default class EventHandler {
                     element.disabled = true;
                 });*/
                 let item = event.target.value;
-                console.log(item);
+                // console.log(item);
                 if (item === "weekend") {
                     document.getElementById(`team.0`).style.display = 'none';
                     this.isWeekend = true;
@@ -225,7 +225,7 @@ export default class EventHandler {
         document.getElementById(`patrollerID.7.1`).addEventListener('change', () => {
             if (document.getElementById(`patrollerID.7.1`).value !== '') {
                 for (let i = 0; i < this.patrollers.length; i++) {
-                    if (i < this.signedIn.length && this.signedIn[i].ID === Number(document.getElementById(`patrollerID.7.1`).value)) {
+                    if (i < this.signedIn.length && Number(this.signedIn[i].ID) === Number(document.getElementById(`patrollerID.7.1`).value)) {
                         alert(`You are already logged in.`);
                         document.getElementById(`patrollerID.7.1`).value = '';
                         break;
@@ -313,7 +313,6 @@ export default class EventHandler {
     }
 
     completeDivChange(teamNum, count, patrollerNum) {
-        console.log(`team=${teamNum}.${count}`);
         let days = Number(this.patrollers[patrollerNum].DAYS);
         let nights = Number(this.patrollers[patrollerNum].NIGHTS);
         let halfDays = Number(this.patrollers[patrollerNum].HALF_DAYS);
@@ -360,7 +359,6 @@ export default class EventHandler {
 
     updatePatrollerInfo(patrollerID, radioGuestDays, whichListener) {
         for (let patroller of this.signedIn) {
-            console.log(patroller);
             if (Number(patroller.ID) === Number(patrollerID)) {
                 if (! this.divTransition) {
                     if (whichListener === `radio`) {
@@ -426,9 +424,6 @@ export default class EventHandler {
                 isHalf = true;
             }
         }
-
-        // console.log(`days=${days}, nights=${nights}, halfDays=${halfDays}, totalDays=${totalDays}`);
-        //LEADER: this.patrollers[patrollerNum].LEADER,
         if (teamNum !== MODAL_NUM) {
             let patroller = {
                 ID: Number(this.patrollers[patrollerNum].ID),
@@ -457,7 +452,6 @@ export default class EventHandler {
             if (this.populated === 0) {
                 // alert(`TOTAL SHIFTS: ${patroller.TOTAL_DAYS}`);
             }
-            console.log(patroller);
             this.signedIn.push(patroller);
             if (teamNum !== MODAL_NUM) {
                 this.updatePatrollerInfo(patroller.ID, patroller.TOTAL_DAYS);
@@ -564,8 +558,8 @@ export default class EventHandler {
     }
 
     handleSignOffs(teamNum, count) {
-        console.log(`teamNum=${teamNum}, count=${count}`);
-        console.log(this.signedIn);
+        /*console.log(`teamNum=${teamNum}, count=${count}`);
+        console.log(this.signedIn);*/
         let setSignOffs = function(signOff, signOff2, value, patrollers, i) {
             if (value !== 1) {
                 document.getElementById(`${signOff}.${teamNum}.${count}`).style.color = 'rgb(204,75,55)';
@@ -737,7 +731,6 @@ export default class EventHandler {
         if (WebStorage.checkLocalStorage()) {
             let event = new Event('change');
             let whichForm = WebStorage.checkWhichForm();
-            console.log(whichForm);
             this.populated = 1;
             if (! document.getElementById("nightOverride").checked === true) {
                 this.isAdmin = true;
@@ -750,18 +743,17 @@ export default class EventHandler {
             } else if (whichForm === "weekday") {
                 document.getElementById("weekdayOverride").checked = true;
                 document.getElementById("weekdayOverride").dispatchEvent(event);
-                // document.querySelector('input[name="formDisplay"]').dispatchEvent(event);
             } else {
                 document.getElementById("nightOverride").checked = true;
                 document.getElementById("nightOverride").dispatchEvent(event);
             }
             this.signedIn = WebStorage.populateForm(whichForm);
-            // console.log(this.signedIn);
+            if (this.dayNight === "Night") {
+                this.counter[0] = this.signedIn.length + 1;
+            }
             WebStorage.purgeLocalStorage();
             WebStorage.populateLocalStorage(null, null, whichForm);
             for (let patroller of this.signedIn) {
-                // console.log(patroller);
-                // console.log(`${patroller.TEAM}.${patroller.POSITION_TEAM}`);
                 this.handleSignOffs(patroller.TEAM, patroller.POSITION_TEAM);
                 WebStorage.populateLocalStorage(patroller, patroller.POSITION_TEAM);
             }
@@ -772,7 +764,6 @@ export default class EventHandler {
             document.getElementById('formSubmit').disabled = false;
             this.handlePrintFormButton();
         }
-        // this.validate();
     }
 
     updateDays() {
