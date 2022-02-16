@@ -112,6 +112,12 @@ $desktop: 840px;
     margin-left: 2px !important;
   }
 
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   #tipTop {
     position: sticky;
     top: 0;

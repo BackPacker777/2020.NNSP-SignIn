@@ -10,7 +10,7 @@ export default class EventHandler {
         this.patrollers = patrollers;
         this.dayNight = '';
         this.halfDay = false;
-        this.overMax = [false, false, false, false, false];
+        // this.overMax = [false, false, false, false, false];
         this.teamCounts = [0,0,0,0,0];
         this.counter = [1,1,1,1,1,1,1];
         this.isWeekend = '';
@@ -748,6 +748,7 @@ export default class EventHandler {
                 document.getElementById("nightOverride").dispatchEvent(event);
             }
             this.signedIn = WebStorage.populateForm(whichForm);
+            console.log(this.signedIn);
             if (this.dayNight === "Night") {
                 this.counter[0] = this.signedIn.length + 1;
             }

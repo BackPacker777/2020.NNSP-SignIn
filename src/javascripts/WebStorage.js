@@ -121,7 +121,7 @@ export default class WebStorage {
                         POSITION_TEAM: teamPosition[team]
                     };
                     patrollers.push(patroller);
-                    // console.log(patrollers);
+                    // console.log(patroller);
                     teamPosition[team]++;
                     // console.log(teamPosition[team]);
                 }
