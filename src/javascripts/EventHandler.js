@@ -165,7 +165,7 @@ export default class EventHandler {
                         this.handleUndo(teamNum, this.counter[teamNum]);
                     }
                     if (!this.isAdmin) {
-                        console.log('not admin');
+                        // console.log('not admin');
                         document.getElementById(`joinTeam.${teamNum}`).disabled = true;
                         this.throwModal(teamNum, this.counter[teamNum]);
                     }
@@ -337,7 +337,7 @@ export default class EventHandler {
                 this.handleHalfDay(teamNum, count);
             }
             if (teamNum !== MODAL_NUM) {
-                console.log(`Handling SignOffs ${teamNum}.${count}`);
+                // console.log(`Handling SignOffs ${teamNum}.${count}`);
                 this.handleSignOffs(teamNum, count);
             }
             this.divTransition = false;
@@ -511,7 +511,7 @@ export default class EventHandler {
             isCandidate = true;
         }
         let calculateHalf = function () {
-            console.log(`halfDay.${teamNum}.${count}`);
+            // console.log(`halfDay.${teamNum}.${count}`);
             if (document.getElementById(`halfDay.${teamNum}.${count}`).checked) {
                 document.getElementById(`person.${teamNum}.${count}`).style.backgroundColor = 'rgb(247,223,30)';
                 if (!isCandidate) {
@@ -640,7 +640,7 @@ export default class EventHandler {
 
     handleAdmin(teamNum, count) {
         const LEADERS = 6, CANDIDATES = 5;
-        console.log(`admin.${teamNum}.${count}`);
+        // console.log(`admin.${teamNum}.${count}`);
         let correctPassword = false;
         document.getElementById(`admin.${teamNum}.${count}`).addEventListener('click', () => {
             this.isAdmin = true;
@@ -660,7 +660,7 @@ export default class EventHandler {
                 } else {
                     // let teamPosition = this.teamCounts[team] + 1;
                     let teamPosition = this.counter[team];
-                    console.log(`teamPosition=${teamPosition}`);
+                    // console.log(`teamPosition=${teamPosition}`);
                     let event1 = new Event("click");
                     document.getElementById(`joinTeam.${team}`).dispatchEvent(event1);
                     document.getElementById(`patrollerID.${team}.${teamPosition}`).value = document.getElementById(`patrollerID.${teamNum}.${count}`).value;
@@ -690,7 +690,7 @@ export default class EventHandler {
                     this.clearDiv(teamNum, count);
                     for (let i = 0; i < this.patrollers.length; i++) {
                         if (Number(this.patrollers[i].ID) === Number(document.getElementById(`patrollerID.${team}.${teamPosition}`).value)) {
-                            console.log(`patrollerNum=${i}`);
+                            // console.log(`patrollerNum=${i}`);
                             this.completeDivChange(team, teamPosition, i);
                             break;
                         }
@@ -748,7 +748,6 @@ export default class EventHandler {
                 document.getElementById("nightOverride").dispatchEvent(event);
             }
             this.signedIn = WebStorage.populateForm(whichForm);
-            console.log(this.signedIn);
             if (this.dayNight === "Night") {
                 this.counter[0] = this.signedIn.length + 1;
             }
@@ -771,12 +770,12 @@ export default class EventHandler {
         for (let i = 0; i < this.patrollers.length; i++) {
             for (let j = 0; j < this.signedIn.length; j++) {
                 if (Number(this.patrollers[i].ID) === Number(this.signedIn[j].ID)) {
-                    console.log(`Updating ${this.patrollers[i].LAST_NAME} days....`);
-                    console.log(`oldDays=${this.patrollers[i].DAYS}, newDays=${this.signedIn[j].DAYS}`);
+                    // console.log(`Updating ${this.patrollers[i].LAST_NAME} days....`);
+                    // console.log(`oldDays=${this.patrollers[i].DAYS}, newDays=${this.signedIn[j].DAYS}`);
                     this.patrollers[i].DAYS = this.signedIn[j].DAYS;
-                    console.log(`oldNights=${this.patrollers[i].NIGHTS}, newNights=${this.signedIn[j].NIGHTS}`);
+                    // console.log(`oldNights=${this.patrollers[i].NIGHTS}, newNights=${this.signedIn[j].NIGHTS}`);
                     this.patrollers[i].NIGHTS = this.signedIn[j].NIGHTS;
-                    console.log(`oldHalfs=${this.patrollers[i].HALF_DAYS}, newHalfs=${this.signedIn[j].HALF_DAYS}`);
+                    // console.log(`oldHalfs=${this.patrollers[i].HALF_DAYS}, newHalfs=${this.signedIn[j].HALF_DAYS}`);
                     this.patrollers[i].HALF_DAYS = this.signedIn[j].HALF_DAYS;
                     this.patrollers[i].SNOWMOBILE = this.signedIn[j].SNOWMOBILE;
                     this.patrollers[i].TOBOGGAN = this.signedIn[j].TOBOGGAN;
