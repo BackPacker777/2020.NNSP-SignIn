@@ -234,17 +234,8 @@ export default class EventHandler {
                         correctID = true;
                         this.completeDivChange(MODAL_NUM, 1, patrollerNum);
                         document.getElementById(`radioNum.7.1`).required = true;
-                        document.getElementById(`radioNum.7.1`).addEventListener('change', () => {
-                            let usedRadio = false;
-                            for (let peeps of this.signedIn) {
-                                if (document.getElementById(`radioNum.7.1`).value === peeps.RADIO && peeps.RADIO !== '0') {
-                                    usedRadio = true;
-                                }
-                            }
-                            if (usedRadio) {
-                                alert(`Radio already in use....`);
-                                document.getElementById(`radioNum.7.1`).value = '';
-                            } else {
+                        document.getElementById(`radioNum.7.1`).addEventListener('blur', () => {
+                            if (this.validateRadio(7, 1)) {
                                 document.getElementById('modalSubmitButton').disabled = false;
                             }
                         });
@@ -302,8 +293,10 @@ export default class EventHandler {
             });
             document.getElementById(`guest.${teamNum}.${count}`).disabled = false;
         }
-        document.getElementById(`radioNum.${teamNum}.${count}`).addEventListener('change', () => {
-            this.updatePatrollerInfo(this.patrollers[patrollerNum].ID, document.getElementById(`radioNum.${teamNum}.${count}`).value, `radio`);
+        document.getElementById(`radioNum.${teamNum}.${count}`).addEventListener('blur', () => {
+            if (this.validateRadio(teamNum, count)) {
+                this.updatePatrollerInfo(this.patrollers[patrollerNum].ID, document.getElementById(`radioNum.${teamNum}.${count}`).value, `radio`);
+            }
         });
         document.getElementById("modalTitle").innerHTML = "";
         document.getElementById("dataEntryDiv").innerHTML = "";
@@ -355,6 +348,25 @@ export default class EventHandler {
             this.counter[teamNum]++;
         }
         this.teamCounts[teamNum]++;
+    }
+
+    validateRadio(teamNum, count) {
+        let valid = false, usedRadio = false;
+        document.getElementById(`radioNum.${teamNum}.${count}`).reportValidity();
+        for (let peeps of this.signedIn) {
+            if (document.getElementById(`radioNum.${teamNum}.${count}`).value === peeps.RADIO && peeps.RADIO !== '0') {
+                usedRadio = true;
+            }
+        }
+        if (usedRadio) {
+            alert(`Radio already in use....`);
+            document.getElementById(`radioNum.${teamNum}.${count}`).value = '';
+            document.getElementById('formSubmit').disabled = true;
+        } else {
+            valid = true;
+            document.getElementById('formSubmit').disabled = false;
+        }
+        return valid;
     }
 
     updatePatrollerInfo(patrollerID, radioGuestDays, whichListener) {
@@ -653,6 +665,10 @@ export default class EventHandler {
             if (correctPassword) {
                 const MIN_TEAM = 1, MAX_TEAM = 4;
                 let team = prompt(`Move to which team?`);
+                while (!/^[0-9]+$/.test(team) || team.length !== 1) {
+                    alert("You did not enter a number.");
+                    team = prompt(`Move to which team?`);
+                }
                 if (team < MIN_TEAM || team > MAX_TEAM) {
                     alert(`Incorrect team number.`);
                 } else if (Number(team) === Number(teamNum)) {

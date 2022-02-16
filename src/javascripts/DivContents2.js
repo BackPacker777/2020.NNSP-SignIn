@@ -11,7 +11,7 @@ export default class DivContents2 {
 
         let patrollerID = `<div class="small-1 cell" id="patroller.${teamNum}.${counter}">
                         <label>ID:
-                            <input type="number" class="submitInclude secure" maxlength="6" name="patrollerID" id="patrollerID.${teamNum}.${counter}" placeholder="ID #" required>
+                            <input type="number" class="submitInclude secure" max="699999" name="patrollerID" id="patrollerID.${teamNum}.${counter}" placeholder="ID #" required>
                         </label>
                     </div>`;
 
@@ -23,7 +23,7 @@ export default class DivContents2 {
 
         let radio = `<div class="small-1 cell" id="radioDiv.${teamNum}.${counter}">
                         <label>Radio:
-                            <input type="number" class="submitInclude" maxlength="2" id="radioNum.${teamNum}.${counter}" placeholder="#" required>
+                            <input type="number" class="submitInclude" min="0" max="99" id="radioNum.${teamNum}.${counter}" placeholder="#" required>
                         </label>
                     </div>`;
 
@@ -207,7 +207,7 @@ export default class DivContents2 {
                     </div>
                     <div class="small-1 cell" id="patroller.${teamNum}.${counter}">
                         <label>ID:
-                            <input type="number" class="submitInclude secure" maxlength="6" name="patrollerID" id="patrollerID.${teamNum}.${counter}" placeholder="ID #">
+                            <input type="number" class="submitInclude secure" max="699999" name="patrollerID" id="patrollerID.${teamNum}.${counter}" placeholder="ID #">
                         </label>
                     </div>
                     <div class="small-2 cell">
@@ -217,7 +217,7 @@ export default class DivContents2 {
                     </div>
                     <div class="small-1 cell" id="radioDiv.${teamNum}.${counter}">
                         <label>Radio:
-                            <input type="number" class="submitInclude" maxlength="2" id="radioNum.${teamNum}.${counter}" placeholder="#">
+                            <input type="number" class="submitInclude" min="0" max="99" id="radioNum.${teamNum}.${counter}" placeholder="#">
                         </label>
                     </div>
                     <div class="small-1 cell">
@@ -251,7 +251,7 @@ export default class DivContents2 {
         return `<div class="grid-x" id="person.${teamNum}.${counter}">
                     <div class="small-2 cell" id="patroller.${teamNum}.${counter}">
                         <label>ID:
-                            <input type="number" class="submitInclude secure" maxlength="6" name="patrollerID" id="patrollerID.${teamNum}.${counter}" placeholder="ID #">
+                            <input type="number" class="submitInclude secure" max="699999" name="patrollerID" id="patrollerID.${teamNum}.${counter}" placeholder="ID #">
                         </label>
                     </div>
                     <div class="small-2 cell">
@@ -261,7 +261,7 @@ export default class DivContents2 {
                     </div>
                     <div class="small-1 cell" id="radioDiv.${teamNum}.${counter}">
                         <label>Radio:
-                            <input type="number" class="submitInclude" maxlength="2" id="radioNum.${teamNum}.${counter}" placeholder="#">
+                            <input type="number" class="submitInclude" min="0" max="99" id="radioNum.${teamNum}.${counter}" placeholder="#">
                         </label>
                     </div>
                     <div class="small-1 cell">
