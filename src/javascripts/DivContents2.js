@@ -6,7 +6,8 @@ export default class DivContents2 {
         const TEAMS = {
             CANDIDATES: 5,
             LEADERS: 6,
-            MODAL: 7
+            MODAL: 7,
+            NARNIA: 8
         };
 
         let patrollerID = `<div class="small-1 cell" id="patroller.${teamNum}.${counter}">
@@ -94,7 +95,57 @@ export default class DivContents2 {
                               <span id='modalCancelButton' class="button alert modalButton">CANCEL</span>
                            </div>`;
 
-        if (!RACE_TIMES) {
+        let modalPatrollerID = `<div class="small-1 cell" id="patroller.8.1">
+                        <label>ID:
+                            <input type="number" class="submitInclude secure" max="699999" id="modalPatrollerID.8.1" placeholder="ID #">
+                        </label>
+                    </div>`;
+
+        let modalDays = `<div class="small-1 cell">
+                        <label>Days:
+                            <input type="text" class="submitInclude" id="modalDays.8.1" min="0" max="120">
+                        </label>
+                    </div>`;
+
+        let modalNights = `<div class="small-1 cell">
+                        <label>Nights:
+                            <input type="text" class="submitInclude" id="modalNights.8.1" min="0" max="120">
+                        </label>
+                    </div>`;
+
+        let modalHalfs = `<div class="small-1 cell">
+                        <label>Half Days:
+                            <input type="text" class="submitInclude" id="modalHalfs.8.1" min="0" max="120">
+                        </label>
+                    </div>`;
+
+        let modalShifts = `<div class="small-1 cell">
+                        <label>Shifts:
+                            <input type="text" class="submitInclude" readonly id="modalShifts.8.1">
+                        </label>
+                    </div>`;
+
+        let modalName = `<div class="small-2 cell">
+                        <label>Name:
+                            <input type="text" class="submitInclude" readonly id="modalName.8.1">
+                        </label>
+                    </div>`;
+
+        if (teamNum === TEAMS.NARNIA) {
+            return `<div class="grid-x" id="person.${teamNum}.${counter}">
+                        ${modalPatrollerID}
+                        ${modalName}
+                        ${blank}
+                        ${modalDays}
+                        ${modalNights}
+                        ${modalHalfs}
+                        ${blank}
+                        ${modalShifts}
+                        ${blank}
+                        ${submit}
+                        ${modalCancel}
+                    </div>`;
+        } else if (!RACE_TIMES) {
             if (teamNum === 0) {
                 return `<div class="grid-x" id="person.${teamNum}.${counter}">
                         ${patrollerID}

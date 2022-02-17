@@ -1,5 +1,4 @@
 import DivContents from "./DivContents2.js";
-import NarniaEventHandler from "./NarniaEventHandler.js";
 import WebStorage from "./WebStorage.js";
 
 export default class EventHandler {
@@ -11,7 +10,7 @@ export default class EventHandler {
         this.dayNight = '';
         this.halfDay = false;
         // this.overMax = [false, false, false, false, false];
-        this.teamCounts = [0,0,0,0,0];
+        // this.teamCounts = [0,0,0,0,0];
         this.counter = [1,1,1,1,1,1,1];
         this.isWeekend = '';
         this.populated = 0;
@@ -19,7 +18,8 @@ export default class EventHandler {
         this.isAdmin = false;
         this.isLocalStorage = false;
         this.buttons = document.querySelectorAll("input[type=button]");
-        new NarniaEventHandler(this.patrollers, this.SIGN_OFFS);
+        this.handleNarnia();
+        // new NarniaEventHandler(this.patrollers, this.SIGN_OFFS);
         this.handleFixButton();
         this.handleWhichForm();
         this.handleSignOnButtons();
@@ -178,6 +178,124 @@ export default class EventHandler {
                     }
                 }
             });
+        }
+    }
+
+    handleNarnia() {
+        document.getElementById(`nspLogo`).addEventListener(`click`, () => {
+            console.log(this.signedIn);
+            let correctPassword = false;
+            let password = prompt(`Password: `);
+            for (let person of this.patrollers) {
+                if (person.ID === password && person.LEADER) {
+                    correctPassword = true;
+                }
+            }
+            if (correctPassword) {
+                document.getElementById('modalDiv').style.display = 'block';
+                document.getElementById("modalTitle").insertAdjacentHTML('beforeend', `<h3>Updating Patroller Shifts</h3>`);
+                document.getElementById("dataEntryDiv").insertAdjacentHTML('beforeend', DivContents.getDivs(8, 1));
+                document.getElementById('modalSubmitButton').disabled = true;
+                document.getElementById(`fixButton`).classList.add('disabled');
+                document.getElementById(`nspLogo`).classList.add('disabled');
+                document.getElementById(`modalPatrollerID.8.1`).focus();
+                document.getElementById('modalCancelButton').addEventListener('click', () => {
+                    document.getElementById(`fixButton`).classList.remove('disabled');
+                    document.getElementById(`nspLogo`).classList.remove('disabled');
+                    document.getElementById('modalDiv').style.display = 'none';
+                });
+                document.getElementById(`modalPatrollerID.8.1`).addEventListener('change', () => {
+                    let valid = false;
+                    if (document.getElementById(`modalPatrollerID.8.1`).value !== '') {
+                        for (let i = 0; i < this.patrollers.length; i++) {
+                            if (i < this.patrollers.length && Number(document.getElementById(`modalPatrollerID.8.1`).value) === Number(this.patrollers[i].ID)) {
+                                valid = true;
+                                document.getElementById(`modalName.8.1`).value = `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`;
+                                document.getElementById(`modalDays.8.1`).value = this.patrollers[i].DAYS;
+                                document.getElementById(`modalDays.8.1`).addEventListener('blur', () => {
+                                    if (!document.getElementById(`modalDays.8.1`).reportValidity()) {
+                                        document.getElementById('modalSubmitButton').disabled = true;
+                                        document.getElementById(`modalDays.8.1`).value = "";
+                                    } else {
+                                        document.getElementById(`modalShifts.8.1`).value = calculateShifts();
+                                        document.getElementById('modalSubmitButton').disabled = false;
+                                    }
+                                });
+                                document.getElementById(`modalNights.8.1`).value = this.patrollers[i].NIGHTS;
+                                document.getElementById(`modalNights.8.1`).addEventListener('blur', () => {
+                                    if (!document.getElementById(`modalNights.8.1`).reportValidity()) {
+                                        document.getElementById('modalSubmitButton').disabled = true;
+                                        document.getElementById(`modalNights.8.1`).value = "";
+                                    } else {
+                                        document.getElementById(`modalShifts.8.1`).value = calculateShifts();
+                                        document.getElementById('modalSubmitButton').disabled = false;
+                                    }
+                                });
+                                document.getElementById(`modalHalfs.8.1`).value = this.patrollers[i].HALF_DAYS;
+                                document.getElementById(`modalHalfs.8.1`).addEventListener('blur', () => {
+                                    if (!document.getElementById(`modalHalfs.8.1`).reportValidity()) {
+                                        document.getElementById('modalSubmitButton').disabled = true;
+                                        document.getElementById(`modalHalfs.8.1`).value = "";
+                                    } else {
+                                        document.getElementById(`modalShifts.8.1`).value = calculateShifts();
+                                        document.getElementById('modalSubmitButton').disabled = false;
+                                    }
+                                });
+                                document.getElementById(`modalShifts.8.1`).value = calculateShifts();
+                                break;
+                            }
+                        }
+                        if (!valid) {
+                            alert(`Invalid patroller number.`);
+                            document.getElementById(`modalPatrollerID.8.1`).value = '';
+                        }
+                    }
+                });
+                document.getElementById('modalSubmitButton').addEventListener('click', () => {
+                    console.log(this.signedIn);
+                    for (let i = 0; i < this.patrollers.length; i++) {
+                        if (Number(document.getElementById(`modalPatrollerID.8.1`).value) === Number(this.patrollers[i].ID)) {
+                            this.patrollers[i].DAYS = document.getElementById(`modalDays.8.1`).value;
+                            this.patrollers[i].NIGHTS = document.getElementById(`modalNights.8.1`).value;
+                            this.patrollers[i].HALF_DAYS = document.getElementById(`modalHalfs.8.1`).value;
+                            console.log(this.patrollers[i]);
+                            break;
+                        }
+                    }
+                    for (let i = 0; i < this.signedIn.length; i++) {
+                        if (this.signedIn.length > 0) {
+                            if (Number(document.getElementById(`modalPatrollerID.8.1`).value) === Number(this.signedIn[i].ID)) {
+                                this.signedIn[i].DAYS = document.getElementById(`modalDays.8.1`).value;
+                                this.signedIn[i].NIGHTS = document.getElementById(`modalNights.8.1`).value;
+                                this.signedIn[i].HALF_DAYS = document.getElementById(`modalHalfs.8.1`).value;
+                                console.log(this.signedIn[i]);
+                                break;
+                            }
+                        }
+                    }
+                    document.getElementById('formSubmit').disabled = false;
+                    document.getElementById(`fixButton`).classList.remove('disabled');
+                    document.getElementById(`nspLogo`).classList.remove('disabled');
+                    for (let button of this.buttons) {
+                        document.getElementById(button.id).disabled = false;
+                    }
+                    document.getElementById(`modalPatrollerID.8.1`).value = "";
+                    document.getElementById(`modalName.8.1`).value = "";
+                    document.getElementById(`modalDays.8.1`).value = "";
+                    document.getElementById(`modalNights.8.1`).value = "";
+                    document.getElementById(`modalHalfs.8.1`).value = "";
+                    document.getElementById("modalTitle").innerHTML = "";
+                    document.getElementById("dataEntryDiv").innerHTML = "";
+                    document.getElementById('modalDiv').style.display = 'none';
+                    this.updateDays();
+                });
+            } else {
+                alert(`Incorrect Password`);
+            }
+        });
+
+        let calculateShifts = function() {
+            return Number(document.getElementById(`modalDays.8.1`).value) + Number(document.getElementById(`modalNights.8.1`).value) + Number(document.getElementById(`modalHalfs.8.1`).value / 2);
         }
     }
 
@@ -347,24 +465,34 @@ export default class EventHandler {
         if (this.populated === 0) {
             this.counter[teamNum]++;
         }
-        this.teamCounts[teamNum]++;
+        // this.teamCounts[teamNum]++;
     }
 
     validateRadio(teamNum, count) {
+        const MODAL_NUM = 7;
         let valid = false, usedRadio = false;
-        document.getElementById(`radioNum.${teamNum}.${count}`).reportValidity();
         for (let peeps of this.signedIn) {
             if (document.getElementById(`radioNum.${teamNum}.${count}`).value === peeps.RADIO && peeps.RADIO !== '0') {
                 usedRadio = true;
             }
         }
-        if (usedRadio) {
+        if (!document.getElementById(`radioNum.${teamNum}.${count}`).reportValidity()) {
+            if (Number(teamNum) === MODAL_NUM) {
+                document.getElementById('modalSubmitButton').disabled = true;
+            }
+        } else if (usedRadio) {
             alert(`Radio already in use....`);
             document.getElementById(`radioNum.${teamNum}.${count}`).value = '';
             document.getElementById('formSubmit').disabled = true;
+            if (teamNum === MODAL_NUM) {
+                document.getElementById('modalSubmitButton').disabled = true;
+            }
         } else {
             valid = true;
             document.getElementById('formSubmit').disabled = false;
+            if (teamNum === MODAL_NUM) {
+                document.getElementById('modalSubmitButton').disabled = false;
+            }
         }
         return valid;
     }
@@ -476,7 +604,7 @@ export default class EventHandler {
     }
 
     clearDiv(teamNum, count) {
-        const LEADERS = 6, CANDIDATES = 5, MODAL_NUM = 7;
+        const LEADERS = 6, CANDIDATES = 5, MODAL_NUM = 7, MAX_NIGHT = 8;
         let patroller = this.signedIn.findIndex(patroller => patroller.ID === Number(document.getElementById(`patrollerID.${teamNum}.${count}`).value));
         this.signedIn.splice(patroller, 1);
         document.getElementById(`name.${teamNum}.${count}`).value = ``;
@@ -490,7 +618,10 @@ export default class EventHandler {
             document.getElementById(`guest.${teamNum}.${count}`).value = ``;
             localStorage.removeItem(`${teamNum}.${count}.guest`);
         }
-        if (this.dayNight === "Day" || this.extraNight) {
+        if (teamNum === MODAL_NUM) {
+            document.getElementById("modalTitle").innerHTML = "";
+            document.getElementById("dataEntryDiv").innerHTML = "";
+        } else if (this.dayNight === "Day" || this.dayNight === "Night" && count > MAX_NIGHT) {
             document.getElementById(`person.${teamNum}.${count}`).outerHTML = ''; //https://stackoverflow.com/a/19298575/466246
             this.extraNight = false;
         }
