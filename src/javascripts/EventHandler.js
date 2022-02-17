@@ -202,6 +202,13 @@ export default class EventHandler {
                 document.getElementById('modalCancelButton').addEventListener('click', () => {
                     document.getElementById(`fixButton`).classList.remove('disabled');
                     document.getElementById(`nspLogo`).classList.remove('disabled');
+                    document.getElementById(`modalPatrollerID.8.1`).value = "";
+                    document.getElementById(`modalName.8.1`).value = "";
+                    document.getElementById(`modalDays.8.1`).value = "";
+                    document.getElementById(`modalNights.8.1`).value = "";
+                    document.getElementById(`modalHalfs.8.1`).value = "";
+                    document.getElementById("modalTitle").innerHTML = "";
+                    document.getElementById("dataEntryDiv").innerHTML = "";
                     document.getElementById('modalDiv').style.display = 'none';
                 });
                 document.getElementById(`modalPatrollerID.8.1`).addEventListener('change', () => {
@@ -212,7 +219,7 @@ export default class EventHandler {
                                 valid = true;
                                 document.getElementById(`modalName.8.1`).value = `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`;
                                 document.getElementById(`modalDays.8.1`).value = this.patrollers[i].DAYS;
-                                document.getElementById(`modalDays.8.1`).addEventListener('blur', () => {
+                                document.getElementById(`modalDays.8.1`).addEventListener('change', () => {
                                     if (!document.getElementById(`modalDays.8.1`).reportValidity()) {
                                         document.getElementById('modalSubmitButton').disabled = true;
                                         document.getElementById(`modalDays.8.1`).value = "";
@@ -222,7 +229,7 @@ export default class EventHandler {
                                     }
                                 });
                                 document.getElementById(`modalNights.8.1`).value = this.patrollers[i].NIGHTS;
-                                document.getElementById(`modalNights.8.1`).addEventListener('blur', () => {
+                                document.getElementById(`modalNights.8.1`).addEventListener('change', () => {
                                     if (!document.getElementById(`modalNights.8.1`).reportValidity()) {
                                         document.getElementById('modalSubmitButton').disabled = true;
                                         document.getElementById(`modalNights.8.1`).value = "";
@@ -232,7 +239,7 @@ export default class EventHandler {
                                     }
                                 });
                                 document.getElementById(`modalHalfs.8.1`).value = this.patrollers[i].HALF_DAYS;
-                                document.getElementById(`modalHalfs.8.1`).addEventListener('blur', () => {
+                                document.getElementById(`modalHalfs.8.1`).addEventListener('change', () => {
                                     if (!document.getElementById(`modalHalfs.8.1`).reportValidity()) {
                                         document.getElementById('modalSubmitButton').disabled = true;
                                         document.getElementById(`modalHalfs.8.1`).value = "";
@@ -352,7 +359,7 @@ export default class EventHandler {
                         correctID = true;
                         this.completeDivChange(MODAL_NUM, 1, patrollerNum);
                         document.getElementById(`radioNum.7.1`).required = true;
-                        document.getElementById(`radioNum.7.1`).addEventListener('blur', () => {
+                        document.getElementById(`radioNum.7.1`).addEventListener('change', () => {
                             if (this.validateRadio(7, 1)) {
                                 document.getElementById('modalSubmitButton').disabled = false;
                             }
@@ -411,7 +418,7 @@ export default class EventHandler {
             });
             document.getElementById(`guest.${teamNum}.${count}`).disabled = false;
         }
-        document.getElementById(`radioNum.${teamNum}.${count}`).addEventListener('blur', () => {
+        document.getElementById(`radioNum.${teamNum}.${count}`).addEventListener('change', () => {
             if (this.validateRadio(teamNum, count)) {
                 this.updatePatrollerInfo(this.patrollers[patrollerNum].ID, document.getElementById(`radioNum.${teamNum}.${count}`).value, `radio`);
             }
