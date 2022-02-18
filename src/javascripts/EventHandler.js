@@ -183,7 +183,6 @@ export default class EventHandler {
 
     handleNarnia() {
         document.getElementById(`nspLogo`).addEventListener(`click`, () => {
-            console.log(this.signedIn);
             let correctPassword = false;
             let password = prompt(`Password: `);
             for (let person of this.patrollers) {
@@ -259,13 +258,11 @@ export default class EventHandler {
                     }
                 });
                 document.getElementById('modalSubmitButton').addEventListener('click', () => {
-                    console.log(this.signedIn);
                     for (let i = 0; i < this.patrollers.length; i++) {
                         if (Number(document.getElementById(`modalPatrollerID.8.1`).value) === Number(this.patrollers[i].ID)) {
                             this.patrollers[i].DAYS = document.getElementById(`modalDays.8.1`).value;
                             this.patrollers[i].NIGHTS = document.getElementById(`modalNights.8.1`).value;
                             this.patrollers[i].HALF_DAYS = document.getElementById(`modalHalfs.8.1`).value;
-                            console.log(this.patrollers[i]);
                             break;
                         }
                     }
@@ -275,7 +272,7 @@ export default class EventHandler {
                                 this.signedIn[i].DAYS = document.getElementById(`modalDays.8.1`).value;
                                 this.signedIn[i].NIGHTS = document.getElementById(`modalNights.8.1`).value;
                                 this.signedIn[i].HALF_DAYS = document.getElementById(`modalHalfs.8.1`).value;
-                                console.log(this.signedIn[i]);
+                                WebStorage.populateLocalStorage(this.signedIn[i], this.signedIn[i].POSITION_TEAM);
                                 break;
                             }
                         }
@@ -708,8 +705,6 @@ export default class EventHandler {
     }
 
     handleSignOffs(teamNum, count) {
-        /*console.log(`teamNum=${teamNum}, count=${count}`);
-        console.log(this.signedIn);*/
         let setSignOffs = function(signOff, signOff2, value, patrollers, i) {
             if (value !== 1) {
                 document.getElementById(`${signOff}.${teamNum}.${count}`).style.color = 'rgb(204,75,55)';
@@ -727,6 +722,7 @@ export default class EventHandler {
                         document.getElementById(`${signOff}.${teamNum}.${count}`).style.color = 'rgb(23,121,186)';
                         document.getElementById(`${signOff}.${teamNum}.${count}`).removeEventListener('click', removeMe);
                         document.getElementById(`${signOff}.${teamNum}.${count}`).style.cursor = 'default';
+                        WebStorage.populateLocalStorage(this.signedIn[i], this.signedIn[i].POSITION_TEAM);
                     } else {
                         alert(`Incorrect Password`);
                     }

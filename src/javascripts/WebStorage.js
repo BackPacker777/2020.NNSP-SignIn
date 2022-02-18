@@ -97,7 +97,7 @@ export default class WebStorage {
                     // console.log(teamPosition[team]);
                     if (localStorage.getItem(`${teams[i]}.position`).length > 2 && team === LEADERS) {
                         leader = localStorage.getItem(`${teams[i]}.position`);
-                        console.log(`position.${team}.${teamPosition[team]}`);
+                        // console.log(`position.${team}.${teamPosition[team]}`);
                         document.getElementById(`position.${team}.${teamPosition[team]}`).value = leader;
                     }
                     let patroller = {
