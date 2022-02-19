@@ -1,6 +1,6 @@
 {
-    "name": "template",
-    "short_name": "template",
+    "name": "NNSP SignIn",
+    "short_name": "NNSP SignIn",
     "lang": "en-US",
     "start_url": "index.ejs",
     "icons": [

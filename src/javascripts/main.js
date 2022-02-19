@@ -9,7 +9,21 @@ class Main {
         document.getElementById("date").innerText = this.getWeekDay();
         document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
         this.eventHandler = new EventHandler(people, SIGN_OFFS);
+        Main.loadServiceWorker();
         this.prepUX();
+    }
+
+    /**
+     * @desc Loads PWA service worker (ServiceWorker.js)
+     */
+    static loadServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker
+                .register('/serviceWorker.js')
+                .then(() => {
+                    console.log('Service Worker Registered');
+                });
+        }
     }
 
     getWeekDay() {
