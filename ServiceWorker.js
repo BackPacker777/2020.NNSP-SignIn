@@ -4,13 +4,9 @@ const VERSION = 'v1.00.0';
 const cacheResources = async () => {
     let cacheFilesFirst = [
         './',
-        './manifest.json',
-        './public/favicons/favicon.ico',
-        './public/favicons/android-chrome-192x192.png',
-        './public/favicons/apple-touch-icon.png',
+        './public/icons/favicon.ico',
         './public/images/nsp_logo.png',
         './public/views/index.ejs',
-        './public/views/results.ejs',
         './public/views/footer.ejs',
         './public/views/header.ejs',
         './public/css/foundation.min.css',

@@ -37,7 +37,7 @@ class app {
 
         HTTP.createServer((request, response) => {
             response.writeHead(301, {
-                'Location': `https://${request.headers['host']}${request.url}`
+                'Location': `https://${request.headers['host']}${request.url}:8111`
             });
             response.end();
         }).listen(80);

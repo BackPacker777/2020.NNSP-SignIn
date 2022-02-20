@@ -33,7 +33,6 @@ class Main {
 
     prepUX() {
         document.getElementById('noPrint').style.display = 'none';
-        document.getElementById('narniaDiv').style.display = 'none';
         document.getElementById('masterDiv').style.display = 'none';
         document.getElementById('modalDiv').style.display = 'none';
         document.getElementById('chosen').style.display = 'none';
