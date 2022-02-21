@@ -2,6 +2,7 @@
 
 const UPLOADER = require('./FileUploader');
 const FS = require(`fs`);
+const SQL = require('sqlite3').verbose();
 
 class DataHandler {
 

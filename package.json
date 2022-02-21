@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "ejs": "latest",
-    "formidable": "latest"
+    "formidable": "latest",
+    "sqlite3": "latest"
   },
   "devDependencies": {
     "babel-eslint": "latest",

@@ -2,7 +2,11 @@
     "name": "NNSP SignIn",
     "short_name": "NNSP SignIn",
     "lang": "en-US",
-    "start_url": "index.ejs",
+    "start_url": "/",
+    "theme_color": "#191970",
+    "background_color": "#FFF8DC",
+    "display": "standalone",
+    "orientation": "portrait",
     "icons": [
         {
             "src": "public/icons/icon-48x48.png",
@@ -49,9 +53,5 @@
             "sizes": "512x512",
             "type": "image/png"
         }
-    ],
-    "theme_color": "#2F3BA2",
-    "background_color": "#ffffff",
-    "display": "standalone",
-    "orientation": "portrait"
+    ]
 }
