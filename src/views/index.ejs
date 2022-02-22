@@ -4,50 +4,31 @@
     <div class="grid-container fluid">
         <div class="grid-x grid-padding-x black">
             <div class="small-12 cell text-center">
-                <h5><strong>Nub's Nob Ski Patrol Sign-In - 2021/2022 [D.1]</strong></h5>
+                <h5><strong>Nub's Nob Ski Patrol Sign-In - 2021/2022</strong></h5>
             </div>
         </div>
     </div>
 </div>
 <form id="rosterForm" action="javascript:0">
-<div id="topMast">
-    <div class="grid-container fluid">
-        <div class="grid-x grid-padding-x" id="topMastFill">
-            <div class="cell small-3 text-center" id="whichFormDiv">
-                <div id="chooser">
-                    <legend><strong>Choose the form to display:</strong></legend>
-                    <input type="radio" id="weekendOverride" name="formDisplay" value="weekend"><label for="weekendOverride" id="weekendOverrideLabel">Weekend/Holiday Day</label>
-                    <input type="radio" id="weekdayOverride" name="formDisplay" value="weekday"><label for="weekdayOverride" id="weekdayOverrideLabel">Weekday</label>
-                    <input type="radio" id="nightOverride" name="formDisplay" value="night"><label for="nightOverride" id="nightOverrideLabel">Night</label>
-                </div>
-                <div class="vertical-center" id="chosen">
-                    <h4>Have a great shift!</h4>
-                </div>
-            </div>
-            <div class="small-2 cell"><input type="submit" id='formSubmit' value="PRINT ROSTER" class="button large expanded border" title="Only lights up when proper conditions are met"></div>
-            <div class="small-1 cell"><span id="fixButton" class="button large expanded alert border" title="Use to clear cache & fix app. LEADERSHIP ONLY!">! FIX !</span></div>
-            <div class="small-1 cell text-center"><img src="public/images/nsp_logo.png" alt="NSP Logo" id="nspLogo" width="80" height="100" class="glow"></div>
-            <div class="cell small-1 text-right"><h5 class="vertical-center" id="date"></h5></div>
-            <div class="cell small-2 text-center"><h5 class="vertical-center" id="weekDay"></h5></div>
-            <div class="cell small-1 text-left"><h5 class="vertical-center" id="dayNight"></h5></div>
-        </div>
-    </div>
-</div>
-
-<div class="modal-outer" id="modalDiv">
-    <form id="modalForm">
-    <div class="modal-content" id="modalContent">
+    <div id="topMast">
         <div class="grid-container fluid">
-            <div class="grid-x grid-margin-x">
-                <div class="cell small-12 text-center" id="modalTitle"></div>
+            <div class="grid-x grid-padding-x" id="topMastFill">
+                <div class="cell small-1 text-center" id="weekendOverrideDiv">
+                    <label for="weekendOverride" id="weekendOverrideLabel">Weekend</label>
+                    <input type="checkbox" id="weekendOverride" title="Only available on non-weekend days">
+                    <p id="weekendOverrideP">Override</p>
+                </div>
+                <div class="small-3 cell"><input type="submit" id='formSubmit' value="PRINT ROSTER" class="button large expanded border" title="Only lights up when proper conditions are met"></div>
+                <div class="small-1 cell"><span id="fixButton" class="button large expanded alert border" title="Use to clear cache & fix app. LEADERSHIP ONLY!">! FIX !</span></div>
+                <div class="small-2 cell text-center"><img src="public/images/nsp_logo.png" alt="NSP Logo" id="nspLogo" width="80" height="100" class="glow"></div>
+                <!--<div class="small-2 cell text-center"><img src="public/images/warn.png" alt="NSP Logo" id="nspLogo" width="80" height="100" class="glow"></div>-->
+                <div class="cell small-1 text-right"><h5 class="vertical-center" id="date"></h5></div>
+                <div class="cell small-2 text-center"><h5 class="vertical-center" id="weekDay"></h5></div>
+                <div class="cell small-2 text-left"><h5 class="vertical-center" id="dayNight"></h5></div>
             </div>
-            <div id="dataEntryDiv"></div>
         </div>
     </div>
-    </form>
-</div>
-
-<div class="grid-container fluid" id="masterDiv">
+    <div class="grid-container fluid" id="masterDiv">
         <fieldset id="team.0">
             <div class="grid-x" id="team_0">
                 <div class="cell small-12"><input type="button" class="success button expanded btn" value="Click Here to Sign In" id="joinTeam.0"></div>
@@ -88,12 +69,15 @@
                 <div class="cell small-12"><input type="button" class="alert button expanded btn" value="Sign On - Leadership/Trainers" id="joinTeam.6"></div>
             </div>
         </fieldset>
-</div>
+    </div>
 </form>
+<div id="narniaDiv">
+    <%- include ('public/views/narnia'); -%>
+</div>
 
 <%- include ('public/views/no_print'); -%>
 
 <!-- SCRIPTS -->
-<script src="public/javascripts/main.js" type="module"></script>
+<script src="src/javascripts/main.js" type="module"></script>
 
 <%- include ('public/views/footer'); -%>

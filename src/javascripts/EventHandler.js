@@ -406,6 +406,8 @@ export default class EventHandler {
             /*document.getElementById(`halfDay.${teamNum}.${count}`).addEventListener('click', () => {
                 this.handleHalfDay(teamNum, count);
             });*/
+        } else {
+            document.getElementById(`joinNight.${count}`).classList.add("disabled");
         }
         if (teamNum !== CANDIDATES) {
             document.getElementById(`guest.${teamNum}.${count}`).value = document.getElementById(`guest.7.1`).value;
