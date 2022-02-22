@@ -12,11 +12,11 @@ class DataHandler {
     }
 
     static getKey() {
-        return FS.readFileSync(`data/encryption/key.pem`);
+        return FS.readFileSync(`data/encryption/privatekey.key`);
     }
 
     static getCert() {
-        return FS.readFileSync(`data/encryption/cert.pem`);
+        return FS.readFileSync(`data/encryption/certificate.crt`);
     }
 
     static setBaseData(callback) {

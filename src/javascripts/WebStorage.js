@@ -68,6 +68,8 @@ export default class WebStorage {
                     if (whichForm === "night") {
                         if (teamPosition[team] > MAX_NIGHT) {
                             document.getElementById(`joinTeam.${team}`).dispatchEvent(event);
+                        } else {
+                            document.getElementById(`joinNight.${teamPosition[team]}`).classList.add("disabled");
                         }
                     } else {
                         document.getElementById(`joinTeam.${team}`).dispatchEvent(event);
