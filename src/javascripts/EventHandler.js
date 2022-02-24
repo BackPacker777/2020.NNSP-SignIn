@@ -3,6 +3,7 @@ import WebStorage from "./WebStorage.js";
 
 export default class EventHandler {
     constructor(patrollers, SIGN_OFFS) {
+        this.controller = new AbortController();
         this.SIGN_OFFS = SIGN_OFFS;
         this.nightCounter = 0;
         this.signedIn = [];
@@ -96,7 +97,7 @@ export default class EventHandler {
                             let button = Number(event.target.id.substr(10, 1));
                             document.getElementById(`joinTeam.0`).disabled = true;
                             this.throwModal(0, button);
-                        });
+                        }, {signal: this.controller.signal});
                         document.getElementById(`patrollerID.0.${counter}`).disabled = true;
                         document.getElementById(`radioNum.0.${counter}`).disabled = true;
                         document.getElementById(`guest.0.${counter}`).disabled = true;
@@ -387,7 +388,7 @@ export default class EventHandler {
     }
 
     changePatrollerDiv(teamNum, count, patrollerNum) {
-        const CANDIDATES = 5, MODAL_NUM = 7;
+        const CANDIDATES = 5, MODAL_NUM = 7, MAX_NIGHT = 8;
         // console.log(`team=${teamNum}, count=${count}, patrollerNum=${patrollerNum}`);
         document.getElementById(`patrollerID.${teamNum}.${count}`).value = document.getElementById(`patrollerID.7.1`).value;
         document.getElementById(`name.${teamNum}.${count}`).value = document.getElementById(`name.7.1`).value;
@@ -406,8 +407,9 @@ export default class EventHandler {
             /*document.getElementById(`halfDay.${teamNum}.${count}`).addEventListener('click', () => {
                 this.handleHalfDay(teamNum, count);
             });*/
-        } else {
+        } else if (this.dayNight === "Night" && count <= MAX_NIGHT) {
             document.getElementById(`joinNight.${count}`).classList.add("disabled");
+            this.controller.abort();
         }
         if (teamNum !== CANDIDATES) {
             document.getElementById(`guest.${teamNum}.${count}`).value = document.getElementById(`guest.7.1`).value;
