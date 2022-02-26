@@ -936,6 +936,7 @@ export default class EventHandler {
                     this.patrollers[i].SCAVENGER = this.signedIn[j].SCAVENGER;
                     this.patrollers[i].CPR = this.signedIn[j].CPR;
                     this.patrollers[i].CHAIR = this.signedIn[j].CHAIR;
+                    this.patrollers[i].OEC = this.signedIn[j].OEC;
                     this.patrollers[i].TODAY_HALF = this.signedIn[j].TODAY_HALF
                     break;
                 }

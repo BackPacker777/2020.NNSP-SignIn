@@ -5,6 +5,9 @@ const FS = require(`fs`);
 const SQL = require('sqlite3').verbose();
 
 class DataHandler {
+    constructor() {
+        this.initDB();
+    }
 
     static renderDom(path, contentType, callback, encoding) {
         FS.readFile(path, encoding ? encoding : `utf-8`, (error, string) => {
@@ -44,6 +47,7 @@ class DataHandler {
                     SCAVENGER: protoArray[i][10],
                     CPR: protoArray[i][11],
                     CHAIR: protoArray[i][12],
+                    OEC: protoArray[i][13],
                 }
             }
             let len = finalData.length - 1;
@@ -61,7 +65,7 @@ class DataHandler {
         FS.writeFile(finalFilePath, stuff, `utf8`, (err) => {
             if (err) throw err;
             for (let i = 0; i < patrollerData.length; i++) {
-                stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SCAVENGER},${patrollerData[i].CPR},${patrollerData[i].CHAIR}\n`;
+                stuff = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SCAVENGER},${patrollerData[i].CPR},${patrollerData[i].CHAIR},${patrollerData[i].OEC}\n`;
                 FS.appendFile(finalFilePath, stuff, `utf8`, (err) => {
                     if (err) console.log(err);
                 });
@@ -76,13 +80,38 @@ class DataHandler {
         FS.writeFile(finalFilePath, writeLine, `utf8`, (err) => {
             if (err) throw err;
             for (let i = 0; i < patrollerData.length; i++) {
-                writeLine = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SCAVENGER},${patrollerData[i].CPR},${patrollerData[i].CHAIR},${patrollerData[i].TODAY_HALF}\n`;
+                writeLine = `${patrollerData[i].ID},${patrollerData[i].LAST_NAME},${patrollerData[i].FIRST_NAME},${patrollerData[i].RATING},${patrollerData[i].LEADER},${patrollerData[i].DAYS},${patrollerData[i].NIGHTS},${patrollerData[i].HALF_DAYS},${patrollerData[i].SNOWMOBILE},${patrollerData[i].TOBOGGAN},${patrollerData[i].SCAVENGER},${patrollerData[i].CPR},${patrollerData[i].CHAIR},${patrollerData[i].OEC},${patrollerData[i].TODAY_HALF}\n`;
                 writeLine = writeLine.replace(/null/gi, '');
                 FS.appendFile(finalFilePath, writeLine, `utf8`, (err) => {
                     if (err) console.log(err);
                 });
             }
         });
+    }
+
+    initDB() {
+        this.db = new SQL.Database(`data/nnsp_shifts.db`, (err) => {
+            this.db.run(`PRAGMA foreign_keys = on`);
+            this.db.run(`PRAGMA AUTO_VACUUM = FULL`);
+            if (err) {
+                return console.error(err.message);
+            } else {
+                console.log(`Connected to -nnsp_shifts.db- Sqlite3 DB`);
+            }
+        });
+    }
+
+    insertRowSQL(data) {
+        data = JSON.parse(data);
+        this.db.run(`INSERT INTO patrollers (id, last_name, first_name, leadership, rating, days, nights, halfs, cpr, snowmobile, chair, toboggan, oec, scavenger)
+         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [data.ID, data.LAST_NAME, data.FIRST_NAME, data.LEADER, data.RATING, data.DAYS, data.NIGHTS, data.HALF_DAYS, data.CPR, data.SNOWMOBILE, data.TOBOGGAN, data.OEC],
+            function(err) {
+                if (err) {
+                    return console.log(err.message);
+                }
+            }
+        );
     }
 
     static receiveFile(request) {

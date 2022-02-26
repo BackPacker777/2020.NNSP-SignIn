@@ -1,5 +1,6 @@
 node_modules
 data/encryption
+./package-lock.json
 .idea/inspectionProfiles/
 .idea/vcs.xml
 .idea/workspace.xml
