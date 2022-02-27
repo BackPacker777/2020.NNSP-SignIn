@@ -9,7 +9,7 @@ class Main {
         document.getElementById("date").innerText = this.getWeekDay();
         document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
         this.eventHandler = new EventHandler(people, SIGN_OFFS);
-        Main.loadServiceWorker();
+        // Main.loadServiceWorker();
         this.prepUX();
     }
 

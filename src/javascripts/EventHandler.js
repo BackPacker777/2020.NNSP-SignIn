@@ -577,6 +577,8 @@ export default class EventHandler {
                 ID: Number(this.patrollers[patrollerNum].ID),
                 RADIO: document.getElementById(`radioNum.${teamNum}.${count}`).value,
                 NAME: `${this.patrollers[patrollerNum].FIRST_NAME} ${this.patrollers[patrollerNum].LAST_NAME}`,
+                LAST_NAME: this.patrollers[patrollerNum].LAST_NAME,
+                FIRST_NAME: this.patrollers[patrollerNum].FIRST_NAME,
                 LEADER: this.patrollers[patrollerNum].LEADER,
                 RATING: this.patrollers[patrollerNum].RATING,
                 TIME: document.getElementById(`time.${teamNum}.${count}`).value,
@@ -586,13 +588,15 @@ export default class EventHandler {
                 NIGHTS: nights,
                 HALF_DAYS: halfDays,
                 TOTAL_DAYS: totalDays,
-                SNOWMOBILE: this.patrollers[patrollerNum].SNOWMOBILE,
-                TOBOGGAN: this.patrollers[patrollerNum].TOBOGGAN,
-                SCAVENGER: this.patrollers[patrollerNum].SCAVENGER,
-                CPR: this.patrollers[patrollerNum].CPR,
-                CHAIR: this.patrollers[patrollerNum].CHAIR,
+                SNOWMOBILE: Number(this.patrollers[patrollerNum].SNOWMOBILE),
+                TOBOGGAN: Number(this.patrollers[patrollerNum].TOBOGGAN),
+                SCAVENGER: Number(this.patrollers[patrollerNum].SCAVENGER),
+                CPR: Number(this.patrollers[patrollerNum].CPR),
+                CHAIR: Number(this.patrollers[patrollerNum].CHAIR),
+                OEC: Number(this.patrollers[patrollerNum].OEC),
                 TODAY_HALF: isHalf,
-                POSITION_TEAM: this.counter[teamNum]
+                POSITION_TEAM: this.counter[teamNum],
+                DATE_TIME: time
             };
             if (teamNum !== 5 && document.getElementById(`guest.${teamNum}.${count}`)) {
                 patroller.GUEST = document.getElementById(`guest.${teamNum}.${count}`).value;
@@ -924,12 +928,8 @@ export default class EventHandler {
         for (let i = 0; i < this.patrollers.length; i++) {
             for (let j = 0; j < this.signedIn.length; j++) {
                 if (Number(this.patrollers[i].ID) === Number(this.signedIn[j].ID)) {
-                    // console.log(`Updating ${this.patrollers[i].LAST_NAME} days....`);
-                    // console.log(`oldDays=${this.patrollers[i].DAYS}, newDays=${this.signedIn[j].DAYS}`);
                     this.patrollers[i].DAYS = this.signedIn[j].DAYS;
-                    // console.log(`oldNights=${this.patrollers[i].NIGHTS}, newNights=${this.signedIn[j].NIGHTS}`);
                     this.patrollers[i].NIGHTS = this.signedIn[j].NIGHTS;
-                    // console.log(`oldHalfs=${this.patrollers[i].HALF_DAYS}, newHalfs=${this.signedIn[j].HALF_DAYS}`);
                     this.patrollers[i].HALF_DAYS = this.signedIn[j].HALF_DAYS;
                     this.patrollers[i].SNOWMOBILE = this.signedIn[j].SNOWMOBILE;
                     this.patrollers[i].TOBOGGAN = this.signedIn[j].TOBOGGAN;
@@ -937,7 +937,8 @@ export default class EventHandler {
                     this.patrollers[i].CPR = this.signedIn[j].CPR;
                     this.patrollers[i].CHAIR = this.signedIn[j].CHAIR;
                     this.patrollers[i].OEC = this.signedIn[j].OEC;
-                    this.patrollers[i].TODAY_HALF = this.signedIn[j].TODAY_HALF
+                    this.patrollers[i].TODAY_HALF = this.signedIn[j].TODAY_HALF;
+                    this.patrollers[i].DATE_TIME = this.signedIn[j].DATE_TIME
                     break;
                 }
             }
@@ -957,6 +958,16 @@ export default class EventHandler {
             body: JSON.stringify(this.signedIn),
             headers: {
                 'x-requested-with': `fetch.2`,
+                'mode': 'no-cors'
+            }
+        }).then((response) => {
+            return response.json();
+        });
+        fetch(document.url, {
+            method: 'POST',
+            body: JSON.stringify(this.signedIn),
+            headers: {
+                'x-requested-with': `fetch.5`,
                 'mode': 'no-cors'
             }
         }).then((response) => {

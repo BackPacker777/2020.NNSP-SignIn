@@ -101,6 +101,14 @@ class app {
                     });
                 } else if (request.headers['x-requested-with'] === 'fetch.4') {
                     DATA_HANDLER.receiveFile(request);
+                } else if (request.headers['x-requested-with'] === 'fetch.5') {
+                    let body = '';
+                    request.on('data', chunk => {
+                        body += chunk.toString();
+                    });
+                    request.on('end', () => {
+                        this.#data_handler.insertRowSQL(body);
+                    });
                 } else {
                     console.log(`Yo, somethings super wrong BDH!`);
                 }

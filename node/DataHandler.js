@@ -30,7 +30,7 @@ class DataHandler {
             let finalData = [];
             tempArray = file.split(/\r?\n/); //remove newlines
             tempArray.shift(); //To remove the csv file headers
-            const COLUMNS = 13;
+            const COLUMNS = 14;
             for (let i = 0; i < tempArray.length; i++) {
                 protoArray[i] = tempArray[i].split(/,/).slice(0, COLUMNS);
                 finalData[i] = {
@@ -101,17 +101,36 @@ class DataHandler {
         });
     }
 
+    getID(callback) {
+        this.db.get(`SELECT id FROM patrollers ORDER BY id DESC LIMIT 1`, (err, row) => {
+            console.log(row.id);
+            // callback(row.id);
+        });
+    }
+
     insertRowSQL(data) {
         data = JSON.parse(data);
-        this.db.run(`INSERT INTO patrollers (id, last_name, first_name, leadership, rating, days, nights, halfs, cpr, snowmobile, chair, toboggan, oec, scavenger)
-         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [data.ID, data.LAST_NAME, data.FIRST_NAME, data.LEADER, data.RATING, data.DAYS, data.NIGHTS, data.HALF_DAYS, data.CPR, data.SNOWMOBILE, data.TOBOGGAN, data.OEC],
-            function(err) {
-                if (err) {
-                    return console.log(err.message);
+        for (let i = 0; i < data.length; i++) {
+            console.log(data[i]);
+            this.db.run(`INSERT INTO patrollers (id, last_name, first_name, leadership, rating, days, nights, halfs, cpr, snowmobile, chair, toboggan, oec, scavenger)
+             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [data[i].ID, data[i].LAST_NAME, data[i].FIRST_NAME, data[i].LEADER, data[i].RATING, data[i].DAYS, data[i].NIGHTS, data[i].HALF_DAYS, data[i].CPR, data[i].SNOWMOBILE, data[i].CHAIR, data[i].TOBOGGAN, data[i].OEC, data[i].SCAVENGER],
+                function(err) {
+                    if (err) {
+                        return console.log(err.message);
+                    }
                 }
-            }
-        );
+            );
+            this.db.run(`INSERT INTO shifts (patroller_id, date_time, team, guest, radio, is_half)
+             VALUES(?, ?, ?, ?, ?, ?)`,
+                [data[i].ID, data[i].DATE_TIME, data[i].TEAM, data[i].GUEST, data[i].RADIO, data[i].TODAY_HALF],
+                function(err) {
+                    if (err) {
+                        return console.log(err.message);
+                    }
+                }
+            );
+        }
     }
 
     static receiveFile(request) {
