@@ -340,4 +340,41 @@ export default class DivContents2 {
                     </div>
                 </div>`;
     }
+
+    static getNarniaChooseDiv() {
+        return `<div class="grid-x" id="narniaTaskChoose">
+                    <div class="small-5 cell">
+                        <label>&nbsp;</label>
+                        <input type="submit" id='adjustShiftsButton' value="Adjust Shift Counts" class="button modalButton expanded">                     
+                    </div>
+                    <div class="small-2 cell"></div>
+                    <div class="small-5 cell">
+                        <label>&nbsp;</label>
+                        <input type="submit" id='recreateShiftButton' value="Recreate Shift" class="button modalButton expanded">                     
+                    </div>
+                </div>`;
+    }
+
+    static getNarniaShiftRecreateDiv() {
+        return `<div class="grid-x" id="narniaShiftRecreate">
+                    <div class="small-4 cell">
+                        <label>&nbsp;</label>
+                        <input type="date" class="submitInclude" id="narniaShiftDate">
+                    </div>
+                    <div class="small-2 cell"></div>
+                    <div class="small-4 cell">
+                        <label>&nbsp;</label>
+                        <input type="radio" id="narniaShiftDay" name="narniaShift" value="day"><label for="narniaShiftDay">Day</label>
+                        <input type="radio" id="narniaShiftNight" name="narniaShift" value="night"><label for="narniaShiftNight">Night</label>
+                    </div>
+                    <div class="small-1 cell" id="modalSubmitDiv">
+                        <label>&nbsp;</label>
+                        <input type="submit" id='modalSubmitButton' value="SUBMIT" class="button modalButton">                     
+                    </div>
+                    <div class="small-1 cell" id="modalCancelDiv">
+                        <label>&nbsp;</label>
+                        <span id='modalCancelButton' class="button alert modalButton">CANCEL</span>
+                   </div>
+                </div>`;
+    }
 }

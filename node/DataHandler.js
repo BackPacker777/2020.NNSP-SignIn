@@ -59,9 +59,10 @@ class DataHandler {
     }
 
     static updatePatrollerDays(patrollerData) {
+        console.log("Updating days....");
         patrollerData = JSON.parse(patrollerData);
         const finalFilePath = `data/patrollers.csv`;
-        let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,scavenger,cpr,chair\n`;
+        let stuff = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,scavenger,cpr,chair,oec\n`;
         FS.writeFile(finalFilePath, stuff, `utf8`, (err) => {
             if (err) throw err;
             for (let i = 0; i < patrollerData.length; i++) {
@@ -76,7 +77,7 @@ class DataHandler {
     static updateAllPatrollerData(patrollerData) {
         patrollerData = JSON.parse(patrollerData);
         const finalFilePath = `data/patrollers2.csv`;
-        let writeLine = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,scavenger,cpr,chair\n`;
+        let writeLine = `ID,LastName,FirstName,Rating,Leader,Days,Nights,HalfDays,snowmobile,toboggan,scavenger,cpr,chair,oec\n`;
         FS.writeFile(finalFilePath, writeLine, `utf8`, (err) => {
             if (err) throw err;
             for (let i = 0; i < patrollerData.length; i++) {
@@ -98,13 +99,6 @@ class DataHandler {
             } else {
                 console.log(`Connected to -nnsp_shifts.db- Sqlite3 DB`);
             }
-        });
-    }
-
-    getID(callback) {
-        this.db.get(`SELECT id FROM patrollers ORDER BY id DESC LIMIT 1`, (err, row) => {
-            console.log(row.id);
-            // callback(row.id);
         });
     }
 
@@ -132,6 +126,22 @@ class DataHandler {
             );
         }
     }
+
+    returnShift(date_time, callback) {
+        let data = [];
+        let sql = `SELECT * FROM shifts
+                    LEFT JOIN patrollers p on shifts.patroller_id = p.id
+                    WHERE shifts.date_time = ?`;
+        this.db.all(sql, [date_time], (err, rows) => {
+            if (err) {
+                console.log(`DATE ERR = ${err}`);
+            } else {
+                data.push(rows);
+                callback(data);
+            }
+        });
+    }
+
 
     static receiveFile(request) {
         UPLOADER.receiveFiles(request);

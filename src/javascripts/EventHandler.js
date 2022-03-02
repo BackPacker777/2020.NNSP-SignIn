@@ -1,9 +1,13 @@
 import DivContents from "./DivContents2.js";
 import WebStorage from "./WebStorage.js";
+import narniaAdjustShiftCounts from "./narniaAdjustShiftCounts.js";
+import narniaRecreateShift from "./narniaRecreateShift.js";
 
 export default class EventHandler {
+    #realDate;
+    #realTime;
+
     constructor(patrollers, SIGN_OFFS) {
-        this.controller = new AbortController();
         this.SIGN_OFFS = SIGN_OFFS;
         this.nightCounter = 0;
         this.signedIn = [];
@@ -18,6 +22,8 @@ export default class EventHandler {
         this.extraNight = false;
         this.isAdmin = false;
         this.isLocalStorage = false;
+        this.#realDate = "";
+        this.#realTime = "";
         this.buttons = document.querySelectorAll("input[type=button]");
         this.handleNarnia();
         // new NarniaEventHandler(this.patrollers, this.SIGN_OFFS);
@@ -93,7 +99,7 @@ export default class EventHandler {
                     while (counter < RACE_TIMES.length) {
                         document.getElementById(`team.0`).insertAdjacentHTML('beforeend', DivContents.getNightRaceDivs(0, counter, RACE_TIMES));
                         DivContents.getDivs(0, counter, null, RACE_TIMES, false);
-                        document.getElementById(`joinNight.${counter}`).addEventListener('click', (event) => {
+                        document.getElementById(`joinNight.${counter}`).addEventListener('click', (event) =>  {
                             let button = Number(event.target.id.substr(10, 1));
                             document.getElementById(`joinTeam.0`).disabled = true;
                             this.throwModal(0, button);
@@ -193,115 +199,33 @@ export default class EventHandler {
             }
             if (correctPassword) {
                 document.getElementById('modalDiv').style.display = 'block';
-                document.getElementById("modalTitle").insertAdjacentHTML('beforeend', `<h3>Updating Patroller Shifts</h3>`);
-                document.getElementById("dataEntryDiv").insertAdjacentHTML('beforeend', DivContents.getDivs(8, 1));
-                document.getElementById('modalSubmitButton').disabled = true;
+                document.getElementById("modalTitle").insertAdjacentHTML('beforeend', `<h3>Choose Task</h3>`);
+                document.getElementById("dataEntryDiv").insertAdjacentHTML('beforeend', DivContents.getNarniaChooseDiv());
                 document.getElementById(`fixButton`).classList.add('disabled');
-                document.getElementById(`nspLogo`).classList.add('disabled');
-                document.getElementById(`modalPatrollerID.8.1`).focus();
-                document.getElementById('modalCancelButton').addEventListener('click', () => {
-                    document.getElementById(`fixButton`).classList.remove('disabled');
-                    document.getElementById(`nspLogo`).classList.remove('disabled');
-                    document.getElementById(`modalPatrollerID.8.1`).value = "";
-                    document.getElementById(`modalName.8.1`).value = "";
-                    document.getElementById(`modalDays.8.1`).value = "";
-                    document.getElementById(`modalNights.8.1`).value = "";
-                    document.getElementById(`modalHalfs.8.1`).value = "";
+                // document.getElementById(`fixButton`).disabled = true;
+
+                document.getElementById(`adjustShiftsButton`).addEventListener(`click`, () => {
                     document.getElementById("modalTitle").innerHTML = "";
                     document.getElementById("dataEntryDiv").innerHTML = "";
-                    document.getElementById('modalDiv').style.display = 'none';
+                    new narniaAdjustShiftCounts(this.patrollers, this.signedIn, this.buttons, (results) => {
+                        this.signedIn = [];
+                        for (let patroller of results) {
+                            this.signedIn.push(patroller);
+                        }
+                        this.updateDays();
+                    });
                 });
-                document.getElementById(`modalPatrollerID.8.1`).addEventListener('change', () => {
-                    let valid = false;
-                    if (document.getElementById(`modalPatrollerID.8.1`).value !== '') {
-                        for (let i = 0; i < this.patrollers.length; i++) {
-                            if (i < this.patrollers.length && Number(document.getElementById(`modalPatrollerID.8.1`).value) === Number(this.patrollers[i].ID)) {
-                                valid = true;
-                                document.getElementById(`modalName.8.1`).value = `${this.patrollers[i].FIRST_NAME} ${this.patrollers[i].LAST_NAME}`;
-                                document.getElementById(`modalDays.8.1`).value = this.patrollers[i].DAYS;
-                                document.getElementById(`modalDays.8.1`).addEventListener('change', () => {
-                                    if (!document.getElementById(`modalDays.8.1`).reportValidity()) {
-                                        document.getElementById('modalSubmitButton').disabled = true;
-                                        document.getElementById(`modalDays.8.1`).value = "";
-                                    } else {
-                                        document.getElementById(`modalShifts.8.1`).value = calculateShifts();
-                                        document.getElementById('modalSubmitButton').disabled = false;
-                                    }
-                                });
-                                document.getElementById(`modalNights.8.1`).value = this.patrollers[i].NIGHTS;
-                                document.getElementById(`modalNights.8.1`).addEventListener('change', () => {
-                                    if (!document.getElementById(`modalNights.8.1`).reportValidity()) {
-                                        document.getElementById('modalSubmitButton').disabled = true;
-                                        document.getElementById(`modalNights.8.1`).value = "";
-                                    } else {
-                                        document.getElementById(`modalShifts.8.1`).value = calculateShifts();
-                                        document.getElementById('modalSubmitButton').disabled = false;
-                                    }
-                                });
-                                document.getElementById(`modalHalfs.8.1`).value = this.patrollers[i].HALF_DAYS;
-                                document.getElementById(`modalHalfs.8.1`).addEventListener('change', () => {
-                                    if (!document.getElementById(`modalHalfs.8.1`).reportValidity()) {
-                                        document.getElementById('modalSubmitButton').disabled = true;
-                                        document.getElementById(`modalHalfs.8.1`).value = "";
-                                    } else {
-                                        document.getElementById(`modalShifts.8.1`).value = calculateShifts();
-                                        document.getElementById('modalSubmitButton').disabled = false;
-                                    }
-                                });
-                                document.getElementById(`modalShifts.8.1`).value = calculateShifts();
-                                break;
-                            }
-                        }
-                        if (!valid) {
-                            alert(`Invalid patroller number.`);
-                            document.getElementById(`modalPatrollerID.8.1`).value = '';
-                        }
-                    }
-                });
-                document.getElementById('modalSubmitButton').addEventListener('click', () => {
-                    for (let i = 0; i < this.patrollers.length; i++) {
-                        if (Number(document.getElementById(`modalPatrollerID.8.1`).value) === Number(this.patrollers[i].ID)) {
-                            this.patrollers[i].DAYS = document.getElementById(`modalDays.8.1`).value;
-                            this.patrollers[i].NIGHTS = document.getElementById(`modalNights.8.1`).value;
-                            this.patrollers[i].HALF_DAYS = document.getElementById(`modalHalfs.8.1`).value;
-                            break;
-                        }
-                    }
-                    for (let i = 0; i < this.signedIn.length; i++) {
-                        if (this.signedIn.length > 0) {
-                            if (Number(document.getElementById(`modalPatrollerID.8.1`).value) === Number(this.signedIn[i].ID)) {
-                                this.signedIn[i].DAYS = document.getElementById(`modalDays.8.1`).value;
-                                this.signedIn[i].NIGHTS = document.getElementById(`modalNights.8.1`).value;
-                                this.signedIn[i].HALF_DAYS = document.getElementById(`modalHalfs.8.1`).value;
-                                WebStorage.populateLocalStorage(this.signedIn[i], this.signedIn[i].POSITION_TEAM);
-                                break;
-                            }
-                        }
-                    }
-                    document.getElementById('formSubmit').disabled = false;
-                    document.getElementById(`fixButton`).classList.remove('disabled');
-                    document.getElementById(`nspLogo`).classList.remove('disabled');
-                    for (let button of this.buttons) {
-                        document.getElementById(button.id).disabled = false;
-                    }
-                    document.getElementById(`modalPatrollerID.8.1`).value = "";
-                    document.getElementById(`modalName.8.1`).value = "";
-                    document.getElementById(`modalDays.8.1`).value = "";
-                    document.getElementById(`modalNights.8.1`).value = "";
-                    document.getElementById(`modalHalfs.8.1`).value = "";
+
+                document.getElementById(`recreateShiftButton`).addEventListener(`click`, () => {
                     document.getElementById("modalTitle").innerHTML = "";
                     document.getElementById("dataEntryDiv").innerHTML = "";
-                    document.getElementById('modalDiv').style.display = 'none';
-                    this.updateDays();
+                    new narniaRecreateShift();
                 });
+
             } else {
                 alert(`Incorrect Password`);
             }
         });
-
-        let calculateShifts = function() {
-            return Number(document.getElementById(`modalDays.8.1`).value) + Number(document.getElementById(`modalNights.8.1`).value) + Number(document.getElementById(`modalHalfs.8.1`).value / 2);
-        }
     }
 
     throwModal(teamNum, count) {
@@ -409,7 +333,7 @@ export default class EventHandler {
             });*/
         } else if (this.dayNight === "Night" && count <= MAX_NIGHT) {
             document.getElementById(`joinNight.${count}`).classList.add("disabled");
-            this.controller.abort();
+            document.getElementById(`joinNight.0.${count}`).innerHTML = '';
         }
         if (teamNum !== CANDIDATES) {
             document.getElementById(`guest.${teamNum}.${count}`).value = document.getElementById(`guest.7.1`).value;
@@ -555,6 +479,8 @@ export default class EventHandler {
     populateDiv(teamNum, count, patrollerNum, days, nights, halfDays, totalDays) {
         const MODAL_NUM = 7;
         let time = new Date();
+        this.#realDate = time.toLocaleDateString();
+        this.#realTime = time.toLocaleTimeString();
         let minutes = time.getMinutes();
         if (minutes < 10) {
             minutes = `0${minutes}`;
@@ -581,7 +507,7 @@ export default class EventHandler {
                 FIRST_NAME: this.patrollers[patrollerNum].FIRST_NAME,
                 LEADER: this.patrollers[patrollerNum].LEADER,
                 RATING: this.patrollers[patrollerNum].RATING,
-                TIME: document.getElementById(`time.${teamNum}.${count}`).value,
+                TIME: this.#realTime,
                 DAYS: days,
                 TEAM: teamNum,
                 RACE: race,
@@ -596,7 +522,7 @@ export default class EventHandler {
                 OEC: Number(this.patrollers[patrollerNum].OEC),
                 TODAY_HALF: isHalf,
                 POSITION_TEAM: this.counter[teamNum],
-                DATE_TIME: time
+                DATE_TIME: this.#realDate
             };
             if (teamNum !== 5 && document.getElementById(`guest.${teamNum}.${count}`)) {
                 patroller.GUEST = document.getElementById(`guest.${teamNum}.${count}`).value;
@@ -657,6 +583,7 @@ export default class EventHandler {
         localStorage.removeItem(`${teamNum}.${count}.nights`);
         localStorage.removeItem(`${teamNum}.${count}.totalDays`);
         localStorage.removeItem(`${teamNum}.${count}.snowmobile`);
+        localStorage.removeItem(`${teamNum}.${count}.date_time`);
     }
 
     handleHalfDay(teamNum, count, modal) {

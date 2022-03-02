@@ -35,6 +35,7 @@ export default class WebStorage {
             localStorage.setItem(`${counter}.chair`, pageData.CHAIR);
             localStorage.setItem(`${counter}.todayHalf`, pageData.TODAY_HALF);
             localStorage.setItem(`${counter}.positionTeam`, pageData.POSITION_TEAM);
+            localStorage.setItem(`${counter}.date_time`, pageData.DATE_TIME);
         }
     }
 

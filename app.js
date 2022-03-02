@@ -109,6 +109,18 @@ class app {
                     request.on('end', () => {
                         this.#data_handler.insertRowSQL(body);
                     });
+                } else if (request.headers['x-requested-with'] === 'fetch.6') {
+                    let date_time = '';
+                    request.on('data', (data) => {
+                        date_time += data.toString();
+                    });
+                    request.on('end', () => {
+                        this.#data_handler.returnShift(date_time, (data) => {
+                            data = JSON.stringify(data);
+                            response.writeHead(200, {'content-type': 'application/json'});
+                            response.end(data);
+                        });
+                    });
                 } else {
                     console.log(`Yo, somethings super wrong BDH!`);
                 }
