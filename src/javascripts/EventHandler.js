@@ -22,8 +22,8 @@ export default class EventHandler {
         this.extraNight = false;
         this.isAdmin = false;
         this.isLocalStorage = false;
-        this.#realDate = "";
-        this.#realTime = "";
+        this.#realDate = null;
+        this.#realTime = null;
         this.buttons = document.querySelectorAll("input[type=button]");
         this.handleNarnia();
         // new NarniaEventHandler(this.patrollers, this.SIGN_OFFS);
@@ -99,11 +99,11 @@ export default class EventHandler {
                     while (counter < RACE_TIMES.length) {
                         document.getElementById(`team.0`).insertAdjacentHTML('beforeend', DivContents.getNightRaceDivs(0, counter, RACE_TIMES));
                         DivContents.getDivs(0, counter, null, RACE_TIMES, false);
-                        document.getElementById(`joinNight.${counter}`).addEventListener('click', (event) =>  {
+                        document.getElementById(`joinNight.${counter}`).addEventListener('click', this.removeMe = (event) =>  {
                             let button = Number(event.target.id.substr(10, 1));
                             document.getElementById(`joinTeam.0`).disabled = true;
                             this.throwModal(0, button);
-                        }, {signal: this.controller.signal});
+                        });
                         document.getElementById(`patrollerID.0.${counter}`).disabled = true;
                         document.getElementById(`radioNum.0.${counter}`).disabled = true;
                         document.getElementById(`guest.0.${counter}`).disabled = true;
@@ -507,7 +507,7 @@ export default class EventHandler {
                 FIRST_NAME: this.patrollers[patrollerNum].FIRST_NAME,
                 LEADER: this.patrollers[patrollerNum].LEADER,
                 RATING: this.patrollers[patrollerNum].RATING,
-                TIME: this.#realTime,
+                TIME: document.getElementById(`time.${teamNum}.${count}`).value,
                 DAYS: days,
                 TEAM: teamNum,
                 RACE: race,
@@ -522,7 +522,7 @@ export default class EventHandler {
                 OEC: Number(this.patrollers[patrollerNum].OEC),
                 TODAY_HALF: isHalf,
                 POSITION_TEAM: this.counter[teamNum],
-                DATE_TIME: this.#realDate
+                DATE_TIME: time
             };
             if (teamNum !== 5 && document.getElementById(`guest.${teamNum}.${count}`)) {
                 patroller.GUEST = document.getElementById(`guest.${teamNum}.${count}`).value;

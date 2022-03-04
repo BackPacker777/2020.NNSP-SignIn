@@ -362,7 +362,7 @@ export default class DivContents2 {
                         <input type="date" class="submitInclude" id="narniaShiftDate">
                     </div>
                     <div class="small-2 cell"></div>
-                    <div class="small-4 cell">
+                    <div class="small-3 cell">
                         <label>&nbsp;</label>
                         <input type="radio" id="narniaShiftDay" name="narniaShift" value="day"><label for="narniaShiftDay">Day</label>
                         <input type="radio" id="narniaShiftNight" name="narniaShift" value="night"><label for="narniaShiftNight">Night</label>
@@ -371,6 +371,7 @@ export default class DivContents2 {
                         <label>&nbsp;</label>
                         <input type="submit" id='modalSubmitButton' value="SUBMIT" class="button modalButton">                     
                     </div>
+                    <div class="small-1 cell"></div>
                     <div class="small-1 cell" id="modalCancelDiv">
                         <label>&nbsp;</label>
                         <span id='modalCancelButton' class="button alert modalButton">CANCEL</span>

@@ -3,12 +3,10 @@ import DivContents from "./DivContents2.js";
 export default class narniaAdjustShiftCounts {
     #date;
     #removeMe;
-    #shiftRoster;
 
     constructor() {
         this.#date = '';
         this.#removeMe = '';
-        this.shiftRoster = [];
         this.main();
     }
 
@@ -44,11 +42,23 @@ export default class narniaAdjustShiftCounts {
             });
         });
         document.getElementById('modalSubmitButton').addEventListener('click', () => {
-            return this.populateRoster();
+            return this.populateRoster(shiftDate, shiftDayNight);
         });
     }
 
-    populateRoster() {
-
+    populateRoster(shiftDate, shiftDayNight) {
+        let shiftData = [shiftDate, shiftDayNight];
+        console.log(shiftData);
+        fetch(document.url, {
+            method: 'POST',
+            body: JSON.stringify(shiftData),
+            headers: {
+                'x-requested-with': `fetch.6`,
+                'mode': 'no-cors'
+            }
+        }).then((response) => {
+            console.log(response);
+            return response.json();
+        });
     }
 }

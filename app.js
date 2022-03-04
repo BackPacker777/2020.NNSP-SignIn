@@ -117,6 +117,7 @@ class app {
                     request.on('end', () => {
                         this.#data_handler.returnShift(date_time, (data) => {
                             data = JSON.stringify(data);
+                            console.log(`app.js result = ${data}`);
                             response.writeHead(200, {'content-type': 'application/json'});
                             response.end(data);
                         });

@@ -128,11 +128,25 @@ class DataHandler {
     }
 
     returnShift(date_time, callback) {
-        let data = [];
-        let sql = `SELECT * FROM shifts
+        date_time = JSON.parse(date_time);
+        console.log(date_time);
+        /*let requestedYear = date_time[0].substring(0,4);
+        let requestedMonth = date_time[0].substring(5,7);
+        let requestedDay = date_time[0].substring(8,10);*/
+        let sql = null;
+        let requestedDate = `${date_time[0].substring(0,4)}-${date_time[0].substring(5,7)}-${date_time[0].substring(8,10)}`;
+        if (date_time[1] === "day") {
+            sql = `SELECT * FROM shifts
                     LEFT JOIN patrollers p on shifts.patroller_id = p.id
-                    WHERE shifts.date_time = ?`;
-        this.db.all(sql, [date_time], (err, rows) => {
+                    WHERE SUBSTR(shifts.date_time, 1, 10) = ? AND SUBSTR(shifts.date_time, 12, 13) < 15`;
+        } else {
+            sql = `SELECT * FROM shifts
+                    LEFT JOIN patrollers p on shifts.patroller_id = p.id
+                    WHERE SUBSTR(shifts.date_time, 1, 10) = ? AND SUBSTR(shifts.date_time, 12, 13) > 15`;
+        }
+        console.log(`requested date = ${requestedDate}`);
+        let data = [];
+        this.db.all(sql, [requestedDate], (err, rows) => {
             if (err) {
                 console.log(`DATE ERR = ${err}`);
             } else {
