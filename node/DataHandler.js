@@ -127,26 +127,25 @@ class DataHandler {
         }
     }
 
-    returnShift(date_time, callback) {
-        date_time = JSON.parse(date_time);
-        console.log(date_time);
+    returnShift(date__time, callback) {
+        const DAY_NIGHT_DELIMITER = '16';
+        date__time = JSON.parse(date__time);
         /*let requestedYear = date_time[0].substring(0,4);
         let requestedMonth = date_time[0].substring(5,7);
         let requestedDay = date_time[0].substring(8,10);*/
         let sql = null;
-        let requestedDate = `${date_time[0].substring(0,4)}-${date_time[0].substring(5,7)}-${date_time[0].substring(8,10)}`;
-        if (date_time[1] === "day") {
+        let requestedDate = `${date__time[0].substring(0,4)}-${date__time[0].substring(5,7)}-${date__time[0].substring(8,10)}`;
+        if (date__time[1] === "day") {
             sql = `SELECT * FROM shifts
                     LEFT JOIN patrollers p on shifts.patroller_id = p.id
-                    WHERE SUBSTR(shifts.date_time, 1, 10) = ? AND SUBSTR(shifts.date_time, 12, 13) < 15`;
+                    WHERE SUBSTR(shifts.date_time, 1, 10) = ? AND SUBSTR(shifts.date_time, 12, 13) < ?`;
         } else {
             sql = `SELECT * FROM shifts
                     LEFT JOIN patrollers p on shifts.patroller_id = p.id
-                    WHERE SUBSTR(shifts.date_time, 1, 10) = ? AND SUBSTR(shifts.date_time, 12, 13) > 15`;
+                    WHERE SUBSTR(shifts.date_time, 1, 10) == ? AND SUBSTR(shifts.date_time, 12, 13) >= ?`;
         }
-        console.log(`requested date = ${requestedDate}`);
         let data = [];
-        this.db.all(sql, [requestedDate], (err, rows) => {
+        this.db.all(sql, [requestedDate, DAY_NIGHT_DELIMITER], (err, rows) => {
             if (err) {
                 console.log(`DATE ERR = ${err}`);
             } else {
@@ -155,7 +154,6 @@ class DataHandler {
             }
         });
     }
-
 
     static receiveFile(request) {
         UPLOADER.receiveFiles(request);

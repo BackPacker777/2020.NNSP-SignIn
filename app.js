@@ -49,18 +49,18 @@ class app {
                     response.writeHead(500, {'Content-Type': 'text/plain'});
                     response.end('An error has occurred: ' + error.message);
                 } else if (contentType.indexOf('css') >= 0 || contentType.indexOf('js') >= 0) {
-                    response.setHeader('Cache-Control', 'max-age=86400');
+                    response.setHeader('Cache-Control', 'no-cache');
                     response.writeHead(200, {'Content-Type': contentType});
                     response.end(string, 'utf-8');
                 } else if (contentType.indexOf('html') >= 0) {
-                    response.setHeader('Cache-Control', 'max-age=86400');
+                    response.setHeader('Cache-Control', 'no-cache');
                     response.writeHead(200, {'Content-Type': contentType});
                     response.end(EJS.render(string, {
                         data: this.#ejsData,
                         filename: this.#fileName
                     }));
                 } else {
-                    response.setHeader('Cache-Control', 'max-age=86400');
+                    response.setHeader('Cache-Control', 'no-cache');
                     response.writeHead(200, {'Content-Type': contentType});
                     response.end(string, 'binary');
                 }
@@ -80,6 +80,7 @@ class app {
                         DATA_HANDLER.updatePatrollerDays(body);
                     });
                 } else if (request.headers['x-requested-with'] === 'fetch.2') {
+                    console.log(`fetch.2`);
                     let body = [];
                     request.on('data', (chunk) => {
                         body.push(chunk);
@@ -87,6 +88,7 @@ class app {
                         try {
                             body = Buffer.concat(body).toString();
                             this.#ejsData = JSON.parse(body);
+                            console.log(`app.js = ${this.#ejsData}`);
                             this.#fileName = `results.ejs`;
                         } catch (error) {
                             console.log(error);
@@ -117,7 +119,6 @@ class app {
                     request.on('end', () => {
                         this.#data_handler.returnShift(date_time, (data) => {
                             data = JSON.stringify(data);
-                            console.log(`app.js result = ${data}`);
                             response.writeHead(200, {'content-type': 'application/json'});
                             response.end(data);
                         });
@@ -144,6 +145,7 @@ class app {
             } else if (request.url.indexOf('.ico') >= 0) {
                 DATA_HANDLER.renderDom(request.url.slice(1), 'image/x-icon', httpHandler, 'binary');
             } else if (request.url.indexOf('results.ejs') >= 0) {
+                console.log(`Rendering results`);
                 DATA_HANDLER.renderDom('public/views/results.ejs', 'text/html', httpHandler, 'utf-8');
             } else if (request.url.indexOf('/') >= 0) {
                 DATA_HANDLER.renderDom('public/views/index.ejs', 'text/html', httpHandler, 'utf-8');

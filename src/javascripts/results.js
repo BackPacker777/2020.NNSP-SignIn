@@ -32,6 +32,5 @@ class results {
 }
 
 window.addEventListener('load', () => {
-    Cache.delete();
     new results();
 });
