@@ -51,22 +51,16 @@ export default class narniaAdjustShiftCounts {
             document.getElementById("dataEntryDiv").innerHTML = "";
             document.getElementById('modalDiv').style.display = 'none';
 
+            let shiftStuff = [];
             this.populateRoster(shiftDate, shiftDayNight).then((results) => {
-                console.log(`results = ${results}`);
-                // results = JSON.parse(results);
-                /*this.displayResults(results).then((response) => {
-                    console.log(response);
-                });*/
+                shiftStuff = JSON.parse(results);
+                console.log(`results = ${JSON.stringify(shiftStuff)}`);
+                this.displayResults(shiftStuff);//.then((response) => {
+                //     console.log(JSON.stringify(response));
+                // });
             });
 
-            /*this.populateRoster(shiftDate, shiftDayNight)
-                results = JSON.parse(results);
-                console.log(`results = ${results}`);
-                this.displayResults(results).then((response) => {
-                    console.log(`response = ${JSON.stringify(response)}`);
-                    window.open('/src/views/results.ejs' + '?x=' + new Date().getTime(), '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
-                });
-            });*/
+            window.open('/src/views/results.ejs' + '?x=' + new Date().getTime(), '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
         });
     }
 
@@ -80,22 +74,18 @@ export default class narniaAdjustShiftCounts {
                 'mode': 'no-cors'
             }
         });
-        // return results.text();
-        this.displayResults(results).then((response) => {
-
-        });
+        return results.text();
     }
 
-    async displayResults(shiftData) {
-        const response = await fetch(document.url, {
+    async displayResults(shiftStuff) {
+        console.log(`displayResults = ${JSON.stringify(shiftStuff)}`);
+        await fetch(document.url, {
             method: 'POST',
-            body: JSON.stringify(shiftData),
+            body: JSON.stringify(shiftStuff),
             headers: {
                 'x-requested-with': `fetch.2`,
                 'mode': 'no-cors'
             }
         });
-        console.log(`response = ${response}`);
-        return response.text();
     }
 }

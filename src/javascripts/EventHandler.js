@@ -880,6 +880,7 @@ export default class EventHandler {
         }).then((response) => {
             console.log(response.json());
         });
+        console.log(this.signedIn);
         fetch(document.url, {
             method: 'POST',
             body: JSON.stringify(this.signedIn),
@@ -890,7 +891,7 @@ export default class EventHandler {
         }).then((response) => {
             return response.json();
         });
-        fetch(document.url, {
+        /*fetch(document.url, {
             method: 'POST',
             body: JSON.stringify(this.signedIn),
             headers: {
@@ -899,6 +900,6 @@ export default class EventHandler {
             }
         }).then((response) => {
             return response.json();
-        });
+        });*/
     }
 }

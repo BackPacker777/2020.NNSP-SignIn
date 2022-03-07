@@ -55,6 +55,10 @@ class app {
                 } else if (contentType.indexOf('html') >= 0) {
                     response.setHeader('Cache-Control', 'no-cache');
                     response.writeHead(200, {'Content-Type': contentType});
+
+                    console.log(`this.#ejsData = ${JSON.stringify(this.#ejsData)}`);
+                    console.log(`this.#fileName = ${this.#fileName}`);
+
                     response.end(EJS.render(string, {
                         data: this.#ejsData,
                         filename: this.#fileName
@@ -80,7 +84,6 @@ class app {
                         DATA_HANDLER.updatePatrollerDays(body);
                     });
                 } else if (request.headers['x-requested-with'] === 'fetch.2') {
-                    console.log(`fetch.2`);
                     let body = [];
                     request.on('data', (chunk) => {
                         body.push(chunk);
@@ -88,8 +91,9 @@ class app {
                         try {
                             body = Buffer.concat(body).toString();
                             this.#ejsData = JSON.parse(body);
-                            console.log(`app.js = ${this.#ejsData}`);
+                            console.log(`app.js 94 ${this.#ejsData}`);
                             this.#fileName = `results.ejs`;
+                            console.log(`app.js 96 = ${JSON.stringify(this.#ejsData)}`);
                         } catch (error) {
                             console.log(error);
                         }
@@ -146,9 +150,9 @@ class app {
                 DATA_HANDLER.renderDom(request.url.slice(1), 'image/x-icon', httpHandler, 'binary');
             } else if (request.url.indexOf('results.ejs') >= 0) {
                 console.log(`Rendering results`);
-                DATA_HANDLER.renderDom('public/views/results.ejs', 'text/html', httpHandler, 'utf-8');
+                DATA_HANDLER.renderDom('src/views/results.ejs', 'text/html', httpHandler, 'utf-8');
             } else if (request.url.indexOf('/') >= 0) {
-                DATA_HANDLER.renderDom('public/views/index.ejs', 'text/html', httpHandler, 'utf-8');
+                DATA_HANDLER.renderDom('src/views/index.ejs', 'text/html', httpHandler, 'utf-8');
             } else {
                 DATA_HANDLER.renderDom(`HEY! What you're looking for: It's not here!`, 'text/html', httpHandler, 'utf-8');
             }

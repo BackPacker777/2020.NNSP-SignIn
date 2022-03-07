@@ -12,9 +12,9 @@
         <div class="cell small-4 large-4 text-right"><h6 id="dayNight"></h6></div>
     </div>
     <hr>
-    <% data %>
     <% for (let i = 0; i < data.length; i++) { %>
-        <% if (Number(data[i].TEAM) === 0) { %>
+        <% console.log(data[i]); %>
+        <% if (Number(data[i].TEAM) === 0 || data[i].team === 0) { %>
             <div class="grid-x">
                 <h5>The Team</h5>
             </div>
