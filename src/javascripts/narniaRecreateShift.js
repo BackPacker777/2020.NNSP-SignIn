@@ -13,6 +13,7 @@ export default class narniaAdjustShiftCounts {
     }
 
     main() {
+        let shiftData = [];
         let shiftDate = null;
         let shiftDayNight = null;
         document.getElementById('modalDiv').style.display = 'block';
@@ -30,15 +31,15 @@ export default class narniaAdjustShiftCounts {
             document.getElementById('modalDiv').style.display = 'none';
         });
         document.getElementById('narniaShiftDate').addEventListener('change', () => {
-            shiftDate = document.getElementById('narniaShiftDate').value;
-            if (shiftDayNight !== null) {
+            shiftData[0] = document.getElementById('narniaShiftDate').value;
+            if (shiftData[1] !== null) {
                 document.getElementById('modalSubmitButton').disabled = false;
             }
         });
         document.querySelectorAll('input[name="narniaShift"]').forEach((element) => {
             element.addEventListener("change", this.#removeMe = (event) => {
-                shiftDayNight = event.target.value;
-                if (shiftDate !== null) {
+                shiftData[1] = event.target.value;
+                if (shiftData[0] !== null) {
                     document.getElementById('modalSubmitButton').disabled = false;
                 }
             });
@@ -51,20 +52,36 @@ export default class narniaAdjustShiftCounts {
             document.getElementById("dataEntryDiv").innerHTML = "";
             document.getElementById('modalDiv').style.display = 'none';
 
-            let shiftStuff = [];
-            this.populateRoster(shiftDate, shiftDayNight).then((results) => {
-                shiftStuff = JSON.parse(results);
-                console.log(`results = ${JSON.stringify(shiftStuff)}`);
-                this.displayResults(shiftStuff);//.then((response) => {
-                //     console.log(JSON.stringify(response));
-                // });
-            });
+            this.displayRoster(shiftData);
 
-            window.open('/src/views/results.ejs' + '?x=' + new Date().getTime(), '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
+            /*this.populateRoster(shiftDate, shiftDayNight).then((results) => {
+                // shiftStuff = JSON.parse(results);
+                console.log(`results = ${results}`);
+                this.displayResults(results).then((response) => {
+                    console.log(`this.displayResults() returned...`);
+                    // console.log(JSON.stringify(response));
+                });
+            });*/
+
+            // window.open('/src/views/results.ejs' + '?x=' + new Date().getTime(), '_blank', 'location=yes,height=900,width=1000,scrollbars=yes,status=yes');
         });
     }
 
-    async populateRoster(shiftDate, shiftDayNight) {
+    displayRoster(shiftData) {
+        fetch(document.url, {
+            method: 'POST',
+            body: JSON.stringify(shiftData),
+            headers: {
+                'x-requested-with': `fetch.6`,
+                'mode': 'no-cors'
+            }
+        }).then((response) => {
+            console.log(response.json());
+            console.log(response.text());
+        });
+    }
+
+    /*async populateRoster(shiftDate, shiftDayNight) {
         let shiftData = [shiftDate, shiftDayNight];
         const results = await fetch(document.url, {
             method: 'POST',
@@ -74,11 +91,11 @@ export default class narniaAdjustShiftCounts {
                 'mode': 'no-cors'
             }
         });
+
         return results.text();
     }
 
     async displayResults(shiftStuff) {
-        console.log(`displayResults = ${JSON.stringify(shiftStuff)}`);
         await fetch(document.url, {
             method: 'POST',
             body: JSON.stringify(shiftStuff),
@@ -87,5 +104,5 @@ export default class narniaAdjustShiftCounts {
                 'mode': 'no-cors'
             }
         });
-    }
+    }*/
 }

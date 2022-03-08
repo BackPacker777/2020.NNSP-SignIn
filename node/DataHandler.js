@@ -129,28 +129,32 @@ class DataHandler {
 
     returnShift(date__time, callback) {
         const DAY_NIGHT_DELIMITER = '16';
+        console.log(date__time);
         date__time = JSON.parse(date__time);
         /*let requestedYear = date_time[0].substring(0,4);
         let requestedMonth = date_time[0].substring(5,7);
         let requestedDay = date_time[0].substring(8,10);*/
-        let sql = null;
         let requestedDate = `${date__time[0].substring(0,4)}-${date__time[0].substring(5,7)}-${date__time[0].substring(8,10)}`;
+        let sql;
         if (date__time[1] === "day") {
-            sql = `SELECT * FROM shifts
+            sql = `SELECT team, guest, radio, is_half, last_name, first_name FROM shifts
                     LEFT JOIN patrollers p on shifts.patroller_id = p.id
                     WHERE SUBSTR(shifts.date_time, 1, 10) = ? AND SUBSTR(shifts.date_time, 12, 13) < ?`;
         } else {
-            sql = `SELECT * FROM shifts
+            sql = `SELECT team, guest, radio, is_half, last_name, first_name FROM shifts
                     LEFT JOIN patrollers p on shifts.patroller_id = p.id
                     WHERE SUBSTR(shifts.date_time, 1, 10) == ? AND SUBSTR(shifts.date_time, 12, 13) >= ?`;
         }
-        let data = [];
+        // let data = [];
         this.db.all(sql, [requestedDate, DAY_NIGHT_DELIMITER], (err, rows) => {
             if (err) {
                 console.log(`DATE ERR = ${err}`);
             } else {
-                data.push(rows);
-                callback(data);
+                console.log(rows.length);
+                console.log(rows);
+                // data.push(rows);
+                // console.log(data);
+                callback(rows);
             }
         });
     }

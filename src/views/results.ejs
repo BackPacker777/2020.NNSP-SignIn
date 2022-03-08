@@ -12,364 +12,368 @@
         <div class="cell small-4 large-4 text-right"><h6 id="dayNight"></h6></div>
     </div>
     <hr>
-    <% for (let i = 0; i < data.length; i++) { %>
-        <% console.log(data[i]); %>
-        <% if (Number(data[i].TEAM) === 0 || data[i].team === 0) { %>
-            <div class="grid-x">
-                <h5>The Team</h5>
-            </div>
-            <div class="grid-x">
-                <div class="cell small-3">
-                    <h6><strong>Name</strong></h6>
+    <% if (data) { %>
+        <% for (let i = 0; i < data.length; i++) { %>
+            <% console.log(data[i]); %>
+            <% if (Number(data[i].TEAM) === 0 || data[i].team === 0) { %>
+                <div class="grid-x">
+                    <h5>The Team</h5>
                 </div>
-                <div class="cell small-2">
-                    <h6><strong>Rating</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Time</strong></h6>
-                </div>
-                <div class="cell small-1">
-                    <h6><strong>Radio</strong></h6>
-                </div>
-                <div class="cell small-3">
-                    <h6><strong>Guest</strong></h6>
-                </div>
-                <% if (data[i].RACE) { %>
-                    <div class="cell small-1">
-                        <h6><strong>Race</strong></h6>
-                    </div>
-                <% } %>
-            </div>
-            <% data.forEach((result) => { %>
-                <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
-                    <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
-                <% } else { %>
-                    <div class="grid-x">
-                <% } %>
-                <% if (Number(result.TEAM) === 0) { %>
+                <div class="grid-x">
                     <div class="cell small-3">
-                        <%= result.NAME %>
+                        <h6><strong>Name</strong></h6>
                     </div>
                     <div class="cell small-2">
-                        <%= result.RATING %>
+                        <h6><strong>Rating</strong></h6>
                     </div>
                     <div class="cell small-2">
-                        <%= result.TIME %>
+                        <h6><strong>Time</strong></h6>
                     </div>
                     <div class="cell small-1">
-                        <%= result.RADIO %>
+                        <h6><strong>Radio</strong></h6>
                     </div>
                     <div class="cell small-3">
-                        <%= result.GUEST %>
+                        <h6><strong>Guest</strong></h6>
                     </div>
-                    <% if (result.RACE) { %>
+                    <% if (data[i].RACE) { %>
                         <div class="cell small-1">
-                            <%= result.RACE %>
+                            <h6><strong>Race</strong></h6>
                         </div>
                     <% } %>
-                <% } %>
                 </div>
-            <% }); %>
-        <hr>
-        <% break; %>
+                <% data.forEach((result) => { %>
+                    <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
+                        <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
+                    <% } else { %>
+                        <div class="grid-x">
+                    <% } %>
+                    <% if (Number(result.TEAM) === 0) { %>
+                        <div class="cell small-3">
+                            <%= result.NAME %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.RATING %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.TIME %>
+                        </div>
+                        <div class="cell small-1">
+                            <%= result.RADIO %>
+                        </div>
+                        <div class="cell small-3">
+                            <%= result.GUEST %>
+                        </div>
+                        <% if (result.RACE) { %>
+                            <div class="cell small-1">
+                                <%= result.RACE %>
+                            </div>
+                        <% } %>
+                    <% } %>
+                    </div>
+                <% }); %>
+            <hr>
+            <% break; %>
+            <% } %>
+            <% } %>
+        <% for (let i = 0; i < data.length; i++) { %>
+            <% if (Number(data[i].TEAM) === 1) { %>
+                <div class="grid-x">
+                    <h5>Team 1</h5>
+                </div>
+                <div class="grid-x">
+                    <div class="cell small-3">
+                        <h6><strong>Name</strong></h6>
+                    </div>
+                    <div class="cell small-2">
+                        <h6><strong>Rating</strong></h6>
+                    </div>
+                    <div class="cell small-2">
+                        <h6><strong>Time</strong></h6>
+                    </div>
+                    <div class="cell small-2">
+                        <h6><strong>Radio</strong></h6>
+                    </div>
+                    <div class="cell small-3">
+                        <h6><strong>Guest</strong></h6>
+                    </div>
+                </div>
+                <% data.forEach((result) => { %>
+                    <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
+                        <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
+                    <% } else { %>
+                        <div class="grid-x">
+                    <% } %>
+                    <% if (Number(result.TEAM) === 1) { %>
+                        <div class="cell small-3">
+                            <%= result.NAME %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.RATING %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.TIME %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.RADIO %>
+                        </div>
+                        <div class="cell small-3">
+                            <%= result.GUEST %>
+                        </div>
+                    <% } %>
+                    </div>
+                <% }); %>
+            <hr>
+            <% break; %>
+            <% } %>
         <% } %>
+        <% for (let i = 0; i < data.length; i++) { %>
+            <% if (Number(data[i].TEAM) === 2) { %>
+                <div class="grid-x">
+                    <h5>Team 2</h5>
+                </div>
+                <div class="grid-x">
+                    <div class="cell small-3">
+                        <h6><strong>Name</strong></h6>
+                    </div>
+                    <div class="cell small-2">
+                        <h6><strong>Rating</strong></h6>
+                    </div>
+                    <div class="cell small-2">
+                        <h6><strong>Time</strong></h6>
+                    </div>
+                    <div class="cell small-2">
+                        <h6><strong>Radio</strong></h6>
+                    </div>
+                    <div class="cell small-3">
+                        <h6><strong>Guest</strong></h6>
+                    </div>
+                </div>
+                <% data.forEach((result) => { %>
+                    <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
+                        <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
+                    <% } else { %>
+                        <div class="grid-x">
+                    <% } %>
+                    <% if (Number(result.TEAM) === 2) { %>
+                        <div class="cell small-3">
+                            <%= result.NAME %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.RATING %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.TIME %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.RADIO %>
+                        </div>
+                        <div class="cell small-3">
+                            <%= result.GUEST %>
+                        </div>
+                    <% } %>
+                    </div>
+                <% }); %>
+            <hr>
+            <% break; %>
+            <% } %>
         <% } %>
-    <% for (let i = 0; i < data.length; i++) { %>
-        <% if (Number(data[i].TEAM) === 1) { %>
-            <div class="grid-x">
-                <h5>Team 1</h5>
-            </div>
-            <div class="grid-x">
-                <div class="cell small-3">
-                    <h6><strong>Name</strong></h6>
+        <% for (let i = 0; i < data.length; i++) { %>
+            <% if (Number(data[i].TEAM) === 3) { %>
+                <div class="grid-x">
+                    <h5>Team 3</h5>
                 </div>
-                <div class="cell small-2">
-                    <h6><strong>Rating</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Time</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Radio</strong></h6>
-                </div>
-                <div class="cell small-3">
-                    <h6><strong>Guest</strong></h6>
-                </div>
-            </div>
-            <% data.forEach((result) => { %>
-                <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
-                    <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
-                <% } else { %>
-                    <div class="grid-x">
-                <% } %>
-                <% if (Number(result.TEAM) === 1) { %>
+                <div class="grid-x">
                     <div class="cell small-3">
-                        <%= result.NAME %>
+                        <h6><strong>Name</strong></h6>
                     </div>
                     <div class="cell small-2">
-                        <%= result.RATING %>
+                        <h6><strong>Rating</strong></h6>
                     </div>
                     <div class="cell small-2">
-                        <%= result.TIME %>
+                        <h6><strong>Time</strong></h6>
                     </div>
                     <div class="cell small-2">
-                        <%= result.RADIO %>
+                        <h6><strong>Radio</strong></h6>
                     </div>
                     <div class="cell small-3">
-                        <%= result.GUEST %>
+                        <h6><strong>Guest</strong></h6>
                     </div>
-                <% } %>
                 </div>
-            <% }); %>
-        <hr>
-        <% break; %>
+                <% data.forEach((result) => { %>
+                    <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
+                        <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
+                    <% } else { %>
+                        <div class="grid-x">
+                    <% } %>
+                    <% if (Number(result.TEAM) === 3) { %>
+                        <div class="cell small-3">
+                            <%= result.NAME %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.RATING %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.TIME %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.RADIO %>
+                        </div>
+                        <div class="cell small-3">
+                            <%= result.GUEST %>
+                        </div>
+                    <% } %>
+                    </div>
+                <% }); %>
+            <hr>
+            <% break; %>
+            <% } %>
         <% } %>
-    <% } %>
-    <% for (let i = 0; i < data.length; i++) { %>
-        <% if (Number(data[i].TEAM) === 2) { %>
-            <div class="grid-x">
-                <h5>Team 2</h5>
-            </div>
-            <div class="grid-x">
-                <div class="cell small-3">
-                    <h6><strong>Name</strong></h6>
+        <% for (let i = 0; i < data.length; i++) { %>
+            <% if (Number(data[i].TEAM) === 4) { %>
+                <div class="grid-x">
+                    <h5>Team 4</h5>
                 </div>
-                <div class="cell small-2">
-                    <h6><strong>Rating</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Time</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Radio</strong></h6>
-                </div>
-                <div class="cell small-3">
-                    <h6><strong>Guest</strong></h6>
-                </div>
-            </div>
-            <% data.forEach((result) => { %>
-                <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
-                    <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
-                <% } else { %>
-                    <div class="grid-x">
-                <% } %>
-                <% if (Number(result.TEAM) === 2) { %>
+                <div class="grid-x">
                     <div class="cell small-3">
-                        <%= result.NAME %>
+                        <h6><strong>Name</strong></h6>
                     </div>
                     <div class="cell small-2">
-                        <%= result.RATING %>
+                        <h6><strong>Rating</strong></h6>
                     </div>
                     <div class="cell small-2">
-                        <%= result.TIME %>
+                        <h6><strong>Time</strong></h6>
                     </div>
                     <div class="cell small-2">
-                        <%= result.RADIO %>
+                        <h6><strong>Radio</strong></h6>
                     </div>
                     <div class="cell small-3">
-                        <%= result.GUEST %>
+                        <h6><strong>Guest</strong></h6>
                     </div>
-                <% } %>
                 </div>
-            <% }); %>
-        <hr>
-        <% break; %>
+                <% data.forEach((result) => { %>
+                    <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
+                        <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
+                    <% } else { %>
+                        <div class="grid-x">
+                    <% } %>
+                    <% if (Number(result.TEAM) === 4) { %>
+                        <div class="cell small-3">
+                            <%= result.NAME %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.RATING %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.TIME %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.RADIO %>
+                        </div>
+                        <div class="cell small-3">
+                            <%= result.GUEST %>
+                        </div>
+                    <% } %>
+                    </div>
+                <% }); %>
+            <hr>
+            <% break; %>
+            <% } %>
         <% } %>
-    <% } %>
-    <% for (let i = 0; i < data.length; i++) { %>
-        <% if (Number(data[i].TEAM) === 3) { %>
-            <div class="grid-x">
-                <h5>Team 3</h5>
-            </div>
-            <div class="grid-x">
-                <div class="cell small-3">
-                    <h6><strong>Name</strong></h6>
+        <% for (let i = 0; i < data.length; i++) { %>
+            <% if (Number(data[i].TEAM) === 5) { %>
+                <div class="grid-x">
+                    <h5>Candidates/Auxiliary</h5>
                 </div>
-                <div class="cell small-2">
-                    <h6><strong>Rating</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Time</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Radio</strong></h6>
-                </div>
-                <div class="cell small-3">
-                    <h6><strong>Guest</strong></h6>
-                </div>
-            </div>
-            <% data.forEach((result) => { %>
-                <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
-                    <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
-                <% } else { %>
-                    <div class="grid-x">
-                <% } %>
-                <% if (Number(result.TEAM) === 3) { %>
+                <div class="grid-x">
                     <div class="cell small-3">
-                        <%= result.NAME %>
+                        <h6><strong>Name</strong></h6>
                     </div>
                     <div class="cell small-2">
-                        <%= result.RATING %>
+                        <h6><strong>Rating</strong></h6>
                     </div>
                     <div class="cell small-2">
-                        <%= result.TIME %>
-                    </div>
-                    <div class="cell small-2">
-                        <%= result.RADIO %>
-                    </div>
-                    <div class="cell small-3">
-                        <%= result.GUEST %>
-                    </div>
-                <% } %>
-                </div>
-            <% }); %>
-        <hr>
-        <% break; %>
-        <% } %>
-    <% } %>
-    <% for (let i = 0; i < data.length; i++) { %>
-        <% if (Number(data[i].TEAM) === 4) { %>
-            <div class="grid-x">
-                <h5>Team 4</h5>
-            </div>
-            <div class="grid-x">
-                <div class="cell small-3">
-                    <h6><strong>Name</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Rating</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Time</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Radio</strong></h6>
-                </div>
-                <div class="cell small-3">
-                    <h6><strong>Guest</strong></h6>
-                </div>
-            </div>
-            <% data.forEach((result) => { %>
-                <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
-                    <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
-                <% } else { %>
-                    <div class="grid-x">
-                <% } %>
-                <% if (Number(result.TEAM) === 4) { %>
-                    <div class="cell small-3">
-                        <%= result.NAME %>
-                    </div>
-                    <div class="cell small-2">
-                        <%= result.RATING %>
-                    </div>
-                    <div class="cell small-2">
-                        <%= result.TIME %>
-                    </div>
-                    <div class="cell small-2">
-                        <%= result.RADIO %>
-                    </div>
-                    <div class="cell small-3">
-                        <%= result.GUEST %>
-                    </div>
-                <% } %>
-                </div>
-            <% }); %>
-        <hr>
-        <% break; %>
-        <% } %>
-    <% } %>
-    <% for (let i = 0; i < data.length; i++) { %>
-        <% if (Number(data[i].TEAM) === 5) { %>
-            <div class="grid-x">
-                <h5>Candidates/Auxiliary</h5>
-            </div>
-            <div class="grid-x">
-                <div class="cell small-3">
-                    <h6><strong>Name</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Rating</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Time</strong></h6>
-                </div>
-                <div class="cell small-5">
-                    <h6><strong>Radio</strong></h6>
-                </div>
-            </div>
-            <% data.forEach((result) => { %>
-                <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
-                    <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
-                <% } else { %>
-                    <div class="grid-x">
-                <% } %>
-                <% if (Number(result.TEAM) === 5) { %>
-                    <div class="cell small-3">
-                        <%= result.NAME %>
-                    </div>
-                    <div class="cell small-2">
-                        <%= result.RATING %>
-                    </div>
-                    <div class="cell small-2">
-                        <%= result.TIME %>
+                        <h6><strong>Time</strong></h6>
                     </div>
                     <div class="cell small-5">
+                        <h6><strong>Radio</strong></h6>
+                    </div>
+                </div>
+                <% data.forEach((result) => { %>
+                    <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
+                        <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
+                    <% } else { %>
+                        <div class="grid-x">
+                    <% } %>
+                    <% if (Number(result.TEAM) === 5) { %>
+                        <div class="cell small-3">
+                            <%= result.NAME %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.RATING %>
+                        </div>
+                        <div class="cell small-2">
+                            <%= result.TIME %>
+                        </div>
+                        <div class="cell small-5">
+                            <%= result.RADIO %>
+                        </div>
+                    <% } %>
+                    </div>
+                <% }); %>
+            <hr>
+            <% break; %>
+            <% } %>
+        <% } %>
+        <% for (let i = 0; i < data.length; i++) { %>
+            <% if (Number(data[i].TEAM) === 6) { %>
+                <div class="grid-x">
+                    <h5>Leadership/Trainers</h5>
+                </div>
+                <div class="grid-x">
+                    <div class="cell small-3">
+                        <h6><strong>Name</strong></h6>
+                    </div>
+                    <div class="cell small-2">
+                        <h6><strong>Rating</strong></h6>
+                    </div>
+                    <div class="cell small-2">
+                        <h6><strong>Time</strong></h6>
+                    </div>
+                    <div class="cell small-5">
+                        <h6><strong>Radio</strong></h6>
+                    </div>
+                </div>
+                <% data.forEach((result) => { %>
+                    <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
+                        <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
+                    <% } else { %>
+                        <div class="grid-x">
+                    <% } %>
+                <% if (Number(result.TEAM) === 6) { %>
+                    <div class="cell small-3">
+                        <%= result.NAME %>
+                    </div>
+                    <div class="cell small-2">
+                        <%= result.RATING %>
+                    </div>
+                    <div class="cell small-2">
+                        <%= result.TIME %>
+                    </div>
+                    <div class="cell small-2">
                         <%= result.RADIO %>
+                    </div>
+                    <div class="cell small-3">
+                        <%= result.GUEST %>
                     </div>
                 <% } %>
                 </div>
             <% }); %>
-        <hr>
-        <% break; %>
-        <% } %>
-    <% } %>
-    <% for (let i = 0; i < data.length; i++) { %>
-        <% if (Number(data[i].TEAM) === 6) { %>
-            <div class="grid-x">
-                <h5>Leadership/Trainers</h5>
-            </div>
-            <div class="grid-x">
-                <div class="cell small-3">
-                    <h6><strong>Name</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Rating</strong></h6>
-                </div>
-                <div class="cell small-2">
-                    <h6><strong>Time</strong></h6>
-                </div>
-                <div class="cell small-5">
-                    <h6><strong>Radio</strong></h6>
-                </div>
-            </div>
-            <% data.forEach((result) => { %>
-                <% if (result.TODAY_HALF === true || result.TODAY_HALF === "true") { %>
-                    <div class="grid-x" style="background-color: #B1B1B1 !important; -webkit-print-color-adjust: exact !important;">
-                <% } else { %>
-                    <div class="grid-x">
-                <% } %>
-            <% if (Number(result.TEAM) === 6) { %>
-                <div class="cell small-3">
-                    <%= result.NAME %>
-                </div>
-                <div class="cell small-2">
-                    <%= result.RATING %>
-                </div>
-                <div class="cell small-2">
-                    <%= result.TIME %>
-                </div>
-                <div class="cell small-2">
-                    <%= result.RADIO %>
-                </div>
-                <div class="cell small-3">
-                    <%= result.GUEST %>
-                </div>
+            <hr>
+            <% break; %>
             <% } %>
-            </div>
-        <% }); %>
-        <hr>
-        <% break; %>
         <% } %>
+    <% } else { %>
+            <h1>NO DATA</h1>
     <% } %>
 </div>
 <!-- SCRIPTS -->
