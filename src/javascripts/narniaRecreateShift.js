@@ -77,8 +77,19 @@ export default class narniaAdjustShiftCounts {
             }
         }).then((response) => {
             console.log(response.json());
-            console.log(response.text());
+            // console.log(response.text());
         });
+        /*fetch(document.url, {
+            method: 'POST',
+            body: JSON.stringify(shiftStuff),
+            headers: {
+                'x-requested-with': `fetch.2`,
+                'mode': 'no-cors'
+            }
+        }).then((response) => {
+            console.log(response.json());
+            console.log(response.text());
+        });*/
     }
 
     /*async populateRoster(shiftDate, shiftDayNight) {
